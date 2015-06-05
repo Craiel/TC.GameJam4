@@ -32,6 +32,12 @@ public class Arena : MonoBehaviour
             tileRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, cellDimensions.x);
             tileRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, cellDimensions.y);
             tile.transform.SetParent(this.transform);
+
+            BoxCollider2D boxCollider = tile.GetComponent<BoxCollider2D>();
+            if(boxCollider != null)
+            {
+                boxCollider.size = cellDimensions;
+            }
         }
     }
 }
