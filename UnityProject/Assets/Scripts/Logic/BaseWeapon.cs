@@ -46,7 +46,7 @@
                 this.LastShotFired = Time.time;
 
                 IList<ProjectileBehavior> projectiles = this.DoFire(origin, source);
-                this.ShotsFired += projectiles.Count;
+                this.ShotsFired++;
                 return projectiles;
             }
 
