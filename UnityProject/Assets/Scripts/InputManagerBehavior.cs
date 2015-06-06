@@ -48,7 +48,7 @@
 
             for (int i = 0; i < StaticSettings.MaxPlayerCount; ++i )
             {   
-                var newPlayer = new PlayerCharacter();
+                var newPlayer = new Character();
                 this.charactersToInputDevices.Add(newPlayer, null);
             }
 
