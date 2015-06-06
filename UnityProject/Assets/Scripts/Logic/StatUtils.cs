@@ -21,7 +21,7 @@ namespace Assets.Scripts.Logic
             CharacterBehavior characterBehavior = target.GetComponent<CharacterBehavior>();
             if (characterBehavior != null)
             {
-                //TODO: Apply Damage to Character
+                characterBehavior.Character.TakeDamage(damage);
             }
         }
     }
