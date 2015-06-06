@@ -47,7 +47,7 @@
             if (GUILayout.Button("Generate Random"))
             {
                 PlayerCharacterBehavior characterBehavior = (PlayerCharacterBehavior)this.target;
-                characterBehavior.Character.SetGear(type, Systems.GenerateRandomGear(type));
+                characterBehavior.Character.SetGear(type, GearGeneration.GenerateRandomGear(type));
             }
 
             if (gear == null)

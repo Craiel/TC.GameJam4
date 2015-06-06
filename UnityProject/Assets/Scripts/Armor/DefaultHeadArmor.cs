@@ -7,6 +7,8 @@
         public DefaultHeadArmor(StatDictionary instarnalStats, StatDictionary inheritedStats)
             : base(instarnalStats, inheritedStats)
         {
+            this.Name = "Head";
+
             this.Type = GearType.Head;
         }
     }

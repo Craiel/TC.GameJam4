@@ -1,8 +1,10 @@
 ﻿namespace Assets.Scripts
 {
+    using System;
     using System.Collections.Generic;
 
     using Assets.Scripts.Logic;
+    using Assets.Scripts.Weapons;
 
     using UnityEngine;
 
@@ -34,10 +36,19 @@
             { StatType.Health, 100.0f },
             { StatType.Velocity, 1.0f },
             { StatType.RotationSpeed, 1.0f },
-            { StatType.HeatCoolingRate, 1.0f }
+            { StatType.HeatCoolingRate, 1.0f },
+            { StatType.TargetingLockTime, 2f},
+            { StatType.TargetingDistance, 20f},
         };
 
         public static bool EnableInControl = false;
+
+        public static IList<StatType> ArmorInternalStats = new List<StatType>
+                                                          {
+                                                              StatType.Health,
+                                                              StatType.HeatMax,
+                                                              StatType.HeatGeneration
+                                                          };
 
         public static IList<StatType> HeadRollMetaFlags = new List<StatType>
                                                           {
@@ -92,7 +103,34 @@
                                                                { StatType.Velocity, 1f },
                                                                { StatType.HeatCoolingRate, 5f },
                                                                { StatType.Health, 100f },
+                                                               { StatType.HeatMax, 100f },
                                                                { StatType.HeatGeneration, -9f }
+                                                           };
+
+        public static StatDictionary LegsRollBaseLineStats = new StatDictionary
+                                                           {
+                                                               { StatType.HeatGeneration, 10f },
+                                                           };
+
+        public static IList<StatType> WeaponRollFlags = new List<StatType>
+                                                          {
+                                                              StatType.Damage,
+                                                              StatType.Health,
+                                                              StatType.HeatMax,
+                                                              StatType.HeatGeneration
+                                                          };
+
+        public static StatDictionary WeaponRollBudgets = new StatDictionary
+                                                           {
+                                                               { StatType.Damage, 50f },
+                                                               { StatType.Health, 200f },
+                                                               { StatType.HeatMax, 100f },
+                                                               { StatType.HeatGeneration, -19f },
+                                                           };
+
+        public static StatDictionary WeaponRollBaseLineStats = new StatDictionary
+                                                           {
+                                                               { StatType.HeatGeneration, 20f },
                                                            };
 
         public const int HeadRollOptionalPicks = 3;
@@ -102,5 +140,26 @@
         public const int LegsRollOptionalPicks = 3;
 
         public static int NumGearDropsPerCharacterAtStart = 2;
+        
+        public static IList<Type> LeftHandWeaponTypes = new List<Type>
+                                                            {
+                                                                typeof(WeaponColumn),
+                                                                typeof(WeaponRanged),
+                                                                typeof(WeaponMelee),
+                                                                typeof(WeaponHeal),
+                                                                typeof(WeaponSpeedBoost),
+                                                                typeof(WeaponBomb),
+                                                                typeof(WeaponInvisibility)
+                                                            };
+
+        public static IList<Type> RightHandWeaponTypes = new List<Type>
+                                                            {
+                                                                typeof(WeaponRanged),
+                                                                typeof(WeaponMelee),
+                                                                typeof(WeaponGrapple),
+                                                                typeof(WeaponSlow),
+                                                                typeof(WeaponHeat),
+                                                                typeof(WeaponHoming)
+                                                            };
     }
 }

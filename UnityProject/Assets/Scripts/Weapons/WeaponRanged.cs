@@ -14,8 +14,11 @@
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public WeaponRanged()
+        public WeaponRanged(StatDictionary internalStats)
+            : base(internalStats)
         {
+            this.Name = "Ranged";
+
             this.projectilePrefab = Resources.Load("Projectiles/Bullet");
 
             var stats = new StatDictionary
@@ -37,7 +40,11 @@
             GameObject instance = (GameObject)Object.Instantiate(this.projectilePrefab, origin.transform.position, origin.transform.rotation);
 
             BulletProjectileBehavior behavior = instance.AddComponent<BulletProjectileBehavior>();
-            behavior.Damage = this.GetInternalStat(StatType.Damage);
+            behavior.DamageInfo = new CombatInfo
+                                      {
+                                          Damage = this.GetInternalStat(StatType.Damage),
+                                          Type = this.DamageType
+                                      };
             behavior.Velocity = this.GetInternalStat(StatType.Velocity);
             behavior.LifeSpan = Time.time + this.GetInternalStat(StatType.ProjectileLifeSpan);
             behavior.Origin = origin;

@@ -2,6 +2,8 @@
 {
     using System.Collections.Generic;
 
+    using Assets.Scripts.Logic;
+
     using UnityEngine;
 
     public interface IWeapon : IGear
@@ -12,7 +14,13 @@
         
         long ProjectileLimit { get; }
 
+        bool IsTargeted { get; set; }
+
+        DamageType DamageType { get; set; }
+
         bool CanFire();
+
+        void SetWeaponGearType(GearType type);
 
         IList<ProjectileBehavior> Fire(GameObject origin, ICharacter source);
     }
