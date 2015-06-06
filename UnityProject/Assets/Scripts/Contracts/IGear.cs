@@ -4,6 +4,8 @@
 
     public interface IGear
     {
+        string Name { get; }
+
         float GetStat(StatType type);
     }
 }

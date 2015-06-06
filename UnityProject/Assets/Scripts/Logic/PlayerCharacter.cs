@@ -5,7 +5,7 @@
 
     using Assets.Scripts.Contracts;
 
-    public class PlayerCharacter : IActor
+    public class PlayerCharacter : ICharacter
     {
         private readonly IDictionary<StatType, float> baseStats;
 
@@ -40,6 +40,8 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        public string Name { get; set; }
+
         public IArmor Head
         {
             get
@@ -119,6 +121,8 @@
                 }
             }
         }
+
+        public ICharacter Target { get; set; }
 
         public float GetStat(StatType type)
         {

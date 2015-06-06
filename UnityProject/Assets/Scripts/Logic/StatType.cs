@@ -19,6 +19,8 @@
         Shield,
 
         HeatMax,
-        HeatCoolingRate
+        HeatCoolingRate,
+
+        ProjectileLifeSpan,
     }
 }

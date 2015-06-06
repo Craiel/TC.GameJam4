@@ -5,13 +5,36 @@
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Logic;
 
+    using UnityEngine;
+
     public class PlainCannon : BaseWeapon
     {
-        protected override IList<IProjectile> DoFire()
-        {
-            // Create 1 projectile in the facing direction of the "host"
+        private readonly Object projectilePrefab;
 
-            return null;
+        // -------------------------------------------------------------------
+        // Constructor
+        // -------------------------------------------------------------------
+        public PlainCannon()
+        {
+            this.projectilePrefab = Resources.Load("Projectiles/Bullet");
+
+            this.SetStat(StatType.Velocity, 0.1f);
+            this.SetStat(StatType.ProjectileLifeSpan, 2f);
+        }
+
+        // -------------------------------------------------------------------
+        // Protected
+        // -------------------------------------------------------------------
+        protected override IList<ProjectileBehavior> DoFire(GameObject origin, ICharacter source)
+        {
+            GameObject instance = (GameObject)Object.Instantiate(this.projectilePrefab, origin.transform.position, origin.transform.rotation);
+
+            ProjectileBehavior behavior = instance.AddComponent<ProjectileBehavior>();
+            behavior.Damage = this.GetStat(StatType.Damage);
+            behavior.Velocity = this.GetStat(StatType.Velocity);
+            behavior.LifeSpan = Time.time + this.GetStat(StatType.ProjectileLifeSpan);
+
+            return new List<ProjectileBehavior> { behavior };
         }
     }
 }

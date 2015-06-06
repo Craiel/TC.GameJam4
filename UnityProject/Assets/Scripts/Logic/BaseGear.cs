@@ -19,6 +19,8 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        public string Name { get; protected set; }
+
         public float GetStat(StatType type)
         {
             if (this.stats.ContainsKey(type))

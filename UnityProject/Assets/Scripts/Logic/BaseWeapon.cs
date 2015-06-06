@@ -13,8 +13,10 @@
         // -------------------------------------------------------------------
         protected BaseWeapon()
         {
-            this.SetStat(StatType.Damage, 1.0f);
-            this.SetStat(StatType.Interval, 1.0f);
+            foreach (StatType type in StaticSettings.WeaponBaseStats.Keys)
+            {
+                this.SetStat(type, StaticSettings.WeaponBaseStats[type]);
+            }
         }
 
         // -------------------------------------------------------------------
@@ -24,8 +26,6 @@
         
         public float LastShotFired { get; private set; }
         
-        public float ProjectilesPerShot { get; protected set; }
-
         public long ProjectileLimit { get; protected set; }
 
         public virtual bool CanFire()
@@ -39,13 +39,13 @@
             return true;
         }
 
-        public IList<IProjectile> Fire()
+        public IList<ProjectileBehavior> Fire(GameObject origin, ICharacter source)
         {
             if (this.CanFire())
             {
                 this.LastShotFired = Time.time;
 
-                IList<IProjectile> projectiles = this.DoFire();
+                IList<ProjectileBehavior> projectiles = this.DoFire(origin, source);
                 this.ShotsFired += projectiles.Count;
                 return projectiles;
             }
@@ -56,6 +56,6 @@
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
-        protected abstract IList<IProjectile> DoFire();
+        protected abstract IList<ProjectileBehavior> DoFire(GameObject origin, ICharacter source);
     }
 }

@@ -6,6 +6,7 @@
     using Assets.Scripts;
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Logic;
+    using Assets.Scripts.Weapons;
 
     using UnityEditor;
 
@@ -22,7 +23,7 @@
                 return;
             }
 
-            CharacterBehavior characterBehavior = (CharacterBehavior)target;
+            CharacterBehavior characterBehavior = (CharacterBehavior)this.target;
             if (characterBehavior.Character == null)
             {
                 EditorGUILayout.LabelField("No Character yet!");
@@ -32,10 +33,61 @@
             this.BuildCharacterInspectorGui(characterBehavior.Character);
         }
 
-        private void BuildCharacterInspectorGui(IActor actor)
+        private void AddHeaderGuiSection(string text)
         {
-            EditorGUILayout.LabelField("\t\t - -   - - \t\t");
-            EditorGUILayout.LabelField("\t\t - Stats - \t\t");
+            EditorGUILayout.LabelField("");
+            EditorGUILayout.LabelField(string.Format("\t\t ---- {0} ---- \t\t", text));
+        }
+
+        private void AddArmorGui(string title, IArmor armor)
+        {
+            string armorName = armor != null ? armor.Name : "none";
+            EditorGUILayout.LabelField(string.Format("{0}: {1}", title, armorName));
+
+            if (GUILayout.Button("Generate Random"))
+            {
+                // Todo
+            }
+
+            if (armor == null)
+            {
+                return;
+            }
+
+            EditorGUILayout.TextField("Armor: ", armor.GetStat(StatType.Armor).ToString(CultureInfo.InvariantCulture));
+        }
+
+        private void AddWeaponGui(string title, IWeapon weapon)
+        {
+            string weaponName = weapon != null ? weapon.Name : "none";
+            EditorGUILayout.LabelField(string.Format("{0}: {1}", title, weaponName));
+
+            if (GUILayout.Button("Generate Random"))
+            {
+                CharacterBehavior characterBehavior = (CharacterBehavior)this.target;
+                characterBehavior.Character.RightWeapon = new PlainCannon();
+                // Todo
+            }
+
+            if (weapon == null)
+            {
+                return;
+            }
+
+            EditorGUILayout.TextField("Damage: ", weapon.GetStat(StatType.Damage).ToString(CultureInfo.InvariantCulture));
+        }
+
+        private void BuildCharacterInspectorGui(ICharacter actor)
+        {
+            this.AddHeaderGuiSection("Gear");
+            
+            this.AddArmorGui("HEAD", actor.Head);
+            this.AddArmorGui("CHEST", actor.Chest);
+            this.AddArmorGui("LEGS", actor.Legs);
+            this.AddWeaponGui("LEFT_WEAPON", actor.LeftWeapon);
+            this.AddWeaponGui("RIGHT_WEAPON", actor.RightWeapon);
+
+            this.AddHeaderGuiSection("Stats");
             EditorGUILayout.BeginVertical();
             foreach (StatType type in Enum.GetValues(typeof(StatType)))
             {
