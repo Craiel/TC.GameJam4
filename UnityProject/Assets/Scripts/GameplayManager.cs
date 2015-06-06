@@ -13,8 +13,6 @@ public class GameplayManager : MonoBehaviour
     [SerializeField]
     private Arena arena;
 
-    private List<Vector3> currentSpawnPoints;
-
     private void Start()
     {
         ChooseArena();
@@ -26,13 +24,11 @@ public class GameplayManager : MonoBehaviour
 
         if (chosenIndex < textArenas.Count)
         {
-            arena.InitFromText(textArenas[chosenIndex].name, out currentSpawnPoints);
+            arena.InitFromText(textArenas[chosenIndex].name);
         }
         else
         {
-            arena.InitFromTexture(imageArenas[chosenIndex - textArenas.Count], out currentSpawnPoints);
+            arena.InitFromTexture(imageArenas[chosenIndex - textArenas.Count]);
         }
-
-        Debug.Log("Spawn Points Count: " + currentSpawnPoints.Count);
     }
 }
