@@ -11,15 +11,10 @@ public class Arena : MonoBehaviour
     [SerializeField]
     private List<GameObject> tiles;
 
-    public void Start()
+    public void InitFromText(string fileName, out List<Vector3> spawnPoints)
     {
-        InitFromText("moredest.txt");
-        //InitFromTexture(Resources.Load("Maps/TestMap3") as Texture2D);
-    }
-
-    public void InitFromText(string fileName)
-    {
-        StreamReader streamReader = new StreamReader(Application.dataPath + "/Resources/Maps/" + fileName);
+        List<Vector3> foundSpawns = new List<Vector3>();
+        StreamReader streamReader = new StreamReader(Application.dataPath + "/Resources/Maps/" + fileName + ".txt");
 
         string indestructible = "x";
         string empty = "o";
@@ -55,7 +50,7 @@ public class Arena : MonoBehaviour
                         }
                         else if(character == spawn)
                         {
-                            //TODO: Record spawn point
+                            foundSpawns.Add(new Vector3(-5.25f + j * 0.35f, 5.25f - i * 0.35f, 0f));
                         }
 
                         GameObject tile = Instantiate(tiles[tileIndex]) as GameObject;
@@ -70,10 +65,14 @@ public class Arena : MonoBehaviour
             }
             while (line != null);
         }
+
+        spawnPoints = foundSpawns;
     }
     
-    public void InitFromTexture(Texture2D texture)
+    public void InitFromTexture(Texture2D texture, out List<Vector3> spawnPoints)
     {
+        List<Vector3> foundSpawns = new List<Vector3>();
+
         Vector2 cellDimensions = new Vector2(35, 35);
         Vector2 mapDimensions = new Vector2(texture.width, texture.height);
 
@@ -92,5 +91,7 @@ public class Arena : MonoBehaviour
                 currentIndex++;
             }
         }
+
+        spawnPoints = foundSpawns;
     }
 }

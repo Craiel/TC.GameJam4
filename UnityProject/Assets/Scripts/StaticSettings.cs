@@ -33,5 +33,7 @@
             { StatType.RotationSpeed, 1.0f },
             { StatType.HeatCoolingRate, 1.0f }
         };
+
+        public static bool EnableInControl = false;
     }
 }

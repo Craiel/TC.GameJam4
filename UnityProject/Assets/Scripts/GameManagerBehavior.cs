@@ -1,6 +1,7 @@
 ﻿namespace Assets.Scripts
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using InControl;
 
@@ -26,6 +27,9 @@
         // Public
         // -------------------------------------------------------------------
         [SerializeField]
+        public bool enableInControl;
+
+        [SerializeField]
         public GameObject player1;
 
         [SerializeField]
@@ -49,6 +53,9 @@
             this.RegisterPlayer(this.player2);
             this.RegisterPlayer(this.player3);
             this.RegisterPlayer(this.player4);
+
+            // Override the static InControl setting
+            StaticSettings.EnableInControl = this.enableInControl;
         }
         
         [UsedImplicitly]
@@ -56,12 +63,38 @@
         {
             foreach (InputDevice device in InputManager.Devices)
             {
-                //device.Action1
+                if (this.inputDevicesToCharacters.ContainsKey(device))
+                {
+                    // This device is already assigned, skip it
+                    continue;
+                }
+
+                if (device.GetControl(InputControlType.Action1))
+                {
+                    foreach (CharacterBehavior behavior in this.charactersToInputDevices.Keys)
+                    {
+                        if (this.charactersToInputDevices[behavior] != null)
+                        {
+                            this.charactersToInputDevices[behavior] = device;
+                            this.inputDevicesToCharacters.Add(device, behavior);
+                            behavior.InputDevice = device;
+                            Debug.Log("Assigned Controller " + device.Name + " to player " + behavior.name);
+                            break;
+                        }
+                    }
+                }
             }
         }
 
         private void OnDeviceDetached(InputDevice device)
         {
+            if (this.inputDevicesToCharacters.ContainsKey(device))
+            {
+                CharacterBehavior assignedCharacter = this.inputDevicesToCharacters[device];
+                assignedCharacter.InputDevice = null;
+                this.charactersToInputDevices[assignedCharacter] = null;
+                this.inputDevicesToCharacters.Remove(device);
+            }
         }
 
         private void RegisterPlayer(GameObject player)

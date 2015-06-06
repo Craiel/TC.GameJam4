@@ -39,7 +39,7 @@
 
         public bool Update()
         {
-            if (this.InputDevice == null)
+            if (StaticSettings.EnableInControl && this.InputDevice == null)
             {
                 return false;
             }
