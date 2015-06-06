@@ -8,6 +8,8 @@
     using Assets.Scripts.Controls;
     using Assets.Scripts.Logic;
 
+    using InControl;
+
     using JetBrains.Annotations;
 
     using UnityEngine;
@@ -28,6 +30,8 @@
 
         private float changeTime;
 
+        private InputDevice inputDevice;
+
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
@@ -47,6 +51,24 @@
 
         [SerializeField]
         public Animator mechController;
+
+        public InputDevice InputDevice
+        {
+            get
+            {
+                return this.inputDevice;
+            }
+
+            set
+            {
+                if (this.inputDevice != value)
+                {
+                    // Cascade the input device into the controller
+                    this.inputDevice = value;
+                    this.movementController.InputDevice = value;
+                }
+            }
+        }
 
         public ICharacter Character
         {
