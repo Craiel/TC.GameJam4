@@ -36,27 +36,6 @@
             return GenerateRandomGear(types[UnityEngine.Random.Range(0, types.Count)]);
         }
 
-        private static IArmor CreateRandomArmor<T>(StatRollData rollData)
-        {
-            StatDictionary result = GenerateRandomStats(rollData);
-
-            StatDictionary inheritedStats = new StatDictionary();
-            StatDictionary internalStats = new StatDictionary();
-            foreach (KeyValuePair<StatType, float> dataPair in result)
-            {
-                if (rollData.InternalStats.Contains(dataPair.Key))
-                {
-                    internalStats.Add(dataPair.Key, dataPair.Value);
-                }
-                else
-                {
-                    inheritedStats.Add(dataPair.Key, dataPair.Value);
-                }
-            }
-
-            return (IArmor)Activator.CreateInstance(typeof(T), internalStats, inheritedStats);
-        }
-
         public static IGear GenerateRandomGear(GearType type)
         {
             Debug.Log("Generating New " + type);
@@ -121,6 +100,30 @@
             return null;
         }
 
+        // -------------------------------------------------------------------
+        // Private
+        // -------------------------------------------------------------------
+        private static IArmor CreateRandomArmor<T>(StatRollData rollData)
+        {
+            StatDictionary result = GenerateRandomStats(rollData);
+
+            StatDictionary inheritedStats = new StatDictionary();
+            StatDictionary internalStats = new StatDictionary();
+            foreach (KeyValuePair<StatType, float> dataPair in result)
+            {
+                if (rollData.InternalStats.Contains(dataPair.Key))
+                {
+                    internalStats.Add(dataPair.Key, dataPair.Value);
+                }
+                else
+                {
+                    inheritedStats.Add(dataPair.Key, dataPair.Value);
+                }
+            }
+
+            return (IArmor)Activator.CreateInstance(typeof(T), internalStats, inheritedStats);
+        }
+
         private static StatDictionary GetRandomWeaponStats()
         {
             var rollData = new StatRollData();
@@ -136,19 +139,6 @@
             return types[UnityEngine.Random.Range(0, types.Count)];
         }
 
-        /*public static IArmor GenerateRandomHead()
-        {
-            var data = new StatRollData();
-            data.RequiredStats.Add(StatType.Health);
-            data.OptionalStats.AddRange(StaticSettings.HeadRollMetaFlags);
-
-            StatDictionary stats = GenerateRandomStats(data);
-            var item = new DefaultHeadArmor(stats);
-        }*/
-
-        // -------------------------------------------------------------------
-        // Private
-        // -------------------------------------------------------------------
         private static StatDictionary GenerateRandomStats(StatRollData data)
         {
             // First we choose which stats we will take

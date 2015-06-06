@@ -85,9 +85,13 @@
             {   
                 var newPlayer = new Character();
                 this.charactersToInputDevices.Add(newPlayer, null);
-                UIManager.Init(GetCharacters());
             }
 
+            if (this.UIManager != null)
+            {
+                this.UIManager.Init(this.GetCharacters());    
+            }
+            
             // Override the static InControl setting
             StaticSettings.EnableInControl = this.enableInControl;
         }

@@ -41,6 +41,9 @@
         public bool useFixedAxisController = true;
 
         [SerializeField]
+        public bool createCharacter = false;
+
+        [SerializeField]
         public Animator mechController;
 
         // Mostly needed for inspection
@@ -75,7 +78,14 @@
         {
             if (this.Character == null)
             {
-                return;
+                if (this.createCharacter)
+                {
+                    this.Character = new Character();
+                }
+                else
+                {
+                    return;
+                }
             }
 
             this.UpdateBehaviorState();
