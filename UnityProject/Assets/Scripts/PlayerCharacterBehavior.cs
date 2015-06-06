@@ -7,7 +7,8 @@
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Controls;
     using Assets.Scripts.Logic;
-    
+    using Assets.Scripts.Weapons;
+
     using JetBrains.Annotations;
 
     using UnityEngine;
@@ -99,6 +100,10 @@
                 {
                     this.Character.SetGear(gearType, GearGeneration.GenerateRandomGear(gearType));
                 }
+
+                // Todo: Remove these when we are done debugging
+                this.Character.SetGear(GearType.LeftWeapon, GearGeneration.GenerateRandomWeapon(GearType.LeftWeapon, typeof(WeaponColumn)));
+                this.Character.SetGear(GearType.RightWeapon, GearGeneration.GenerateRandomWeapon(GearType.RightWeapon, typeof(WeaponRanged)));
                 
                 this.startupGearGenerated = true;
             }
