@@ -35,26 +35,5 @@ public class Arena : MonoBehaviour
                 currentIndex++;
             }
         }
-
-        /*
-
-            foreach (Color color in texture.GetPixels())
-            {
-                int tileIndex = tileColorKeys.IndexOf(color);
-                GameObject tile = Instantiate(tiles[tileIndex]) as GameObject;
-
-
-
-                RectTransform tileRectTransform = tile.GetComponent<RectTransform>();
-                tileRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, cellDimensions.x);
-                tileRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, cellDimensions.y);
-                tile.transform.SetParent(this.transform);
-
-                BoxCollider2D boxCollider = tile.GetComponent<BoxCollider2D>();
-                if (boxCollider != null)
-                {
-                    boxCollider.size = cellDimensions;
-                }
-            }*/
     }
 }
