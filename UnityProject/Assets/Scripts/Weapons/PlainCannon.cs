@@ -31,7 +31,7 @@
         {
             GameObject instance = (GameObject)Object.Instantiate(this.projectilePrefab, origin.transform.position, origin.transform.rotation);
 
-            ProjectileBehavior behavior = instance.AddComponent<ProjectileBehavior>();
+            BulletProjectileBehavior behavior = instance.AddComponent<BulletProjectileBehavior>();
             behavior.Damage = this.GetStat(StatType.Damage);
             behavior.Velocity = this.GetStat(StatType.Velocity);
             behavior.LifeSpan = Time.time + this.GetStat(StatType.ProjectileLifeSpan);

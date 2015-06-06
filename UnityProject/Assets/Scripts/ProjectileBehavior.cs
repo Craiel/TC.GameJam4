@@ -35,5 +35,22 @@
                 Destroy(this.gameObject);
             }
         }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            GameObject target = other.gameObject;
+
+            if(target == Origin)
+            {
+                return;
+            }
+
+            DestructibleTile destructibleTile = target.GetComponent<DestructibleTile>();
+            if(destructibleTile != null)
+            {
+                destructibleTile.TakeDamage(Damage);
+            }
+            Dispose();
+        }
     }
 }
