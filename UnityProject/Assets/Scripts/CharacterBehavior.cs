@@ -86,8 +86,10 @@
         {
             this.character = new PlayerCharacter { Name = this.characterName };
             this.projectileParent = new GameObject(this.character.Name + "_Bullets");
+        }
 
-            // Create the movement controller
+        private void InitializeMovementController()
+        {
             if (StaticSettings.EnableInControl)
             {
                 this.movementController = new InControlPlayerController(this.gameObject);
@@ -108,10 +110,26 @@
         [UsedImplicitly]
         private void Update()
         {
-            this.character.Update();
+            if (this.movementController == null)
+            {
+                this.InitializeMovementController();
+            }
 
-            float fireLeft = Input.GetAxis("Fire1");
-            float fireRight = Input.GetAxis("Fire2");
+            this.character.Update(this.gameObject);
+
+            float fireLeft = 0f;
+            float fireRight = 0f;
+            if (StaticSettings.EnableInControl && this.inputDevice != null)
+            {
+                fireLeft = this.inputDevice.LeftTrigger.Value;
+                fireRight = this.inputDevice.RightTrigger.Value;
+            }
+            else
+            {
+                fireLeft = Input.GetAxis("Fire1");
+                fireRight = Input.GetAxis("Fire2");
+            }
+            
 
             float currentTime = Time.time;
 
