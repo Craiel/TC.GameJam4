@@ -3,7 +3,9 @@
     using System;
 
     using Assets.Scripts.Contracts;
-    
+
+    using InControl;
+
     using UnityEngine;
 
     public class FixedAxisPlayerController : IMovementController
@@ -43,8 +45,15 @@
 
         public bool InvertAccellerationAxis { get; set; }
 
+        public InputDevice InputDevice { get; set; }
+
         public bool Update()
         {
+            if (this.InputDevice == null)
+            {
+                return false;
+            }
+
             bool changed = false; 
             float move = (Input.GetAxis("Move")) * this.Velocity * DefaultSpeedMultiplier;
             float rotate = Input.GetAxis("Rotate");
