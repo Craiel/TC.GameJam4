@@ -55,7 +55,7 @@
             float currentTime = Time.time;
             
             bool changed = this.HandleMove();
-            changed = changed || this.HandleRotation(currentTime);
+            changed = this.HandleRotation(currentTime) || changed;
 
             return changed;
         }
@@ -79,10 +79,12 @@
             {
                 direction = this.InvertAccellerationAxis ? down : -down;
             } 
-            else if (Math.Abs(up) < float.Epsilon)
+            else if (Math.Abs(up) > float.Epsilon)
             {
-                direction = this.InvertAccellerationAxis ? up : -up;
+                direction = -(this.InvertAccellerationAxis ? up : -up);
             }
+
+            direction *= DefaultSpeedMultiplier;
 
             this.target.transform.Translate(StaticSettings.DefaultMoveDirection * direction);
             return true;
@@ -112,11 +114,11 @@
             // Check which direction we are rotating
             if (left > 0)
             {
-                this.activeVector += this.InvertRotationAxis ? 1 : -1;
+                this.activeVector += this.InvertRotationAxis ? -1 : 1;
             }
             else if (right > 0)
             {
-                this.activeVector += this.InvertRotationAxis ? -1 : 1;
+                this.activeVector += this.InvertRotationAxis ? 1 : -1;
             }
 
             // Make the vector loop over
