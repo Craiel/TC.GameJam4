@@ -53,6 +53,9 @@
         [SerializeField]
         private GameplayManager gameplayManager;
 
+        [SerializeField]
+        private UIManager UIManager;
+
         public IList<ICharacter> GetCharacters()
         {
             return new List<ICharacter>(charactersToInputDevices.Keys);
@@ -82,6 +85,7 @@
             {   
                 var newPlayer = new Character();
                 this.charactersToInputDevices.Add(newPlayer, null);
+                UIManager.Init(GetCharacters());
             }
 
             // Override the static InControl setting
@@ -93,12 +97,6 @@
         {
             if(InputManager.Devices == null)
             {
-                return;
-            }
-            
-            if(!gameplayManager.IsPlaying && InputManager.ActiveDevice.Command.Value > 0)
-            {
-                gameplayManager.SetupMatch(GetCharacters());
                 return;
             }
 
