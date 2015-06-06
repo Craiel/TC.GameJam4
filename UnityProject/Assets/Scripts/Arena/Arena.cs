@@ -2,78 +2,55 @@
 using System.Collections.Generic;
 using System.IO;
 
+﻿using Assets.Scripts;
+﻿using Assets.Scripts.Arena;
+
+﻿using JetBrains.Annotations;
+using Assets.Scripts.Contracts;
+
 public class Arena : MonoBehaviour
 {
+    private const string TagIndestructible = "x";
+    private const string TagDestructible = "d";
+    private const string TagHalf = "h";
+    private const string TagSpawn = "s";
+
+    private int currentLineToProcess;
+
+    // -------------------------------------------------------------------
+    // Private
+    // -------------------------------------------------------------------
     [SerializeField]
     private List<Color> tileColorKeys;
 
     [SerializeField]
     private List<GameObject> tiles;
 
+    [SerializeField]
+    private GameObject gearViewPrefab;
+
+    [SerializeField]
+    private GameplayManager gameplayManager;
+
+    // -------------------------------------------------------------------
+    // Public
+    // -------------------------------------------------------------------
     public List<Vector3> SpawnPoints { get; private set; }
-    public List<Tile> Tiles {get; private set;}
-
-    private void Awake() 
-    {
-        Tiles = new List<Tile>();
-        SpawnPoints = new List<Vector3>();
-    }
-
+    public List<ArenaTile> Tiles {get; private set;}
+    public List<GearView> UnclaimedGear { get; private set; }
+    
     public void InitFromText(string fileName)
     {   
-        StreamReader streamReader = new StreamReader(Application.dataPath + "/Resources/Maps/" + fileName + ".txt");
+        StreamReader streamReader = new StreamReader(Application.dataPath + string.Format(StaticSettings.MapFileFilter, fileName));
 
-        string indestructible = "x";
-        string destructible = "d";
-        string half = "h";
-        string spawn = "s";
-
-        int i = 0;
-
-        string line;
+        this.currentLineToProcess = 0;
         using (streamReader)
         {
+            string line;
             do
             {
                 line = streamReader.ReadLine();
-                if (!string.IsNullOrEmpty(line))
-                {
-                    for (int j = 0; j < line.Length; ++j)
-                    {
-                        string character = line.Substring(j, 1);
-                        int tileIndex = 0;
-                        Tile.Type type = Tile.Type.Ground;
-                        if (character == indestructible)
-                        {
-                            tileIndex = 1;
-                            type = Tile.Type.Indestructible;
-                        }
-                        else if (character == destructible)
-                        {
-                            tileIndex = 2;
-                            type = Tile.Type.Destructible;
-                        }
-                        else if (character == half)
-                        {
-                            tileIndex = 3;
-                            type = Tile.Type.HalfWall;
-                        }
-                        else if (character == spawn)
-                        {
-                            SpawnPoints.Add(new Vector3(-5.25f + j * 0.35f, 5.25f - i * 0.35f, 0f));
-                            type = Tile.Type.Spawn;
-                        }
-
-                        GameObject tile = Instantiate(tiles[tileIndex]) as GameObject;
-                        Tiles.Add(new Tile{CurrentType = type, TileView = tile});
-
-                        tile.transform.SetParent(this.transform);
-                        tile.transform.localPosition = new Vector3(-5.25f + j * 0.35f, 5.25f - i * 0.35f, 0f);
-                    }
-
-                    i++;
-                }
-
+                this.ProcessLine(line);
             }
             while (line != null);
         }
@@ -89,8 +66,8 @@ public class Arena : MonoBehaviour
         {
             for (int j = 0; j < mapDimensions.y; j++)
             {
-                int tileIndex = tileColorKeys.IndexOf(colors[currentIndex]);
-                GameObject tile = Instantiate(tiles[tileIndex]) as GameObject;
+                int tileIndex = this.tileColorKeys.IndexOf(colors[currentIndex]);
+                GameObject tile = Instantiate(this.tiles[tileIndex]);
 
                 tile.transform.SetParent(this.transform);
                 tile.transform.localPosition = new Vector3(-5.25f + j * 0.35f, 5.25f - i * 0.35f, 0f);
@@ -101,18 +78,116 @@ public class Arena : MonoBehaviour
         //TODO: Recognize spawns
     }
 
-    public class Tile
+    public void PlaceStarterGear()
     {
-        public enum Type
+        int characterCount = gameplayManager.Characters.Count;
+        int totalStarterGear = StaticSettings.NumGearDropsPerCharacterAtStart * characterCount;
+
+        for (int i = 0; i < characterCount; ++i)
         {
-            Indestructible,
-            Destructible,
-            HalfWall,
-            Spawn,
-            Ground
+            //TODO: Generate Weapon
         }
 
-        public Type CurrentType { get; set; }
-        public GameObject TileView { get; set; }
+        for (int i = 0; i < totalStarterGear - characterCount; ++i)
+        {
+            //TODO: Generate Random gear
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // Private
+    // -------------------------------------------------------------------
+    [UsedImplicitly]
+    private void Awake()
+    {
+        this.Tiles = new List<ArenaTile>();
+        this.SpawnPoints = new List<Vector3>();
+    }
+
+    [UsedImplicitly]
+    private void Update()
+    {
+
+    }
+
+    private void ProcessLine(string line)
+    {
+        if (!string.IsNullOrEmpty(line))
+        {
+            for (int j = 0; j < line.Length; ++j)
+            {
+                string character = line.Substring(j, 1);
+                int tileIndex = 0;
+                ArenaTileType type = ArenaTileType.Ground;
+                if (character == TagIndestructible)
+                {
+                    tileIndex = 1;
+                    type = ArenaTileType.Indestructible;
+                }
+                else if (character == TagDestructible)
+                {
+                    tileIndex = 2;
+                    type = ArenaTileType.Destructible;
+                }
+                else if (character == TagHalf)
+                {
+                    tileIndex = 3;
+                    type = ArenaTileType.HalfWall;
+                }
+                else if (character == TagSpawn)
+                {
+                    this.SpawnPoints.Add(new Vector3(-5.25f + j * 0.35f, 5.25f - this.currentLineToProcess * 0.35f, 0f));
+                    type = ArenaTileType.Spawn;
+                }
+
+                GameObject tile = Instantiate(this.tiles[tileIndex]);
+                this.Tiles.Add(new ArenaTile { CurrentType = type, TileView = tile });
+
+                tile.transform.SetParent(this.transform);
+                tile.transform.localPosition = new Vector3(-5.25f + j * 0.35f, 5.25f - this.currentLineToProcess * 0.35f, 0f);
+            }
+
+            this.currentLineToProcess++;
+        }
+    }
+
+    private void PlaceGear(IGear gear)
+    {
+        const float minGearDropProximity = 0.35f;
+        
+        List<ArenaTile> availableTiles = new List<ArenaTile>();
+        foreach (ArenaTile tile in Tiles)
+        {
+            if(tile.CurrentType != ArenaTileType.Ground)
+            {
+                continue;
+            }
+
+            Vector3 tilePosition = tile.TileView.transform.position;
+
+            bool isValid = true;
+
+            foreach (GearView gearView in UnclaimedGear)
+            {
+                if ((gearView.transform.position - tilePosition).magnitude < minGearDropProximity)
+                {
+                    isValid = false;
+                    break;
+                }
+            }
+
+            if (isValid)
+            {
+                availableTiles.Add(tile);
+            }
+        }
+
+        GameObject newGear = Instantiate(gearViewPrefab) as GameObject;
+        newGear.transform.SetParent(this.transform);
+        newGear.transform.position = availableTiles[Random.Range(0, availableTiles.Count)].TileView.transform.position;
+
+        GearView newGearView = newGear.GetComponent<GearView>();
+        newGearView.Init(gear);
+        UnclaimedGear.Add(newGearView);
     }
 }

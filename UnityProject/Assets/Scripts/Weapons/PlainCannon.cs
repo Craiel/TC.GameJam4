@@ -18,10 +18,15 @@
         {
             this.projectilePrefab = Resources.Load("Projectiles/Bullet");
 
-            this.SetStat(StatType.Velocity, 0.1f);
-            this.SetStat(StatType.ProjectileLifeSpan, 1f);
-            this.SetStat(StatType.Interval, 0.1f);
-            this.SetStat(StatType.HeatGeneration, 1.0f);
+            var stats = new StatDictionary
+                {
+                    { StatType.Velocity, 0.1f },
+                    { StatType.ProjectileLifeSpan, 1f },
+                    { StatType.Interval, 0.1f },
+                    { StatType.HeatGeneration, 1.0f },
+                };
+
+            this.InternalStats.Merge(stats);
         }
 
         // -------------------------------------------------------------------
@@ -32,9 +37,9 @@
             GameObject instance = (GameObject)Object.Instantiate(this.projectilePrefab, origin.transform.position, origin.transform.rotation);
 
             BulletProjectileBehavior behavior = instance.AddComponent<BulletProjectileBehavior>();
-            behavior.Damage = this.GetStat(StatType.Damage);
-            behavior.Velocity = this.GetStat(StatType.Velocity);
-            behavior.LifeSpan = Time.time + this.GetStat(StatType.ProjectileLifeSpan);
+            behavior.Damage = this.GetInternalStat(StatType.Damage);
+            behavior.Velocity = this.GetInternalStat(StatType.Velocity);
+            behavior.LifeSpan = Time.time + this.GetInternalStat(StatType.ProjectileLifeSpan);
             behavior.Origin = origin;
 
             return new List<ProjectileBehavior> { behavior };

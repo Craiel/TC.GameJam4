@@ -2,17 +2,17 @@
 {
     using Assets.Scripts.Contracts;
 
-    public class BaseArmor : BaseGear, IArmor
+    public abstract class BaseArmor : BaseGear, IArmor
     {
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public BaseArmor()
+        protected BaseArmor(StatDictionary internalStats, StatDictionary inheritedStats)
         {
-            foreach (StatType type in StaticSettings.ArmorBaseStats.Keys)
-            {
-                this.SetStat(type, StaticSettings.ArmorBaseStats[type]);
-            }
+            this.InternalStats.Merge(StaticSettings.ArmorBaseStats);
+            this.InternalStats.Merge(internalStats);
+
+            this.InheritedStats.Merge(inheritedStats);
         }
 
         // -------------------------------------------------------------------

@@ -1,36 +1,48 @@
 ﻿namespace Assets.Scripts.Logic
 {
-    using System.Collections.Generic;
-
     using Assets.Scripts.Contracts;
 
     using UnityEngine;
 
     public abstract class BaseGear : IGear
     {
-        private readonly IDictionary<StatType, float> stats;
+        private readonly StatDictionary internalStats;
+        private readonly StatDictionary inheritedStats;
 
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
         protected BaseGear()
         {
-            this.stats = new Dictionary<StatType, float>();
+            this.internalStats = new StatDictionary();
+            this.inheritedStats = new StatDictionary();
         }
 
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        public GearType Type { get; protected set; }
+
         public string Name { get; protected set; }
 
-        public float GetStat(StatType type)
+        public float GetInternalStat(StatType type)
         {
-            if (this.stats.ContainsKey(type))
-            {
-                return this.stats[type];
-            }
+            return this.internalStats.GetStat(type);
+        }
 
-            return 0;
+        public float GetInheritedStat(StatType type)
+        {
+            return this.inheritedStats.GetStat(type);
+        }
+
+        public StatDictionary GetInternalStats()
+        {
+            return new StatDictionary(this.internalStats);
+        }
+
+        public StatDictionary GetInheritedStats()
+        {
+            return new StatDictionary(this.inheritedStats);
         }
 
         public virtual void Update(GameObject gameObject)
@@ -40,14 +52,20 @@
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
-        protected void SetStat(StatType type, float value)
+        protected StatDictionary InternalStats
         {
-            if (!this.stats.ContainsKey(type))
+            get
             {
-                this.stats.Add(type, value);
+                return this.internalStats;
             }
+        }
 
-            this.stats[type] = value;
+        protected StatDictionary InheritedStats
+        {
+            get
+            {
+                return this.inheritedStats;
+            }
         }
     }
 }

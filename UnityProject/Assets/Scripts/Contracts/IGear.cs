@@ -6,10 +6,18 @@
 
     public interface IGear
     {
+        GearType Type { get; }
+
         string Name { get; }
 
-        float GetStat(StatType type);
-
         void Update(GameObject gameObject);
+
+        float GetInternalStat(StatType type);
+
+        float GetInheritedStat(StatType type);
+
+        StatDictionary GetInternalStats();
+
+        StatDictionary GetInheritedStats();
     }
 }

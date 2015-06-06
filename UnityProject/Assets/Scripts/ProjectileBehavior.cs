@@ -2,6 +2,9 @@
 {
     using Assets.Scripts.Logic;
     using System;
+
+    using JetBrains.Annotations;
+
     using UnityEngine;
 
     public abstract class ProjectileBehavior : MonoBehaviour
@@ -9,9 +12,9 @@
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public ProjectileBehavior()
+        protected ProjectileBehavior()
         {
-            IsAlive = true;
+            this.IsAlive = true;
         }
 
         // -------------------------------------------------------------------
@@ -42,20 +45,21 @@
         {
             if (isDisposing)
             {
-                IsAlive = false;
+                this.IsAlive = false;
                 Destroy(this.gameObject);
             }
         }
 
+        [UsedImplicitly]
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject == Origin)
+            if (other.gameObject == this.Origin)
             {
                 return;
             }
 
-            StatUtils.ApplyDamage(other.gameObject, Damage);
-            Dispose();
+            Systems.ApplyDamage(other.gameObject, this.Damage);
+            this.Dispose();
         }
     }
 }

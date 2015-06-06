@@ -13,10 +13,10 @@
         // -------------------------------------------------------------------
         protected BaseWeapon()
         {
-            foreach (StatType type in StaticSettings.WeaponBaseStats.Keys)
-            {
-                this.SetStat(type, StaticSettings.WeaponBaseStats[type]);
-            }
+            // Make it all left by default and sort it out later
+            this.Type = GearType.LeftWeapon;
+ 
+            this.InternalStats.Merge(StaticSettings.WeaponBaseStats);
         }
 
         // -------------------------------------------------------------------
@@ -31,7 +31,7 @@
         public virtual bool CanFire()
         {
             float currentTime = Time.time;
-            if (currentTime < this.LastShotFired + this.GetStat(StatType.Interval))
+            if (currentTime < this.LastShotFired + this.GetInternalStat(StatType.Interval))
             {
                 return false;
             }
