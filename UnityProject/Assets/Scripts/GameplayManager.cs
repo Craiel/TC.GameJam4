@@ -19,11 +19,16 @@ public class GameplayManager : MonoBehaviour
 
     public bool IsPlaying { get; private set; }
 
+    public IList<ICharacter> Characters { get; private set; }
+
     public void SetupMatch(IList<ICharacter> characters)
     {
+        Characters = characters;
         IsPlaying = true;
+        
         ChooseArena();
         SpawnMechs(characters);
+        arena.PlaceStarterGear();
     }
 
     private void ChooseArena()

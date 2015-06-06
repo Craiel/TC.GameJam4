@@ -6,6 +6,7 @@ using System.IO;
 ﻿using Assets.Scripts.Arena;
 
 ﻿using JetBrains.Annotations;
+using Assets.Scripts.Contracts;
 
 public class Arena : MonoBehaviour
 {
@@ -25,11 +26,18 @@ public class Arena : MonoBehaviour
     [SerializeField]
     private List<GameObject> tiles;
 
+    [SerializeField]
+    private GameObject gearViewPrefab;
+
+    [SerializeField]
+    private GameplayManager gameplayManager;
+
     // -------------------------------------------------------------------
     // Public
     // -------------------------------------------------------------------
     public List<Vector3> SpawnPoints { get; private set; }
     public List<ArenaTile> Tiles {get; private set;}
+    public List<GearView> UnclaimedGear { get; private set; }
     
     public void InitFromText(string fileName)
     {   
@@ -70,6 +78,22 @@ public class Arena : MonoBehaviour
         //TODO: Recognize spawns
     }
 
+    public void PlaceStarterGear()
+    {
+        int characterCount = gameplayManager.Characters.Count;
+        int totalStarterGear = StaticSettings.NumGearDropsPerCharacterAtStart * characterCount;
+
+        for (int i = 0; i < characterCount; ++i)
+        {
+            //TODO: Generate Weapon
+        }
+
+        for (int i = 0; i < totalStarterGear - characterCount; ++i)
+        {
+            //TODO: Generate Random gear
+        }
+    }
+
     // -------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------
@@ -78,6 +102,12 @@ public class Arena : MonoBehaviour
     {
         this.Tiles = new List<ArenaTile>();
         this.SpawnPoints = new List<Vector3>();
+    }
+
+    [UsedImplicitly]
+    private void Update()
+    {
+
     }
 
     private void ProcessLine(string line)
@@ -119,5 +149,45 @@ public class Arena : MonoBehaviour
 
             this.currentLineToProcess++;
         }
+    }
+
+    private void PlaceGear(IGear gear)
+    {
+        const float minGearDropProximity = 0.35f;
+        
+        List<ArenaTile> availableTiles = new List<ArenaTile>();
+        foreach (ArenaTile tile in Tiles)
+        {
+            if(tile.CurrentType != ArenaTileType.Ground)
+            {
+                continue;
+            }
+
+            Vector3 tilePosition = tile.TileView.transform.position;
+
+            bool isValid = true;
+
+            foreach (GearView gearView in UnclaimedGear)
+            {
+                if ((gearView.transform.position - tilePosition).magnitude < minGearDropProximity)
+                {
+                    isValid = false;
+                    break;
+                }
+            }
+
+            if (isValid)
+            {
+                availableTiles.Add(tile);
+            }
+        }
+
+        GameObject newGear = Instantiate(gearViewPrefab) as GameObject;
+        newGear.transform.SetParent(this.transform);
+        newGear.transform.position = availableTiles[Random.Range(0, availableTiles.Count)].TileView.transform.position;
+
+        GearView newGearView = newGear.GetComponent<GearView>();
+        newGearView.Init(gear);
+        UnclaimedGear.Add(newGearView);
     }
 }

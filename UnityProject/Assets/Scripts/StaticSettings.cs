@@ -38,5 +38,7 @@
         };
 
         public static bool EnableInControl = false;
+
+        public static int NumGearDropsPerCharacterAtStart = 2;
     }
 }
