@@ -18,7 +18,7 @@
         public float Velocity { get; set; }
 
         public float LifeSpan { get; set; }
-
+        
         public void Dispose()
         {
             this.Dispose(true);

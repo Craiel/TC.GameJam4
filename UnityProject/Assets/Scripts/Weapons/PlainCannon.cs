@@ -21,6 +21,7 @@
             this.SetStat(StatType.Velocity, 0.1f);
             this.SetStat(StatType.ProjectileLifeSpan, 1f);
             this.SetStat(StatType.Interval, 0.1f);
+            this.SetStat(StatType.HeatGeneration, 1.0f);
         }
 
         // -------------------------------------------------------------------
