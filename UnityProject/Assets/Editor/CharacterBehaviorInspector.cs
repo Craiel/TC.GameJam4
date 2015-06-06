@@ -66,6 +66,7 @@
             {
                 CharacterBehavior characterBehavior = (CharacterBehavior)this.target;
                 characterBehavior.Character.RightWeapon = new PlainCannon();
+                characterBehavior.Character.LeftWeapon = new EnergyCannon();
                 // Todo
             }
 
