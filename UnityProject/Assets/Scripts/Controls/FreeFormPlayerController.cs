@@ -6,7 +6,7 @@
 
     using UnityEngine;
 
-    public class PlayerController : MonoBehaviour
+    public class FreeFormPlayerController : MonoBehaviour
     {
         private const float DefaultSpeedMultiplier = 0.02f;
 
