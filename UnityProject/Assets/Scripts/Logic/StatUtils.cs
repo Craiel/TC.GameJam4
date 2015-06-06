@@ -18,7 +18,7 @@ namespace Assets.Scripts.Logic
                 return;
             }
 
-            CharacterBehavior characterBehavior = target.GetComponent<CharacterBehavior>();
+            PlayerCharacterBehavior characterBehavior = target.GetComponent<PlayerCharacterBehavior>();
             if (characterBehavior != null)
             {
                 characterBehavior.Character.TakeDamage(damage);

@@ -14,6 +14,8 @@
 
         public const float DefaultProjectileLifespan = 5.0f;
 
+        public const string MapFileFilter = "/Resources/Maps/{0}.txt";
+
         public static readonly Vector3 DefaultMoveDirection = new Vector3(0, 1, 0);
 
         public static readonly IDictionary<StatType, float> ArmorBaseStats = new Dictionary<StatType, float>();

@@ -1,7 +1,6 @@
 ﻿namespace Assets.Scripts
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     using InControl;
 
@@ -9,18 +8,18 @@
 
     using UnityEngine;
 
-    public class GameManagerBehavior : MonoBehaviour
+    public class InputManagerBehavior : MonoBehaviour
     {
-        private IDictionary<CharacterBehavior, InputDevice> charactersToInputDevices;
-        private IDictionary<InputDevice, CharacterBehavior> inputDevicesToCharacters;
+        private readonly IDictionary<PlayerBehavior, InputDevice> charactersToInputDevices;
+        private readonly IDictionary<InputDevice, PlayerBehavior> inputDevicesToCharacters;
 
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public GameManagerBehavior()
+        public InputManagerBehavior()
         {
-            this.charactersToInputDevices = new Dictionary<CharacterBehavior, InputDevice>();
-            this.inputDevicesToCharacters = new Dictionary<InputDevice, CharacterBehavior>();
+            this.charactersToInputDevices = new Dictionary<PlayerBehavior, InputDevice>();
+            this.inputDevicesToCharacters = new Dictionary<InputDevice, PlayerBehavior>();
         }
 
         // -------------------------------------------------------------------
@@ -61,6 +60,21 @@
         [UsedImplicitly]
         private void Update()
         {
+            // Todo: for testing only
+            if(InputManager.ActiveDevice.Command.Value > 0)
+            {
+                foreach (PlayerBehavior behavior in this.charactersToInputDevices.Keys)
+                {
+                    if (behavior.Character.InputDevice != null)
+                    {
+                        behavior.TempTransitionToGameMode();
+                    }
+                }
+                this.charactersToInputDevices.Clear();
+                this.inputDevicesToCharacters.Clear();
+                return;
+            }
+
             foreach (InputDevice device in InputManager.Devices)
             {
                 if (this.inputDevicesToCharacters.ContainsKey(device))
@@ -71,14 +85,14 @@
 
                 if (device.GetControl(InputControlType.Action1))
                 {
-                    foreach (CharacterBehavior behavior in this.charactersToInputDevices.Keys)
+                    foreach (PlayerBehavior behavior in this.charactersToInputDevices.Keys)
                     {
                         if (this.charactersToInputDevices[behavior] == null)
                         {
                             this.charactersToInputDevices[behavior] = device;
                             this.inputDevicesToCharacters.Add(device, behavior);
-                            behavior.InputDevice = device;
-                            Debug.Log("Assigned Controller " + device.Name + " to player " + behavior.name);
+                            behavior.Character.InputDevice = device;
+                            Debug.Log("Assigned Controller " + device.Name + " to player " + behavior.Character.Name);
                             break;
                         }
                     }
@@ -90,8 +104,8 @@
         {
             if (this.inputDevicesToCharacters.ContainsKey(device))
             {
-                CharacterBehavior assignedCharacter = this.inputDevicesToCharacters[device];
-                assignedCharacter.InputDevice = null;
+                PlayerBehavior assignedCharacter = this.inputDevicesToCharacters[device];
+                assignedCharacter.Character.InputDevice = null;
                 this.charactersToInputDevices[assignedCharacter] = null;
                 this.inputDevicesToCharacters.Remove(device);
             }
@@ -104,10 +118,10 @@
                 return;
             }
 
-            var behavior = player.GetComponent<CharacterBehavior>();
+            var behavior = player.GetComponent<PlayerBehavior>();
             if (behavior == null)
             {
-                Debug.LogWarning("Player has no Character behavior set!");
+                Debug.LogWarning("Player has no Player behavior set!");
                 return;
             }
 

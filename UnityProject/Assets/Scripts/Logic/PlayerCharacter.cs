@@ -5,6 +5,8 @@
 
     using Assets.Scripts.Contracts;
 
+    using InControl;
+
     using UnityEngine;
 
     public class PlayerCharacter : ICharacter
@@ -43,6 +45,8 @@
         // Public
         // -------------------------------------------------------------------
         public string Name { get; set; }
+
+        public InputDevice InputDevice { get; set; }
 
         public IArmor Head
         {

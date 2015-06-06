@@ -2,6 +2,8 @@
 {
     using Assets.Scripts.Logic;
 
+    using InControl;
+
     using UnityEngine;
 
     public interface ICharacter
@@ -16,6 +18,8 @@
         IWeapon RightWeapon { get; set; }
 
         ICharacter Target { get; set; }
+
+        InputDevice InputDevice { get; set; }
 
         float GetStat(StatType type);
 
