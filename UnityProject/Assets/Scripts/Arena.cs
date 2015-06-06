@@ -25,6 +25,7 @@ public class Arena : MonoBehaviour
         string empty = "o";
         string destructible = "d";
         string half = "h";
+        string spawn = "s";
 
         int i = 0;
 
@@ -51,6 +52,10 @@ public class Arena : MonoBehaviour
                         else if(character == half)
                         {
                             tileIndex = 3;
+                        }
+                        else if(character == spawn)
+                        {
+                            //TODO: Record spawn point
                         }
 
                         GameObject tile = Instantiate(tiles[tileIndex]) as GameObject;

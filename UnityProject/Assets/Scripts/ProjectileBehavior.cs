@@ -1,7 +1,7 @@
 ﻿namespace Assets.Scripts
 {
+    using Assets.Scripts.Logic;
     using System;
-    
     using UnityEngine;
 
     public abstract class ProjectileBehavior : MonoBehaviour
@@ -49,18 +49,12 @@
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            GameObject target = other.gameObject;
-
-            if(target == Origin)
+            if (other.gameObject == Origin)
             {
                 return;
             }
 
-            DestructibleTile destructibleTile = target.GetComponent<DestructibleTile>();
-            if(destructibleTile != null)
-            {
-                destructibleTile.TakeDamage(Damage);
-            }
+            StatUtils.ApplyDamage(other.gameObject, Damage);
             Dispose();
         }
     }
