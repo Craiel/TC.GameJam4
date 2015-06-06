@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Assets.Scripts;
+using Assets.Scripts.Contracts;
 
 public class GameplayManager : MonoBehaviour 
 {
@@ -16,15 +17,13 @@ public class GameplayManager : MonoBehaviour
     [SerializeField]
     private GameObject mechPrefab;
 
-    private void Start()
-    {
-        SetupMatch();
-    }
+    public bool IsPlaying { get; private set; }
 
-    public void SetupMatch()
+    public void SetupMatch(IList<ICharacter> characters)
     {
+        IsPlaying = true;
         ChooseArena();
-        SpawnMechs();
+        SpawnMechs(characters);
     }
 
     private void ChooseArena()
@@ -41,15 +40,23 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
-    private void SpawnMechs()
+    private void SpawnMechs(IList<ICharacter> characters)
     {
-        GameObject newMech = Instantiate(mechPrefab) as GameObject;
-        //TODO: Initialize mech with ICharacter data
+        foreach(ICharacter character in characters)
+        {
+            if(character.InputDevice == null)
+            {
+                continue;
+            }
 
-        newMech.transform.SetParent(arena.transform);
-        if(arena.SpawnPoints.Count > 0)
-        {   
-            newMech.transform.localPosition = arena.SpawnPoints[Random.Range(0, arena.SpawnPoints.Count)];
+            GameObject newMech = Instantiate(mechPrefab) as GameObject;
+            newMech.GetComponent<PlayerCharacterBehavior>().Character = character;
+            newMech.transform.SetParent(arena.transform);
+
+            if (arena.SpawnPoints.Count > 0)
+            {
+                newMech.transform.localPosition = arena.SpawnPoints[Random.Range(0, arena.SpawnPoints.Count)];
+            }
         }
     }
 }
