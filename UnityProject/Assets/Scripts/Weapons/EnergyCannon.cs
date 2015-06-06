@@ -37,9 +37,10 @@
             
             if (ray.collider != null)
             {
+                Vector3 depthOffset = new Vector3(0, 0, -1f);
                 LineRenderer line = origin.GetComponent<LineRenderer>();
-                line.SetPosition(0, origin.transform.position);
-                line.SetPosition(1, ray.transform.position);
+                line.SetPosition(0, origin.transform.position + depthOffset);
+                line.SetPosition(1, ray.transform.position + depthOffset);
                 //line.SetPosition(1, new Vector3(0f,ray.transform.position.y,0f));
                 timeChanged = Time.time;
             }
