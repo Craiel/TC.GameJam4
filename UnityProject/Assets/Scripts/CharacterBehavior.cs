@@ -133,6 +133,11 @@
             }
 
             IList<ProjectileBehavior> newProjectiles = weapon.Fire(this.gameObject, this.character);
+            if (newProjectiles == null)
+            {
+                return;
+            }
+
             foreach (ProjectileBehavior projectile in newProjectiles)
             {
                 projectile.transform.SetParent(this.projectileParent.transform);

@@ -45,6 +45,10 @@
         {
             InputManager.OnDeviceDetached += this.OnDeviceDetached;
 
+            this.RegisterPlayer(this.player1);
+            this.RegisterPlayer(this.player2);
+            this.RegisterPlayer(this.player3);
+            this.RegisterPlayer(this.player4);
         }
         
         [UsedImplicitly]
@@ -58,6 +62,23 @@
 
         private void OnDeviceDetached(InputDevice device)
         {
+        }
+
+        private void RegisterPlayer(GameObject player)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            var behavior = player.GetComponent<CharacterBehavior>();
+            if (behavior == null)
+            {
+                Debug.LogWarning("Player has no Character behavior set!");
+                return;
+            }
+
+            this.charactersToInputDevices.Add(behavior, null);
         }
     }
 }
