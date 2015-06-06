@@ -16,7 +16,7 @@
 
         bool IsTargeted { get; set; }
 
-        WeaponType WeaponType { get; set; }
+        DamageType DamageType { get; set; }
 
         bool CanFire();
 

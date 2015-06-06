@@ -14,9 +14,9 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public static void ApplyDamage(GameObject target, float damage)
+        public static void ResolveDamage(DamageResolve resolve)
         {
-            DestructibleTile destructibleTile = target.GetComponent<DestructibleTile>();
+            /*DestructibleTile destructibleTile = target.GetComponent<DestructibleTile>();
             if (destructibleTile != null)
             {
                 destructibleTile.TakeDamage(damage);
@@ -27,7 +27,7 @@
             if (characterBehavior != null)
             {
                 characterBehavior.Character.TakeDamage(damage);
-            }
+            }*/
         }
 
         public static IGear GenerateRandomGear()
@@ -133,9 +133,9 @@
             return GenerateRandomStats(rollData);
         }
 
-        private static WeaponType PickRandomWeaponType()
+        private static DamageType PickRandomWeaponType()
         {
-            IList<WeaponType> types = Enum.GetValues(typeof(WeaponType)).Cast<WeaponType>().ToList();
+            IList<DamageType> types = Enum.GetValues(typeof(DamageType)).Cast<DamageType>().ToList();
             return types[UnityEngine.Random.Range(0, types.Count)];
         }
 

@@ -2,7 +2,7 @@
 {
     using Assets.Scripts.Logic;
     using System;
-
+    
     using JetBrains.Annotations;
 
     using UnityEngine;
@@ -12,15 +12,16 @@
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        protected ProjectileBehavior()
+        protected ProjectileBehavior(DamageInfo damageInfo)
         {
+            this.DamageInfo = damageInfo;
             this.IsAlive = true;
         }
 
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public float Damage { get; set; }
+        public DamageInfo DamageInfo { get; private set; }
 
         public Vector2 Direction { get; set; }
 
@@ -60,7 +61,7 @@
                 return;
             }
 
-            Systems.ApplyDamage(other.gameObject, this.Damage);
+            Systems.ApplyDamage(other.gameObject, this.gameObject, this.DamageInfo);
             this.Dispose();
         }
     }

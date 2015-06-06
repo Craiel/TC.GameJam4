@@ -15,7 +15,7 @@
         {
             // Make it all left by default and sort it out later
             this.Type = GearType.LeftWeapon;
-            this.WeaponType = WeaponType.Projectile;
+            this.DamageType = DamageType.Projectile;
  
             this.InternalStats.Merge(StaticSettings.WeaponBaseStats);
             this.InternalStats.Merge(stats);
@@ -30,7 +30,7 @@
         
         public long ProjectileLimit { get; protected set; }
 
-        public WeaponType WeaponType { get; set; }
+        public DamageType DamageType { get; set; }
 
         public bool IsTargeted { get; set; }
 
