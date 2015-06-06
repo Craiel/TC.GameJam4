@@ -1,12 +1,10 @@
 ﻿namespace Assets.Scripts
 {
     using System;
-
-    using JetBrains.Annotations;
-
+    
     using UnityEngine;
 
-    public class ProjectileBehavior : MonoBehaviour
+    public abstract class ProjectileBehavior : MonoBehaviour
     {
         // -------------------------------------------------------------------
         // Public
@@ -18,6 +16,8 @@
         public float Velocity { get; set; }
 
         public float LifeSpan { get; set; }
+
+        public GameObject Origin { get; set; }
         
         public void Dispose()
         {
@@ -34,12 +34,6 @@
             {
                 Destroy(this.gameObject);
             }
-        }
-
-        [UsedImplicitly]
-        private void Update()
-        {
-            this.transform.Translate(StaticSettings.DefaultMoveDirection * this.Velocity);
         }
     }
 }

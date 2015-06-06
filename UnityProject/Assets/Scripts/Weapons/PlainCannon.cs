@@ -35,6 +35,7 @@
             behavior.Damage = this.GetStat(StatType.Damage);
             behavior.Velocity = this.GetStat(StatType.Velocity);
             behavior.LifeSpan = Time.time + this.GetStat(StatType.ProjectileLifeSpan);
+            behavior.Origin = origin;
 
             return new List<ProjectileBehavior> { behavior };
         }

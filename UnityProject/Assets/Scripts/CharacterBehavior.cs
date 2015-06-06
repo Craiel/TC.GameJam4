@@ -125,8 +125,8 @@
             {
                 if (currentTime > projectile.LifeSpan)
                 {
-                    Destroy(projectile.gameObject);
                     this.projectiles.Remove(projectile);
+                    projectile.Dispose();
                 }
             }
         }
@@ -135,26 +135,26 @@
         {
             //If there is movement our next move is true
             if (didUpdate)
-                nextMove = true;
+                this.nextMove = true;
             else
-                nextMove = false;
+                this.nextMove = false;
 
-            if (nextMove != currentMove && changeTime + 1 >= Time.time)
+            if (this.nextMove != this.currentMove && this.changeTime + 1 >= Time.time)
             {
-                if (nextMove)
+                if (this.nextMove)
                 {
-                    mechController.SetTrigger("WalkUp");
-                    currentMove = true;
+                    this.mechController.SetTrigger("WalkUp");
+                    this.currentMove = true;
                 }
                 else
                 {
-                    mechController.SetTrigger("Idle");
-                    currentMove = false;
+                    this.mechController.SetTrigger("Idle");
+                    this.currentMove = false;
                 }
-                changeTime = Time.time;
+                this.changeTime = Time.time;
             }
             else
-                changeTime = Time.time;
+                this.changeTime = Time.time;
         }
     }
 }
