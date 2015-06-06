@@ -126,7 +126,11 @@
                 if (currentTime > projectile.LifeSpan)
                 {
                     this.projectiles.Remove(projectile);
-                    projectile.Dispose();
+
+                    if(projectile.IsAlive)
+                    {
+                        projectile.Dispose();
+                    }
                 }
             }
         }

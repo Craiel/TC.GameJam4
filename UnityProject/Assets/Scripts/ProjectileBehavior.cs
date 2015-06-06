@@ -7,6 +7,14 @@
     public abstract class ProjectileBehavior : MonoBehaviour
     {
         // -------------------------------------------------------------------
+        // Constructor
+        // -------------------------------------------------------------------
+        public ProjectileBehavior()
+        {
+            IsAlive = true;
+        }
+
+        // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
         public float Damage { get; set; }
@@ -18,6 +26,8 @@
         public float LifeSpan { get; set; }
 
         public GameObject Origin { get; set; }
+
+        public bool IsAlive { get; set; }
         
         public void Dispose()
         {
@@ -32,6 +42,7 @@
         {
             if (isDisposing)
             {
+                IsAlive = false;
                 Destroy(this.gameObject);
             }
         }
