@@ -10,6 +10,8 @@
 
     public class Character : ICharacter
     {
+        private static int nextId;
+
         private readonly StatDictionary baseStats;
 
         private readonly StatDictionary fullStats;
@@ -26,6 +28,8 @@
         // -------------------------------------------------------------------
         public Character()
         {
+            this.Id = nextId++;
+
             this.baseStats = new StatDictionary();
             this.fullStats = new StatDictionary();
             this.temporaryStats = new StatDictionary();
@@ -37,6 +41,7 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        public int Id { get; private set; }
         public string Name { get; set; }
 
         public InputDevice InputDevice { get; set; }

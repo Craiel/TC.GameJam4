@@ -24,6 +24,8 @@
 
         private bool nextMove;
 
+        private bool startupGearGenerated;
+
         private float changeTime;
 
         // -------------------------------------------------------------------
@@ -42,6 +44,9 @@
 
         [SerializeField]
         public bool createCharacter = false;
+
+        [SerializeField]
+        public bool generateRandomStartupGear = false;
 
         [SerializeField]
         public Animator mechController;
@@ -86,6 +91,16 @@
                 {
                     return;
                 }
+            }
+
+            if (this.generateRandomStartupGear && !this.startupGearGenerated)
+            {
+                foreach (GearType gearType in Enum.GetValues(typeof(GearType)))
+                {
+                    this.Character.SetGear(gearType, GearGeneration.GenerateRandomGear(gearType));
+                }
+                
+                this.startupGearGenerated = true;
             }
 
             this.UpdateBehaviorState();

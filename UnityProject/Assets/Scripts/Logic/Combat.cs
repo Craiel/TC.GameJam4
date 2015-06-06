@@ -1,12 +1,13 @@
 ﻿namespace Assets.Scripts.Logic
 {
-    public class DamageInfo
+    public static class Combat
     {
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public float Damage { get; set; }
-
-        public DamageType Type { get; set; }
+        public static void Resolve(CombatResolve data)
+        {
+            
+        }
     }
 }

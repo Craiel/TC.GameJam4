@@ -9,27 +9,11 @@
 
     using UnityEngine;
     
-    public static class Systems
+    public static class GearGeneration
     {
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public static void ResolveDamage(DamageResolve resolve)
-        {
-            /*DestructibleTile destructibleTile = target.GetComponent<DestructibleTile>();
-            if (destructibleTile != null)
-            {
-                destructibleTile.TakeDamage(damage);
-                return;
-            }
-
-            PlayerCharacterBehavior characterBehavior = target.GetComponent<PlayerCharacterBehavior>();
-            if (characterBehavior != null)
-            {
-                characterBehavior.Character.TakeDamage(damage);
-            }*/
-        }
-
         public static IGear GenerateRandomGear()
         {
             IList<GearType> types = Enum.GetValues(typeof(GearType)).Cast<GearType>().ToList();
@@ -83,7 +67,7 @@
                         Type weaponType = StaticSettings.LeftHandWeaponTypes[UnityEngine.Random.Range(0, StaticSettings.LeftHandWeaponTypes.Count)];
                         IWeapon weapon = (IWeapon)Activator.CreateInstance(weaponType, GetRandomWeaponStats());
                         weapon.SetWeaponGearType(GearType.LeftWeapon);
-                        weapon.WeaponType = PickRandomWeaponType();
+                        weapon.DamageType = PickRandomWeaponType();
                         return weapon;
                     }
 
@@ -93,7 +77,7 @@
                         IWeapon weapon = (IWeapon)Activator.CreateInstance(weaponType, GetRandomWeaponStats());
                         weapon.IsTargeted = true;
                         weapon.SetWeaponGearType(GearType.RightWeapon);
-                        weapon.WeaponType = PickRandomWeaponType();
+                        weapon.DamageType = PickRandomWeaponType();
                         return weapon;
                     }
             }

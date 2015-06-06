@@ -94,12 +94,12 @@ public class Arena : MonoBehaviour
 
         for (int i = 0; i < characterCount; ++i)
         {   
-            PlaceGear(Systems.GenerateRandomGear(GearType.RightWeapon));
+            PlaceGear(GearGeneration.GenerateRandomGear(GearType.RightWeapon));
         }
 
         for (int i = 0; i < totalStarterGear - characterCount; ++i)
         {
-            PlaceGear(Systems.GenerateRandomGear());
+            PlaceGear(GearGeneration.GenerateRandomGear());
         }
     }
 

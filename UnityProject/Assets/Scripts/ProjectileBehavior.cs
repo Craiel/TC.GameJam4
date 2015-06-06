@@ -12,16 +12,15 @@
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        protected ProjectileBehavior(DamageInfo damageInfo)
+        protected ProjectileBehavior()
         {
-            this.DamageInfo = damageInfo;
             this.IsAlive = true;
         }
 
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public DamageInfo DamageInfo { get; private set; }
+        public CombatInfo DamageInfo { get; set; }
 
         public Vector2 Direction { get; set; }
 
@@ -61,7 +60,13 @@
                 return;
             }
 
-            Systems.ApplyDamage(other.gameObject, this.gameObject, this.DamageInfo);
+            var data = new CombatResolve(this.DamageInfo)
+                              {
+                                  Source = this.gameObject,
+                                  Target = other.gameObject
+                              };
+            
+            Combat.Resolve(data);
             this.Dispose();
         }
     }

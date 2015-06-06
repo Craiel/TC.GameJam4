@@ -4,12 +4,12 @@
 
     using UnityEngine;
 
-    public class DamageResolve
+    public class CombatResult
     {
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public DamageResolve()
+        public CombatResult()
         {
             this.DamageDealtByType = new Dictionary<DamageType, float>();
         }
@@ -17,15 +17,16 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public GameObject Source { get; set; }
+        public Vector3 Location { get; set; }
 
-        public GameObject Target { get; set; }
-
-        public DamageInfo DamageInfo { get; set; }
+        public CombatInfo Info { get; set; }
 
         public bool WasHit { get; set; }
 
         public int HitCount { get; set; }
+
+        public int? SourcePlayerId { get; set; }
+        public int? TargetPlayerId { get; set; }
 
         public float DamageDealtTotal { get; set; }
 
