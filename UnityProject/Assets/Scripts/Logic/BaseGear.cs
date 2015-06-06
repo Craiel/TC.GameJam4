@@ -4,6 +4,8 @@
 
     using Assets.Scripts.Contracts;
 
+    using UnityEngine;
+
     public abstract class BaseGear : IGear
     {
         private readonly IDictionary<StatType, float> stats;
@@ -31,7 +33,7 @@
             return 0;
         }
 
-        public virtual void Update()
+        public virtual void Update(GameObject gameObject)
         {
         }
 

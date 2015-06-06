@@ -2,6 +2,8 @@
 {
     using Assets.Scripts.Logic;
 
+    using UnityEngine;
+
     public interface ICharacter
     {
         string Name { get; set; }
@@ -19,6 +21,6 @@
 
         void TakeDamage(float damage);
 
-        void Update();
+        void Update(GameObject gameObject);
     }
 }

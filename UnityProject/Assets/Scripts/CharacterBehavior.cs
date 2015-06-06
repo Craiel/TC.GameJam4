@@ -115,10 +115,21 @@
                 this.InitializeMovementController();
             }
 
-            this.character.Update();
+            this.character.Update(this.gameObject);
 
-            float fireLeft = Input.GetAxis("Fire1");
-            float fireRight = Input.GetAxis("Fire2");
+            float fireLeft = 0f;
+            float fireRight = 0f;
+            if (StaticSettings.EnableInControl && this.inputDevice != null)
+            {
+                fireLeft = this.inputDevice.LeftTrigger.Value;
+                fireRight = this.inputDevice.RightTrigger.Value;
+            }
+            else
+            {
+                fireLeft = Input.GetAxis("Fire1");
+                fireRight = Input.GetAxis("Fire2");
+            }
+            
 
             float currentTime = Time.time;
 
