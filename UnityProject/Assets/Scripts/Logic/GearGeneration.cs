@@ -20,6 +20,34 @@
             return GenerateRandomGear(types[UnityEngine.Random.Range(0, types.Count)]);
         }
 
+        public static IWeapon GenerateRandomWeapon(GearType type, Type weaponType, DamageType? damageType = null)
+        {
+            switch (type)
+            {
+                case GearType.LeftWeapon:
+                    {
+                        IWeapon weapon = (IWeapon)Activator.CreateInstance(weaponType, GetRandomWeaponStats());
+                        weapon.SetWeaponGearType(GearType.LeftWeapon);
+                        weapon.DamageType = damageType ?? PickRandomWeaponType();
+                        return weapon;
+                    }
+
+                case GearType.RightWeapon:
+                    {
+                        IWeapon weapon = (IWeapon)Activator.CreateInstance(weaponType, GetRandomWeaponStats());
+                        weapon.IsTargeted = true;
+                        weapon.SetWeaponGearType(GearType.RightWeapon);
+                        weapon.DamageType = damageType ?? PickRandomWeaponType();
+                        return weapon;
+                    }
+
+                default:
+                    {
+                        throw new InvalidOperationException();
+                    }
+            }
+        }
+
         public static IGear GenerateRandomGear(GearType type)
         {
             Debug.Log("Generating New " + type);
@@ -65,20 +93,13 @@
                 case GearType.LeftWeapon:
                     {
                         Type weaponType = StaticSettings.LeftHandWeaponTypes[UnityEngine.Random.Range(0, StaticSettings.LeftHandWeaponTypes.Count)];
-                        IWeapon weapon = (IWeapon)Activator.CreateInstance(weaponType, GetRandomWeaponStats());
-                        weapon.SetWeaponGearType(GearType.LeftWeapon);
-                        weapon.DamageType = PickRandomWeaponType();
-                        return weapon;
+                        return GenerateRandomWeapon(type, weaponType);
                     }
 
                 case GearType.RightWeapon:
                     {
                         Type weaponType = StaticSettings.RightHandWeaponTypes[UnityEngine.Random.Range(0, StaticSettings.RightHandWeaponTypes.Count)];
-                        IWeapon weapon = (IWeapon)Activator.CreateInstance(weaponType, GetRandomWeaponStats());
-                        weapon.IsTargeted = true;
-                        weapon.SetWeaponGearType(GearType.RightWeapon);
-                        weapon.DamageType = PickRandomWeaponType();
-                        return weapon;
+                        return GenerateRandomWeapon(type, weaponType);
                     }
             }
             return null;
