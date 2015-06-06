@@ -33,8 +33,9 @@
 
         public bool InvertAccellerationAxis { get; set; }
 
-        public void Update()
+        public bool Update()
         {
+            bool changed = false;
             float move = (Input.GetAxis("Move")) * this.Velocity * DefaultSpeedMultiplier;
             float rotate = (Input.GetAxis("Rotate") * DefaultRotationMultiplier) * this.RotationSpeed;
 
@@ -46,11 +47,14 @@
             if (Math.Abs(rotate) > float.Epsilon)
             {
                 this.target.transform.Rotate(Vector3.forward, rotate);
+                changed = true;
             }
 
             if (Math.Abs(move - float.Epsilon) > float.Epsilon) {
                 this.target.transform.Translate(StaticSettings.DefaultMoveDirection * move);
+                changed = true;
             }
+            return true;
         }
     }
 }
