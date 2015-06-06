@@ -12,7 +12,7 @@
 
     using UnityEngine;
 
-    [CustomEditor(typeof(CharacterBehavior))]
+    [CustomEditor(typeof(PlayerCharacterBehavior))]
     public class CharacterBehaviorInspector : Editor
     {
         public override void OnInspectorGUI()
@@ -23,7 +23,7 @@
                 return;
             }
 
-            CharacterBehavior characterBehavior = (CharacterBehavior)this.target;
+            PlayerCharacterBehavior characterBehavior = (PlayerCharacterBehavior)this.target;
             if (characterBehavior.Character == null)
             {
                 EditorGUILayout.LabelField("No Character yet!");
@@ -64,8 +64,9 @@
 
             if (GUILayout.Button("Generate Random"))
             {
-                CharacterBehavior characterBehavior = (CharacterBehavior)this.target;
+                PlayerCharacterBehavior characterBehavior = (PlayerCharacterBehavior)this.target;
                 characterBehavior.Character.RightWeapon = new PlainCannon();
+                characterBehavior.Character.LeftWeapon = new EnergyCannon();
                 // Todo
             }
 

@@ -12,16 +12,10 @@
     {
         private const float DefaultSpeedMultiplier = 0.02f;
 
-        private const float DefaultRotateDelay = 0.5f;
-
-        private const float RotateStep = 45.0f;
-
+        private const float DefaultRotationMultiplier = 2f;
+        
         private readonly GameObject target;
-
-        private int activeVector;
-
-        private float lastRotateTime;
-
+        
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
@@ -51,11 +45,9 @@
             {
                 return false;
             }
-
-            float currentTime = Time.time;
             
             bool changed = this.HandleMove();
-            changed = changed || this.HandleRotation(currentTime);
+            changed = this.HandleRotation() || changed;
 
             return changed;
         }
@@ -79,16 +71,18 @@
             {
                 direction = this.InvertAccellerationAxis ? down : -down;
             } 
-            else if (Math.Abs(up) < float.Epsilon)
+            else if (Math.Abs(up) > float.Epsilon)
             {
-                direction = this.InvertAccellerationAxis ? up : -up;
+                direction = -(this.InvertAccellerationAxis ? up : -up);
             }
+
+            direction *= DefaultSpeedMultiplier;
 
             this.target.transform.Translate(StaticSettings.DefaultMoveDirection * direction);
             return true;
         }
 
-        private bool HandleRotation(float currentTime)
+        private bool HandleRotation()
         {
             float left = this.InputDevice.DPad.Left.Value;
             float right = this.InputDevice.DPad.Right.Value;
@@ -99,39 +93,19 @@
                 return false;
             }
 
-            // Recalculate the rotation delay
-            var rotationDelay = DefaultRotateDelay * this.RotationSpeed;
-            rotationDelay = Mathf.Clamp(rotationDelay, StaticSettings.MinRotationDelay, StaticSettings.MaxRotationDelay);
-
-            // Check if enough time has passed to rotate
-            if (currentTime < this.lastRotateTime + rotationDelay)
+            float rotate = 0f;
+            if (Math.Abs(left) > float.Epsilon)
             {
-                return false;
+                rotate = this.InvertAccellerationAxis ? -left : left;
+            }
+            else if (Math.Abs(right) > float.Epsilon)
+            {
+                rotate = -(this.InvertAccellerationAxis ? -right : right);
             }
 
-            // Check which direction we are rotating
-            if (left > 0)
-            {
-                this.activeVector += this.InvertRotationAxis ? 1 : -1;
-            }
-            else if (right > 0)
-            {
-                this.activeVector += this.InvertRotationAxis ? -1 : 1;
-            }
+            rotate *= DefaultRotationMultiplier;
 
-            // Make the vector loop over
-            if (this.activeVector > 8)
-            {
-                this.activeVector = 0;
-            } else if (this.activeVector < 0)
-            {
-                this.activeVector = 8;
-            }
-
-            // Reset the rotation and re-apply
-            this.target.transform.rotation = Quaternion.identity;
-            this.target.transform.Rotate(Vector3.forward, RotateStep * this.activeVector);
-            this.lastRotateTime = currentTime;
+            this.target.transform.Rotate(Vector3.forward, rotate);
             return true;
         }
     }

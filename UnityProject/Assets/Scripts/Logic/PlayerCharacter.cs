@@ -5,6 +5,10 @@
 
     using Assets.Scripts.Contracts;
 
+    using InControl;
+
+    using UnityEngine;
+
     public class PlayerCharacter : ICharacter
     {
         private readonly IDictionary<StatType, float> baseStats;
@@ -41,6 +45,8 @@
         // Public
         // -------------------------------------------------------------------
         public string Name { get; set; }
+
+        public InputDevice InputDevice { get; set; }
 
         public IArmor Head
         {
@@ -144,31 +150,31 @@
             //TODO: Apply damage to mech (shields, armor, hull, parts damage, etc.)
         }
 
-        public void Update()
+        public void Update(GameObject gameObject)
         {
             if (this.head != null)
             {
-                this.head.Update();
+                this.head.Update(gameObject);
             }
 
             if (this.chest != null)
             {
-                this.chest.Update();
+                this.chest.Update(gameObject);
             }
 
             if (this.legs != null)
             {
-                this.legs.Update();
+                this.legs.Update(gameObject);
             }
 
             if (this.leftWeapon != null)
             {
-                this.leftWeapon.Update();
+                this.leftWeapon.Update(gameObject);
             }
 
             if (this.rightWeapon != null)
             {
-                this.rightWeapon.Update();
+                this.rightWeapon.Update(gameObject);
             }
         }
 

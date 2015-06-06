@@ -7,19 +7,15 @@
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Controls;
     using Assets.Scripts.Logic;
-
-    using InControl;
-
+    
     using JetBrains.Annotations;
 
     using UnityEngine;
 
-    public class CharacterBehavior : MonoBehaviour
+    public class PlayerCharacterBehavior : MonoBehaviour
     {
         private readonly IList<ProjectileBehavior> projectiles;
- 
-        private ICharacter character;
-
+        
         private IMovementController movementController;
 
         private GameObject projectileParent;
@@ -30,12 +26,10 @@
 
         private float changeTime;
 
-        private InputDevice inputDevice;
-
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public CharacterBehavior()
+        public PlayerCharacterBehavior()
         {
             this.projectiles = new List<ProjectileBehavior>();
         }
@@ -44,50 +38,19 @@
         // Public
         // -------------------------------------------------------------------
         [SerializeField]
-        public string characterName = "player";
-
-        [SerializeField]
         public bool useFixedAxisController = true;
 
         [SerializeField]
         public Animator mechController;
+
+        // Mostly needed for inspection
+        public ICharacter Character { get; set; }
         
-        public InputDevice InputDevice
-        {
-            get
-            {
-                return this.inputDevice;
-            }
-
-            set
-            {
-                if (this.inputDevice != value)
-                {
-                    // Cascade the input device into the controller
-                    this.inputDevice = value;
-                    this.movementController.InputDevice = value;
-                }
-            }
-        }
-
-        public ICharacter Character
-        {
-            get
-            {
-                return this.character;
-            }
-        }
-
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
-        [UsedImplicitly]
-        private void Start()
+        private void InitializeMovementController()
         {
-            this.character = new PlayerCharacter { Name = this.characterName };
-            this.projectileParent = new GameObject(this.character.Name + "_Bullets");
-
-            // Create the movement controller
             if (StaticSettings.EnableInControl)
             {
                 this.movementController = new InControlPlayerController(this.gameObject);
@@ -103,30 +66,53 @@
                     this.movementController = new FreeFormPlayerController(this.gameObject);
                 }
             }
+
+            this.movementController.InputDevice = this.Character.InputDevice;
         }
 
         [UsedImplicitly]
         private void Update()
         {
-            this.character.Update();
+            if (this.movementController == null)
+            {
+                this.InitializeMovementController();
+            }
 
-            float fireLeft = Input.GetAxis("Fire1");
-            float fireRight = Input.GetAxis("Fire2");
+            if (this.projectileParent == null)
+            {
+                this.projectileParent = new GameObject(this.Character.Name + "_Bullets");
+            }
+
+            this.Character.Update(this.gameObject);
+
+            float fireLeft;
+            float fireRight;
+            if (StaticSettings.EnableInControl && this.Character.InputDevice != null)
+            {
+                fireLeft = this.Character.InputDevice.LeftTrigger.Value;
+                fireRight = this.Character.InputDevice.RightTrigger.Value;
+            }
+            else
+            {
+                fireLeft = Input.GetAxis("Fire1");
+                fireRight = Input.GetAxis("Fire2");
+            }
+            
 
             float currentTime = Time.time;
 
             if (Math.Abs(fireLeft) > float.Epsilon)
             {
-                this.FireWeapon(this.character.LeftWeapon);
+                this.FireWeapon(this.Character.LeftWeapon);
             }
 
             if (Math.Abs(fireRight) > float.Epsilon)
             {
-                this.FireWeapon(this.character.RightWeapon);
+                this.FireWeapon(this.Character.RightWeapon);
             }
 
-            this.movementController.Velocity = this.character.GetStat(StatType.Velocity);
-            this.movementController.RotationSpeed = this.character.GetStat(StatType.RotationSpeed);
+            this.movementController.Velocity = this.Character.GetStat(StatType.Velocity);
+            this.movementController.RotationSpeed = this.Character.GetStat(StatType.RotationSpeed);
 
             bool didUpdate = this.movementController.Update();
             this.UpdateMoveAnimation(didUpdate);
@@ -141,7 +127,7 @@
                 return;
             }
 
-            IList<ProjectileBehavior> newProjectiles = weapon.Fire(this.gameObject, this.character);
+            IList<ProjectileBehavior> newProjectiles = weapon.Fire(this.gameObject, this.Character);
             if (newProjectiles == null)
             {
                 return;
@@ -174,10 +160,7 @@
         private void UpdateMoveAnimation(bool didUpdate)
         {
             //If there is movement our next move is true
-            if (didUpdate)
-                this.nextMove = true;
-            else
-                this.nextMove = false;
+            this.nextMove = didUpdate;
 
             if (this.nextMove != this.currentMove && this.changeTime + 1 >= Time.time)
             {
@@ -194,7 +177,9 @@
                 this.changeTime = Time.time;
             }
             else
+            {
                 this.changeTime = Time.time;
+            }
         }
     }
 }

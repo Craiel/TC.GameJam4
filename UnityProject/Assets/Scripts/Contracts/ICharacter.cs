@@ -2,6 +2,10 @@
 {
     using Assets.Scripts.Logic;
 
+    using InControl;
+
+    using UnityEngine;
+
     public interface ICharacter
     {
         string Name { get; set; }
@@ -15,10 +19,12 @@
 
         ICharacter Target { get; set; }
 
+        InputDevice InputDevice { get; set; }
+
         float GetStat(StatType type);
 
         void TakeDamage(float damage);
 
-        void Update();
+        void Update(GameObject gameObject);
     }
 }
