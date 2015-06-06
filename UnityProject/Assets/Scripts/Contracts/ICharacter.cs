@@ -18,5 +18,7 @@
         float GetStat(StatType type);
 
         void TakeDamage(float damage);
+
+        void Update();
     }
 }

@@ -63,7 +63,8 @@
                 this.target.transform.Translate(StaticSettings.DefaultMoveDirection * move);
                 changed = true;
             }
-            return true;
+
+            return changed;
         }
     }
 }

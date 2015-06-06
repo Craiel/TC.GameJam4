@@ -8,7 +8,7 @@
 
     using UnityEngine;
 
-    public class FixedAxisPlayerController : IMovementController
+    public class InControlPlayerController : IMovementController
     {
         private const float DefaultSpeedMultiplier = 0.02f;
 
@@ -21,11 +21,11 @@
         private int activeVector;
 
         private float lastRotateTime;
-        
+
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public FixedAxisPlayerController(GameObject target)
+        public InControlPlayerController(GameObject target)
         {
             System.Diagnostics.Trace.Assert(target != null);
 
@@ -47,44 +47,58 @@
 
         public bool Update()
         {
-            if (StaticSettings.EnableInControl && this.InputDevice == null)
+            if (this.InputDevice == null)
             {
                 return false;
             }
 
-            bool changed = false; 
-            float move = (Input.GetAxis("Move")) * this.Velocity * DefaultSpeedMultiplier;
-            float rotate = Input.GetAxis("Rotate");
             float currentTime = Time.time;
-
-            if (!this.InvertRotationAxis)
-            {
-                rotate *= -1;
-            }
-
-            if (this.InvertAccellerationAxis)
-            {
-                move *= -1;
-            }
-
-            if (Math.Abs(rotate) > float.Epsilon)
-            {
-                this.HandleRotation(currentTime, rotate);
-                changed = true;
-            }
             
-            if (Math.Abs(move - float.Epsilon) > float.Epsilon) {
-                this.target.transform.Translate(StaticSettings.DefaultMoveDirection * move);
-                changed = true;
-            }
+            bool changed = this.HandleMove();
+            changed = changed || this.HandleRotation(currentTime);
+
             return changed;
         }
 
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
-        private void HandleRotation(float currentTime, float rotationValue)
+        private bool HandleMove()
         {
+            float down = this.InputDevice.DPad.Down.Value;
+            float up = this.InputDevice.DPad.Up.Value;
+
+            if (Math.Abs(down) < float.Epsilon
+                && Math.Abs(up) < float.Epsilon)
+            {
+                return false;
+            }
+
+            float direction = 0f;
+            if (Math.Abs(down) > float.Epsilon)
+            {
+                direction = this.InvertAccellerationAxis ? down : -down;
+            } 
+            else if (Math.Abs(up) < float.Epsilon)
+            {
+                direction = this.InvertAccellerationAxis ? up : -up;
+            }
+
+            this.target.transform.Translate(StaticSettings.DefaultMoveDirection * direction);
+            return true;
+        }
+
+        private bool HandleRotation(float currentTime)
+        {
+            float left = this.InputDevice.DPad.Left.Value;
+            float right = this.InputDevice.DPad.Right.Value;
+
+            if (Math.Abs(left) < float.Epsilon
+                && Math.Abs(right) < float.Epsilon)
+            {
+                return false;
+            }
+
             // Recalculate the rotation delay
             var rotationDelay = DefaultRotateDelay * this.RotationSpeed;
             rotationDelay = Mathf.Clamp(rotationDelay, StaticSettings.MinRotationDelay, StaticSettings.MaxRotationDelay);
@@ -92,17 +106,17 @@
             // Check if enough time has passed to rotate
             if (currentTime < this.lastRotateTime + rotationDelay)
             {
-                return;
+                return false;
             }
 
             // Check which direction we are rotating
-            if (rotationValue > 0)
+            if (left > 0)
             {
-                this.activeVector++;
+                this.activeVector += this.InvertRotationAxis ? 1 : -1;
             }
-            else if (rotationValue < 0)
+            else if (right > 0)
             {
-                this.activeVector--;
+                this.activeVector += this.InvertRotationAxis ? -1 : 1;
             }
 
             // Make the vector loop over
@@ -118,6 +132,7 @@
             this.target.transform.rotation = Quaternion.identity;
             this.target.transform.Rotate(Vector3.forward, RotateStep * this.activeVector);
             this.lastRotateTime = currentTime;
+            return true;
         }
     }
 }
