@@ -12,31 +12,27 @@ public class Arena : MonoBehaviour
 
     public void Start()
     {
-        InitFromTexture(Resources.Load("Maps/TestMap1") as Texture2D);
+        InitFromTexture(Resources.Load("Maps/TestMap3") as Texture2D);
     }
     
     public void InitFromTexture(Texture2D texture)
     {
-        Vector2 cellDimensions = GetComponent<GridLayoutGroup>().cellSize;
+        Vector2 cellDimensions = new Vector2(35, 35);
+        Vector2 mapDimensions = new Vector2(texture.width, texture.height);
 
-        RectTransform rectTransform = GetComponent<RectTransform>();
-        rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, cellDimensions.x * texture.width);
-        rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, cellDimensions.y * texture.height);
-
-        foreach(Color color in texture.GetPixels())
+        int currentIndex = 0;
+        Color[] colors = texture.GetPixels();
+        for (int i = 0; i < mapDimensions.x; i++)
         {
-            int tileIndex = tileColorKeys.IndexOf(color);
-            GameObject tile = Instantiate(tiles[tileIndex]) as GameObject;
-
-            RectTransform tileRectTransform = tile.GetComponent<RectTransform>();
-            tileRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, cellDimensions.x);
-            tileRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, cellDimensions.y);
-            tile.transform.SetParent(this.transform);
-
-            BoxCollider2D boxCollider = tile.GetComponent<BoxCollider2D>();
-            if(boxCollider != null)
+            for(int j = 0; j < mapDimensions.y; j++)
             {
-                boxCollider.size = cellDimensions;
+                int tileIndex = tileColorKeys.IndexOf(colors[currentIndex]);
+                GameObject tile = Instantiate(tiles[tileIndex]) as GameObject;
+
+                tile.transform.SetParent(this.transform);
+                tile.transform.localPosition = new Vector3(-5.25f + j * 0.35f, 5.25f - i * 0.35f, 0f);
+
+                currentIndex++;
             }
         }
     }

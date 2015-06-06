@@ -20,6 +20,8 @@
 
         private float lastRotateTime;
 
+        private float _zAxis = 0f;
+
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
@@ -41,8 +43,9 @@
 
         public bool InvertAccellerationAxis { get; set; }
 
-        public void Update()
+        public bool Update()
         {
+            bool changed = false; 
             float move = (Input.GetAxis("Move")) * this.Velocity * DefaultSpeedMultiplier;
             float rotate = Input.GetAxis("Rotate");
             float currentTime = Time.time;
@@ -60,11 +63,14 @@
             if (Math.Abs(rotate) > float.Epsilon)
             {
                 this.HandleRotation(currentTime, rotate);
+                changed = true;
             }
             
             if (Math.Abs(move - float.Epsilon) > float.Epsilon) {
                 this.target.transform.Translate(StaticSettings.DefaultMoveDirection * move);
+                changed = true;
             }
+            return changed;
         }
 
         // -------------------------------------------------------------------

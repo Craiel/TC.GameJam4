@@ -22,6 +22,12 @@
 
         private GameObject projectileParent;
 
+        private bool currentMove;
+
+        private bool nextMove;
+
+        private float changeTime;
+
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
@@ -38,6 +44,9 @@
 
         [SerializeField]
         public bool useFixedAxisController = true;
+
+        [SerializeField]
+        public Animator mechController;
 
         public ICharacter Character
         {
@@ -87,7 +96,9 @@
 
             this.movementController.Velocity = this.character.GetStat(StatType.Velocity);
             this.movementController.RotationSpeed = this.character.GetStat(StatType.RotationSpeed);
-            this.movementController.Update();
+
+            bool didUpdate = this.movementController.Update();
+            this.UpdateMoveAnimation(didUpdate);
 
             this.UpdateProjectileLifespan(currentTime);
         }
@@ -118,6 +129,32 @@
                     this.projectiles.Remove(projectile);
                 }
             }
+        }
+
+        private void UpdateMoveAnimation(bool didUpdate)
+        {
+            //If there is movement our next move is true
+            if (didUpdate)
+                nextMove = true;
+            else
+                nextMove = false;
+
+            if (nextMove != currentMove && changeTime + 1 >= Time.time)
+            {
+                if (nextMove)
+                {
+                    mechController.SetTrigger("WalkUp");
+                    currentMove = true;
+                }
+                else
+                {
+                    mechController.SetTrigger("Idle");
+                    currentMove = false;
+                }
+                changeTime = Time.time;
+            }
+            else
+                changeTime = Time.time;
         }
     }
 }

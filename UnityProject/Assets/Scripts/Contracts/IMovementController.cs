@@ -10,6 +10,6 @@
 
         bool InvertAccellerationAxis { get; set; }
 
-        void Update();
+        bool Update();
     }
 }

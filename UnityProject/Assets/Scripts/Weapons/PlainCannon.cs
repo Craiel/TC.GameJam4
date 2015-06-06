@@ -19,7 +19,8 @@
             this.projectilePrefab = Resources.Load("Projectiles/Bullet");
 
             this.SetStat(StatType.Velocity, 0.1f);
-            this.SetStat(StatType.ProjectileLifeSpan, 2f);
+            this.SetStat(StatType.ProjectileLifeSpan, 1f);
+            this.SetStat(StatType.Interval, 0.1f);
         }
 
         // -------------------------------------------------------------------
