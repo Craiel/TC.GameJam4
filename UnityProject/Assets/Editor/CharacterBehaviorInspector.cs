@@ -86,7 +86,7 @@
             EditorGUILayout.BeginVertical();
             foreach (StatType type in Enum.GetValues(typeof(StatType)))
             {
-                float value = actor.GetStat(type);
+                float value = actor.GetCurrentStat(type);
                 if (Math.Abs(value) > float.Epsilon)
                 {
                     EditorGUILayout.TextField(type.ToString(), value.ToString(CultureInfo.InvariantCulture));

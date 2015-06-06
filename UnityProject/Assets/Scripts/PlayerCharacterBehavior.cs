@@ -137,8 +137,8 @@
                 this.FireWeapon(this.Character.GetGear(GearType.RightWeapon) as IWeapon);
             }
 
-            this.movementController.Velocity = this.Character.GetStat(StatType.Velocity);
-            this.movementController.RotationSpeed = this.Character.GetStat(StatType.RotationSpeed);
+            this.movementController.Velocity = this.Character.GetCurrentStat(StatType.Velocity);
+            this.movementController.RotationSpeed = this.Character.GetCurrentStat(StatType.RotationSpeed);
 
             bool didUpdate = this.movementController.Update();
             this.UpdateMoveAnimation(didUpdate);
