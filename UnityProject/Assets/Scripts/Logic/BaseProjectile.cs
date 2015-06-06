@@ -1,5 +1,7 @@
 ﻿namespace Assets.Scripts.Logic
 {
+    using Assets.Scripts.Contracts;
+
     using UnityEngine;
 
     public abstract class BaseProjectile : IProjectile

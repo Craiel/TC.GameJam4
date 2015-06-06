@@ -2,64 +2,59 @@
 {
     using System;
 
-    using JetBrains.Annotations;
-
+    using Assets.Scripts.Contracts;
+    
     using UnityEngine;
 
-    public class FixedAxisPlayerController : MonoBehaviour
+    public class FixedAxisPlayerController : IMovementController
     {
         private const float DefaultSpeedMultiplier = 0.02f;
 
-        private const float MinRotationDelay = 0.2f;
-
-        private const float MaxRotationDelay = 2f;
-
         private const float DefaultRotateDelay = 0.5f;
+
         private const float RotateStep = 45.0f;
+
+        private readonly GameObject target;
 
         private int activeVector;
 
         private float lastRotateTime;
 
-        private Vector3 moveDirection;
+        // -------------------------------------------------------------------
+        // Constructor
+        // -------------------------------------------------------------------
+        public FixedAxisPlayerController(GameObject target)
+        {
+            System.Diagnostics.Trace.Assert(target != null);
 
+            this.target = target;
+        }
+        
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        [SerializeField]
-        public float velocity = 1.0f;
+        public float Velocity { get; set; }
 
-        [SerializeField]
-        public float rotationSpeed = 1.0f;
+        public float RotationSpeed { get; set; }
 
-        [SerializeField]
-        public bool invertRotationAxis = true;
-        
-        // -------------------------------------------------------------------
-        // Private
-        // -------------------------------------------------------------------
-        private CharacterController characterController;
+        public bool InvertRotationAxis { get; set; }
 
-        [UsedImplicitly]
-        private void Start()
+        public bool InvertAccellerationAxis { get; set; }
+
+        public void Update()
         {
-            this.characterController = this.GetComponent<CharacterController>();
-
-            System.Diagnostics.Trace.Assert(this.characterController != null);
-
-            this.moveDirection = new Vector3(0, 1, 0);
-        }
-
-        [UsedImplicitly]
-        private void Update()
-        {
-            float move = (Input.GetAxis("Move")) * this.velocity * DefaultSpeedMultiplier;
+            float move = (Input.GetAxis("Move")) * this.Velocity * DefaultSpeedMultiplier;
             float rotate = Input.GetAxis("Rotate");
             float currentTime = Time.time;
 
-            if (this.invertRotationAxis)
+            if (!this.InvertRotationAxis)
             {
                 rotate *= -1;
+            }
+
+            if (this.InvertAccellerationAxis)
+            {
+                move *= -1;
             }
 
             if (Math.Abs(rotate) > float.Epsilon)
@@ -68,15 +63,18 @@
             }
             
             if (Math.Abs(move - float.Epsilon) > float.Epsilon) {
-                this.transform.Translate(this.moveDirection * move);
+                this.target.transform.Translate(StaticSettings.DefaultMoveDirection * move);
             }
         }
 
+        // -------------------------------------------------------------------
+        // Private
+        // -------------------------------------------------------------------
         private void HandleRotation(float currentTime, float rotationValue)
         {
             // Recalculate the rotation delay
-            var rotationDelay = DefaultRotateDelay * this.rotationSpeed;
-            rotationDelay = Mathf.Clamp(rotationDelay, MinRotationDelay, MaxRotationDelay);
+            var rotationDelay = DefaultRotateDelay * this.RotationSpeed;
+            rotationDelay = Mathf.Clamp(rotationDelay, StaticSettings.MinRotationDelay, StaticSettings.MaxRotationDelay);
 
             // Check if enough time has passed to rotate
             if (currentTime < this.lastRotateTime + rotationDelay)
@@ -104,8 +102,8 @@
             }
 
             // Reset the rotation and re-apply
-            this.transform.rotation = Quaternion.identity;
-            this.transform.Rotate(Vector3.forward, RotateStep * this.activeVector);
+            this.target.transform.rotation = Quaternion.identity;
+            this.target.transform.Rotate(Vector3.forward, RotateStep * this.activeVector);
             this.lastRotateTime = currentTime;
         }
     }

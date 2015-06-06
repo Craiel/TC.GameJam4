@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
 
+    using Assets.Scripts.Contracts;
     using Assets.Scripts.Logic;
 
     public class PlainCannon : BaseWeapon

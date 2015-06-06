@@ -2,63 +2,54 @@
 {
     using System;
 
-    using JetBrains.Annotations;
+    using Assets.Scripts.Contracts;
 
     using UnityEngine;
 
-    public class FreeFormPlayerController : MonoBehaviour
+    public class FreeFormPlayerController : IMovementController
     {
         private const float DefaultSpeedMultiplier = 0.02f;
 
         private const float DefaultRotationMultiplier = 2f;
+        
+        private readonly GameObject target;
 
-        private Vector3 moveDirection;
+        // -------------------------------------------------------------------
+        // Constructor
+        // -------------------------------------------------------------------
+        public FreeFormPlayerController(GameObject target)
+        {
+            this.target = target;
+        }
 
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        [SerializeField]
-        public float velocity = 1.0f;
+        public float Velocity { get; set; }
 
-        [SerializeField]
-        public float rotationSpeed = 1.0f;
+        public float RotationSpeed { get; set; }
 
-        [SerializeField]
-        public bool invertRotationAxis = true;
-        
-        // -------------------------------------------------------------------
-        // Private
-        // -------------------------------------------------------------------
-        private CharacterController characterController;
+        public bool InvertRotationAxis { get; set; }
 
-        [UsedImplicitly]
-        private void Start()
+        public bool InvertAccellerationAxis { get; set; }
+
+        public void Update()
         {
-            this.characterController = this.GetComponent<CharacterController>();
+            float move = (Input.GetAxis("Move")) * this.Velocity * DefaultSpeedMultiplier;
+            float rotate = (Input.GetAxis("Rotate") * DefaultRotationMultiplier) * this.RotationSpeed;
 
-            System.Diagnostics.Trace.Assert(this.characterController != null);
-
-            this.moveDirection = new Vector3(0, 1, 0);
-        }
-
-        [UsedImplicitly]
-        private void Update()
-        {
-            float move = (Input.GetAxis("Move")) * this.velocity * DefaultSpeedMultiplier;
-            float rotate = (Input.GetAxis("Rotate") * DefaultRotationMultiplier) * this.rotationSpeed;
-
-            if (this.invertRotationAxis)
+            if (!this.InvertRotationAxis)
             {
                 rotate *= -1;
             }
 
             if (Math.Abs(rotate) > float.Epsilon)
             {
-                this.transform.Rotate(Vector3.forward, rotate);
+                this.target.transform.Rotate(Vector3.forward, rotate);
             }
 
             if (Math.Abs(move - float.Epsilon) > float.Epsilon) {
-                this.transform.Translate(this.moveDirection * move);
+                this.target.transform.Translate(StaticSettings.DefaultMoveDirection * move);
             }
         }
     }

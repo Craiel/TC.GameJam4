@@ -1,20 +1,16 @@
-﻿namespace Assets.Scripts.Logic
+﻿namespace Assets.Scripts.Contracts
 {
     using System.Collections.Generic;
-
-    public interface IWeapon
+    
+    public interface IWeapon : IGear
     {
         long ShotsFired { get; }
 
         float LastShotFired { get; }
-
-        float Interval { get; }
-
+        
         float ProjectilesPerShot { get; }
 
         long ProjectileLimit { get; }
-
-        float ProjectileLifetime { get; }
 
         bool CanFire();
 
