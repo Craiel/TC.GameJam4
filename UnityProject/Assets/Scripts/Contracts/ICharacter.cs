@@ -16,5 +16,7 @@
         ICharacter Target { get; set; }
 
         float GetStat(StatType type);
+
+        void TakeDamage(float damage);
     }
 }

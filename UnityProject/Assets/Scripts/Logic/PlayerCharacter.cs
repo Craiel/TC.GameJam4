@@ -4,6 +4,7 @@
     using System.Collections.Generic;
 
     using Assets.Scripts.Contracts;
+    using UnityEngine;
 
     public class PlayerCharacter : ICharacter
     {
@@ -137,6 +138,11 @@
             }
 
             return 0;
+        }
+
+        public void TakeDamage(float damage)
+        {   
+            //TODO: Apply damage to mech (shields, armor, hull, parts damage, etc.)
         }
 
         // -------------------------------------------------------------------
