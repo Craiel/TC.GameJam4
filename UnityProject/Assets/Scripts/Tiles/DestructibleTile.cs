@@ -12,6 +12,8 @@ public class DestructibleTile : MonoBehaviour
 
     private float currentHitPoints;
 
+    public bool IsDestroyed { get; private set; }
+
     private void Awake()
     {
         currentHitPoints = hitPoints;
@@ -30,5 +32,6 @@ public class DestructibleTile : MonoBehaviour
     {
         GetComponent<SpriteRenderer>().sprite = destroyedSprite;
         GetComponent<BoxCollider2D>().enabled = false;
+        IsDestroyed = true;
     }
 }

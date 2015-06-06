@@ -8,6 +8,7 @@
 
     public static class StaticSettings
     {
+        public const int MaxPlayerCount = 4;
         public const float MinRotationDelay = 0.2f;
 
         public const float MaxRotationDelay = 2f;
@@ -98,5 +99,7 @@
         public const int ChestRollOptionalPicks = 3;
 
         public const int LegsRollOptionalPicks = 3;
+
+        public static int NumGearDropsPerCharacterAtStart = 2;
     }
 }

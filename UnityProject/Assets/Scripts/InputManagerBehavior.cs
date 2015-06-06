@@ -7,19 +7,21 @@
     using JetBrains.Annotations;
 
     using UnityEngine;
+    using Assets.Scripts.Contracts;
+    using Assets.Scripts.Logic;
 
     public class InputManagerBehavior : MonoBehaviour
     {
-        private readonly IDictionary<PlayerBehavior, InputDevice> charactersToInputDevices;
-        private readonly IDictionary<InputDevice, PlayerBehavior> inputDevicesToCharacters;
+        private readonly IDictionary<ICharacter, InputDevice> charactersToInputDevices;
+        private readonly IDictionary<InputDevice, ICharacter> inputDevicesToCharacters;
 
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
         public InputManagerBehavior()
         {
-            this.charactersToInputDevices = new Dictionary<PlayerBehavior, InputDevice>();
-            this.inputDevicesToCharacters = new Dictionary<InputDevice, PlayerBehavior>();
+            this.charactersToInputDevices = new Dictionary<ICharacter, InputDevice>();
+            this.inputDevicesToCharacters = new Dictionary<InputDevice, ICharacter>();
         }
 
         // -------------------------------------------------------------------
@@ -29,16 +31,12 @@
         public bool enableInControl;
 
         [SerializeField]
-        public GameObject player1;
+        private GameplayManager gameplayManager;
 
-        [SerializeField]
-        public GameObject player2;
-
-        [SerializeField]
-        public GameObject player3;
-
-        [SerializeField]
-        public GameObject player4;
+        public IList<ICharacter> GetCharacters()
+        {
+            return new List<ICharacter>(charactersToInputDevices.Keys);
+        }
 
         // -------------------------------------------------------------------
         // Private
@@ -48,10 +46,11 @@
         {
             InputManager.OnDeviceDetached += this.OnDeviceDetached;
 
-            this.RegisterPlayer(this.player1);
-            this.RegisterPlayer(this.player2);
-            this.RegisterPlayer(this.player3);
-            this.RegisterPlayer(this.player4);
+            for (int i = 0; i < StaticSettings.MaxPlayerCount; ++i )
+            {   
+                var newPlayer = new PlayerCharacter();
+                this.charactersToInputDevices.Add(newPlayer, null);
+            }
 
             // Override the static InControl setting
             StaticSettings.EnableInControl = this.enableInControl;
@@ -60,18 +59,14 @@
         [UsedImplicitly]
         private void Update()
         {
-            // Todo: for testing only
-            if(InputManager.ActiveDevice.Command.Value > 0)
+            if(InputManager.Devices == null)
             {
-                foreach (PlayerBehavior behavior in this.charactersToInputDevices.Keys)
-                {
-                    if (behavior.Character.InputDevice != null)
-                    {
-                        behavior.TempTransitionToGameMode();
-                    }
-                }
-                this.charactersToInputDevices.Clear();
-                this.inputDevicesToCharacters.Clear();
+                return;
+            }
+            
+            if(!gameplayManager.IsPlaying && InputManager.ActiveDevice.Command.Value > 0)
+            {
+                gameplayManager.SetupMatch(GetCharacters());
                 return;
             }
 
@@ -85,47 +80,40 @@
 
                 if (device.GetControl(InputControlType.Action1))
                 {
-                    foreach (PlayerBehavior behavior in this.charactersToInputDevices.Keys)
+                    ICharacter target = this.GetPlayerForNewController();
+                    if (target != null)
                     {
-                        if (this.charactersToInputDevices[behavior] == null)
-                        {
-                            this.charactersToInputDevices[behavior] = device;
-                            this.inputDevicesToCharacters.Add(device, behavior);
-                            behavior.Character.InputDevice = device;
-                            Debug.Log("Assigned Controller " + device.Name + " to player " + behavior.Character.Name);
-                            break;
-                        }
+                        this.charactersToInputDevices[target] = device;
+                        this.inputDevicesToCharacters.Add(device, target);
+                        target.InputDevice = device;
+                        Debug.Log("Assigned Controller " + device.Name + " to player " + target.Name);
                     }
                 }
             }
+        }
+
+        private ICharacter GetPlayerForNewController()
+        {
+            foreach (ICharacter character in this.charactersToInputDevices.Keys)
+            {
+                if (character.InputDevice == null)
+                {
+                    return character;
+                }
+            }
+
+            return null;
         }
 
         private void OnDeviceDetached(InputDevice device)
         {
             if (this.inputDevicesToCharacters.ContainsKey(device))
             {
-                PlayerBehavior assignedCharacter = this.inputDevicesToCharacters[device];
-                assignedCharacter.Character.InputDevice = null;
+                ICharacter assignedCharacter = this.inputDevicesToCharacters[device];
+                assignedCharacter.InputDevice = null;
                 this.charactersToInputDevices[assignedCharacter] = null;
                 this.inputDevicesToCharacters.Remove(device);
             }
-        }
-
-        private void RegisterPlayer(GameObject player)
-        {
-            if (player == null)
-            {
-                return;
-            }
-
-            var behavior = player.GetComponent<PlayerBehavior>();
-            if (behavior == null)
-            {
-                Debug.LogWarning("Player has no Player behavior set!");
-                return;
-            }
-
-            this.charactersToInputDevices.Add(behavior, null);
         }
     }
 }

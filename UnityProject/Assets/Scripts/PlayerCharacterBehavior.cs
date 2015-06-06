@@ -176,7 +176,7 @@
             //If there is movement our next move is true
             this.nextMove = didUpdate;
 
-            if (this.nextMove != this.currentMove && this.changeTime + 1 >= Time.time)
+            if (this.nextMove != this.currentMove && Time.time > this.changeTime + 0.25f)
             {
                 if (this.nextMove)
                 {
@@ -184,14 +184,10 @@
                     this.currentMove = true;
                 }
                 else
-                {
+                {   
                     this.mechController.SetTrigger("Idle");
                     this.currentMove = false;
                 }
-                this.changeTime = Time.time;
-            }
-            else
-            {
                 this.changeTime = Time.time;
             }
         }
