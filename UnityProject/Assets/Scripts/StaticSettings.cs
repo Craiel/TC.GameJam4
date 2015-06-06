@@ -91,7 +91,8 @@
                                                                { StatType.RotationSpeed, 1f },
                                                                { StatType.Velocity, 1f },
                                                                { StatType.HeatCoolingRate, 5f },
-                                                               { StatType.Health, 100f }
+                                                               { StatType.Health, 100f },
+                                                               { StatType.HeatGeneration, -9f }
                                                            };
 
         public const int HeadRollOptionalPicks = 3;

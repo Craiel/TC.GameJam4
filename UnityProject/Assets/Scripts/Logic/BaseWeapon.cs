@@ -13,6 +13,9 @@
         // -------------------------------------------------------------------
         protected BaseWeapon()
         {
+            // Make it all left by default and sort it out later
+            this.Type = GearType.LeftWeapon;
+ 
             this.InternalStats.Merge(StaticSettings.WeaponBaseStats);
         }
 

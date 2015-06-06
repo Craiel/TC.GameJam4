@@ -60,7 +60,7 @@
             foreach (StatType statType in Enum.GetValues(typeof(StatType)))
             {
                 float value = gear.GetInternalStat(statType);
-                if (value > 0)
+                if (Math.Abs(value) > float.Epsilon)
                 {
                     EditorGUILayout.TextField(statType.ToString(), value.ToString(CultureInfo.InvariantCulture));
                 }
@@ -72,7 +72,7 @@
             foreach (StatType statType in Enum.GetValues(typeof(StatType)))
             {
                 float value = gear.GetInheritedStat(statType);
-                if (value > 0)
+                if (Math.Abs(value) > float.Epsilon)
                 {
                     EditorGUILayout.TextField(statType.ToString(), value.ToString(CultureInfo.InvariantCulture));
                 }
@@ -87,7 +87,7 @@
             foreach (StatType type in Enum.GetValues(typeof(StatType)))
             {
                 float value = actor.GetStat(type);
-                if (value > 0)
+                if (Math.Abs(value) > float.Epsilon)
                 {
                     EditorGUILayout.TextField(type.ToString(), value.ToString(CultureInfo.InvariantCulture));
                 }

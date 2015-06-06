@@ -6,6 +6,8 @@
 
     public interface IGear
     {
+        GearType Type { get; }
+
         string Name { get; }
 
         void Update(GameObject gameObject);

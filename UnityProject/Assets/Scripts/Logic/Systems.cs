@@ -41,6 +41,8 @@
 
         public static IGear GenerateRandomGear(GearType type)
         {
+            Debug.Log("Generating New " + type);
+
             switch (type)
             {
                 case GearType.Head:
@@ -133,6 +135,7 @@
                 float budget = data.BudgetValues[type];
                 float normalized = baseRoll[type] * normalizeMultiplier;
                 float score = budget * normalized;
+                Debug.Log(string.Format("Roll:{0}  Normlized:{1}  Budget:{2}  Score:{3}", baseRoll[type], normalized, budget, score));
                 result.SetStat(type, score);
             }
 

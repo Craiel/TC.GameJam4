@@ -21,6 +21,8 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        public GearType Type { get; protected set; }
+
         public string Name { get; protected set; }
 
         public float GetInternalStat(StatType type)
