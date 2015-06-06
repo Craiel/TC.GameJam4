@@ -161,5 +161,10 @@
                                                                 typeof(WeaponHeat),
                                                                 typeof(WeaponHoming)
                                                             };
+
+        public static IList<StatType> PersistentPlayerStats = new List<StatType>
+                                                          {
+                                                              StatType.Health
+                                                          };
     }
 }
