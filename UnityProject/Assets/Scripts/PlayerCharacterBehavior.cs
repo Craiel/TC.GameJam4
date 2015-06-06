@@ -73,15 +73,12 @@
         [UsedImplicitly]
         private void Update()
         {
-            if (this.movementController == null)
+            if (this.Character == null)
             {
-                this.InitializeMovementController();
+                return;
             }
 
-            if (this.projectileParent == null)
-            {
-                this.projectileParent = new GameObject(this.Character.Name + "_Bullets");
-            }
+            this.UpdateBehaviorState();
 
             this.Character.Update(this.gameObject);
 
@@ -98,7 +95,6 @@
                 fireRight = Input.GetAxis("Fire2");
             }
             
-
             float currentTime = Time.time;
 
             if (Math.Abs(fireLeft) > float.Epsilon)
@@ -118,6 +114,24 @@
             this.UpdateMoveAnimation(didUpdate);
 
             this.UpdateProjectileLifespan(currentTime);
+        }
+
+        private void UpdateBehaviorState()
+        {
+            if (this.movementController == null)
+            {
+                this.InitializeMovementController();
+            }
+
+            if (this.movementController.InputDevice != this.Character.InputDevice)
+            {
+                this.movementController.InputDevice = this.Character.InputDevice;
+            }
+
+            if (this.projectileParent == null)
+            {
+                this.projectileParent = new GameObject(this.Character.Name + "_Bullets");
+            }
         }
 
         private void FireWeapon(IWeapon weapon)
