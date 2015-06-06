@@ -7,6 +7,9 @@ public class DestructibleTile : MonoBehaviour
     [SerializeField]
     private float hitPoints;
 
+    [SerializeField]
+    private Sprite destroyedSprite;
+
     private float currentHitPoints;
 
     private void Awake()
@@ -30,7 +33,7 @@ public class DestructibleTile : MonoBehaviour
 
     private void Destroy()
     {
-        //TODO: Implement destroyed vs. undestroyed 
+        GetComponent<SpriteRenderer>().sprite = destroyedSprite;
         GetComponent<BoxCollider2D>().enabled = false;
     }
 }
