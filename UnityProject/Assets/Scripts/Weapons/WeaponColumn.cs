@@ -51,6 +51,8 @@
                 LineRenderer line = origin.GetComponent<LineRenderer>();
                 line.SetPosition(0, origin.transform.position + depthOffset);
                 line.SetPosition(1, ray.transform.position + depthOffset);
+                GameObject instance = (GameObject)Object.Instantiate(Resources.Load("Projectiles/EnergyBullet"), origin.transform.position, origin.transform.rotation);
+                instance.GetComponent<Transform>().localScale = new Vector3(1,10,0);
                 //line.SetPosition(1, new Vector3(0f,ray.transform.position.y,0f));
                 timeChanged = Time.time;
             }
