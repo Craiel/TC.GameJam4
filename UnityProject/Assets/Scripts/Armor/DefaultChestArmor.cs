@@ -7,6 +7,8 @@
         public DefaultChestArmor(StatDictionary instarnalStats, StatDictionary inheritedStats)
             : base(instarnalStats, inheritedStats)
         {
+            this.Name = "Chest";
+
             this.Type = GearType.Chest;
         }
     }

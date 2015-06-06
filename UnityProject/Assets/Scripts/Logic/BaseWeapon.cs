@@ -11,13 +11,14 @@
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        protected BaseWeapon()
+        protected BaseWeapon(StatDictionary stats)
         {
             // Make it all left by default and sort it out later
             this.Type = GearType.LeftWeapon;
             this.WeaponType = WeaponType.Projectile;
  
             this.InternalStats.Merge(StaticSettings.WeaponBaseStats);
+            this.InternalStats.Merge(stats);
         }
 
         // -------------------------------------------------------------------
@@ -31,6 +32,8 @@
 
         public WeaponType WeaponType { get; set; }
 
+        public bool IsTargeted { get; set; }
+
         public virtual bool CanFire()
         {
             float currentTime = Time.time;
@@ -40,6 +43,11 @@
             }
 
             return true;
+        }
+
+        public void SetWeaponGearType(GearType type)
+        {
+            this.Type = type;
         }
 
         public IList<ProjectileBehavior> Fire(GameObject origin, ICharacter source)

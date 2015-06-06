@@ -7,24 +7,18 @@
 
     using UnityEngine;
 
-    public class WeaponRanged : BaseWeapon
+    public class WeaponHeal : BaseWeapon
     {
-        private readonly Object projectilePrefab;
-
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public WeaponRanged(StatDictionary internalStats)
+        public WeaponHeal(StatDictionary internalStats)
             : base(internalStats)
         {
-            this.Name = "Ranged";
-
-            this.projectilePrefab = Resources.Load("Projectiles/Bullet");
+            this.Name = "Heal";
 
             var stats = new StatDictionary
                 {
-                    { StatType.Velocity, 0.1f },
-                    { StatType.ProjectileLifeSpan, 1f },
                     { StatType.Interval, 0.1f },
                     { StatType.HeatGeneration, 1.0f },
                 };
@@ -37,15 +31,8 @@
         // -------------------------------------------------------------------
         protected override IList<ProjectileBehavior> DoFire(GameObject origin, ICharacter source)
         {
-            GameObject instance = (GameObject)Object.Instantiate(this.projectilePrefab, origin.transform.position, origin.transform.rotation);
-
-            BulletProjectileBehavior behavior = instance.AddComponent<BulletProjectileBehavior>();
-            behavior.Damage = this.GetInternalStat(StatType.Damage);
-            behavior.Velocity = this.GetInternalStat(StatType.Velocity);
-            behavior.LifeSpan = Time.time + this.GetInternalStat(StatType.ProjectileLifeSpan);
-            behavior.Origin = origin;
-
-            return new List<ProjectileBehavior> { behavior };
+            // Todo: 
+            return null;
         }
     }
 }

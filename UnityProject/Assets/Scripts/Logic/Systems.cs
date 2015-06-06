@@ -6,12 +6,9 @@
 
     using Assets.Scripts.Armor;
     using Assets.Scripts.Contracts;
-    using Assets.Scripts.Weapons;
 
     using UnityEngine;
-
-    using Random = UnityEngine.Random;
-
+    
     public static class Systems
     {
         // -------------------------------------------------------------------
@@ -36,7 +33,28 @@
         public static IGear GenerateRandomGear()
         {
             IList<GearType> types = Enum.GetValues(typeof(GearType)).Cast<GearType>().ToList();
-            return GenerateRandomGear(types[Random.Range(0, types.Count)]);
+            return GenerateRandomGear(types[UnityEngine.Random.Range(0, types.Count)]);
+        }
+
+        private static IArmor CreateRandomArmor<T>(StatRollData rollData)
+        {
+            StatDictionary result = GenerateRandomStats(rollData);
+
+            StatDictionary inheritedStats = new StatDictionary();
+            StatDictionary internalStats = new StatDictionary();
+            foreach (KeyValuePair<StatType, float> dataPair in result)
+            {
+                if (rollData.InternalStats.Contains(dataPair.Key))
+                {
+                    internalStats.Add(dataPair.Key, dataPair.Value);
+                }
+                else
+                {
+                    inheritedStats.Add(dataPair.Key, dataPair.Value);
+                }
+            }
+
+            return (IArmor)Activator.CreateInstance(typeof(T), internalStats, inheritedStats);
         }
 
         public static IGear GenerateRandomGear(GearType type)
@@ -51,7 +69,9 @@
                         rollData.RequiredStats.Add(StatType.Health);
                         rollData.OptionalStats.AddRange(StaticSettings.HeadRollMetaFlags);
                         rollData.BudgetValues.Merge(StaticSettings.HeadRollBudgets);
-                        return new DefaultHeadArmor(null, GenerateRandomStats(rollData));
+                        rollData.InternalStats.AddRange(StaticSettings.ArmorInternalStats);
+
+                        return CreateRandomArmor<DefaultHeadArmor>(rollData);
                     }
 
                 case GearType.Chest:
@@ -60,29 +80,60 @@
                         rollData.RequiredStats.Add(StatType.Health);
                         rollData.OptionalStats.AddRange(StaticSettings.ChestRollMetaFlags);
                         rollData.BudgetValues.Merge(StaticSettings.ChestRollBudgets);
-                        return new DefaultChestArmor(null, GenerateRandomStats(rollData));
+                        rollData.InternalStats.AddRange(StaticSettings.ArmorInternalStats);
+
+                        return CreateRandomArmor<DefaultChestArmor>(rollData);
                     }
 
                 case GearType.Legs:
                     {
                         var rollData = new StatRollData { OptionalStatPicks = StaticSettings.LegsRollOptionalPicks };
                         rollData.RequiredStats.Add(StatType.Health);
+                        rollData.RequiredStats.Add(StatType.HeatGeneration);
+                        rollData.RequiredStats.Add(StatType.HeatMax);
                         rollData.OptionalStats.AddRange(StaticSettings.LegsRollMetaFlags);
                         rollData.BudgetValues.Merge(StaticSettings.LegsRollBudgets);
-                        return new DefaultLegArmor(null, GenerateRandomStats(rollData));
+                        rollData.BaseLineValues.Merge(StaticSettings.LegsRollBaseLineStats);
+                        rollData.InternalStats.AddRange(StaticSettings.ArmorInternalStats);
+
+                        return CreateRandomArmor<DefaultLegArmor>(rollData);
                     }
 
                 case GearType.LeftWeapon:
                     {
-                        return new WeaponColumn();
+                        Type weaponType = StaticSettings.LeftHandWeaponTypes[UnityEngine.Random.Range(0, StaticSettings.LeftHandWeaponTypes.Count)];
+                        IWeapon weapon = (IWeapon)Activator.CreateInstance(weaponType, GetRandomWeaponStats());
+                        weapon.SetWeaponGearType(GearType.LeftWeapon);
+                        weapon.WeaponType = PickRandomWeaponType();
+                        return weapon;
                     }
 
                 case GearType.RightWeapon:
                     {
-                        return new WeaponRanged();
+                        Type weaponType = StaticSettings.RightHandWeaponTypes[UnityEngine.Random.Range(0, StaticSettings.RightHandWeaponTypes.Count)];
+                        IWeapon weapon = (IWeapon)Activator.CreateInstance(weaponType, GetRandomWeaponStats());
+                        weapon.IsTargeted = true;
+                        weapon.SetWeaponGearType(GearType.RightWeapon);
+                        weapon.WeaponType = PickRandomWeaponType();
+                        return weapon;
                     }
             }
             return null;
+        }
+
+        private static StatDictionary GetRandomWeaponStats()
+        {
+            var rollData = new StatRollData();
+            rollData.RequiredStats.AddRange(StaticSettings.WeaponRollFlags);
+            rollData.BudgetValues.AddRange(StaticSettings.WeaponRollBudgets);
+            rollData.BaseLineValues.AddRange(StaticSettings.WeaponRollBaseLineStats);
+            return GenerateRandomStats(rollData);
+        }
+
+        private static WeaponType PickRandomWeaponType()
+        {
+            IList<WeaponType> types = Enum.GetValues(typeof(WeaponType)).Cast<WeaponType>().ToList();
+            return types[UnityEngine.Random.Range(0, types.Count)];
         }
 
         /*public static IArmor GenerateRandomHead()
@@ -112,14 +163,14 @@
                 // We have enough optionals to pick so pick random
                 for(var i = 0; i < data.OptionalStatPicks; i++)
                 {
-                    StatType type = optionalStatsLeft[Random.Range(0, optionalStatsLeft.Count)];
+                    StatType type = optionalStatsLeft[UnityEngine.Random.Range(0, optionalStatsLeft.Count)];
                     chosenStats.Add(type);
                     optionalStatsLeft.Remove(type);
                 }
             }
             
             // Now we do a roll on those stats to figure out the distribution
-            var baseRoll = chosenStats.ToDictionary(type => type, type => Random.Range(0.1f, 1f));
+            var baseRoll = chosenStats.ToDictionary(type => type, type => UnityEngine.Random.Range(0.1f, 1f));
             var baseRollSum = baseRoll.Sum(x => x.Value);
             var normalizeMultiplier = 1.0f / baseRollSum;
 
@@ -134,7 +185,17 @@
 
                 float budget = data.BudgetValues[type];
                 float normalized = baseRoll[type] * normalizeMultiplier;
-                float score = budget * normalized;
+                float score;
+                if (data.BaseLineValues.ContainsKey(type))
+                {
+                    float baseLine = data.BaseLineValues[type];
+                    score = baseLine + (budget * normalized);
+                }
+                else
+                {
+                    score = budget * normalized;
+                }
+
                 Debug.Log(string.Format("Roll:{0}  Normlized:{1}  Budget:{2}  Score:{3}", baseRoll[type], normalized, budget, score));
                 result.SetStat(type, score);
             }

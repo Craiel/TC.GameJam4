@@ -15,8 +15,11 @@
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public WeaponColumn()
+        public WeaponColumn(StatDictionary internalStats)
+            : base(internalStats)
         {
+            this.Name = "Beam";
+
             var stats = new StatDictionary
                 {
                     { StatType.Velocity, 0.1f },
