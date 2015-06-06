@@ -12,6 +12,8 @@
 
     public class InputManagerBehavior : MonoBehaviour
     {
+        private static InputManagerBehavior instance;
+
         private readonly IDictionary<ICharacter, InputDevice> charactersToInputDevices;
         private readonly IDictionary<InputDevice, ICharacter> inputDevicesToCharacters;
 
@@ -27,6 +29,24 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        public static InputManagerBehavior Instance
+        {
+            get
+            {
+                if(instance == null) {
+                    GameObject existing = GameObject.Find(typeof(InputManagerBehavior).Name);
+                    if(existing == null) {
+                        existing = new GameObject(typeof(InputManagerBehavior).Name);
+                        instance = existing.AddComponent<InputManagerBehavior>();
+                    } else {
+                        instance = existing.GetComponent<InputManagerBehavior>();
+                    }
+                }
+
+                return instance;
+            }
+        }
+
         [SerializeField]
         public bool enableInControl;
 
@@ -41,6 +61,18 @@
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
+        [UsedImplicitly]
+        private void Awake()
+        {
+            if (Instance != this)
+            {
+                Destroy(this);
+                return;
+            }
+
+            DontDestroyOnLoad(this);
+        }
+
         [UsedImplicitly]
         private void Start()
         {

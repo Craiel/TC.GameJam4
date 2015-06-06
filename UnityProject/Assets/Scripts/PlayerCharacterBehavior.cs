@@ -116,6 +116,16 @@
             this.UpdateProjectileLifespan(currentTime);
         }
 
+        [UsedImplicitly]
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            GearView gearView = other.gameObject.GetComponent<GearView>();
+            if(gearView != null)
+            {
+                Debug.Log("Walked over Unclaimed Gear");
+            }
+        }
+
         private void UpdateBehaviorState()
         {
             if (this.movementController == null)

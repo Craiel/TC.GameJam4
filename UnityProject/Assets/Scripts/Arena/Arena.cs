@@ -7,6 +7,7 @@ using System.IO;
 
 ﻿using JetBrains.Annotations;
 using Assets.Scripts.Contracts;
+using Assets.Scripts.Logic;
 
 public class Arena : MonoBehaviour
 {
@@ -16,6 +17,14 @@ public class Arena : MonoBehaviour
     private const string TagSpawn = "s";
 
     private int currentLineToProcess;
+    
+    // -------------------------------------------------------------------
+    // Constructor
+    // -------------------------------------------------------------------
+    public Arena()
+    {
+        UnclaimedGear = new List<GearView>();
+    }
 
     // -------------------------------------------------------------------
     // Private
@@ -84,13 +93,13 @@ public class Arena : MonoBehaviour
         int totalStarterGear = StaticSettings.NumGearDropsPerCharacterAtStart * characterCount;
 
         for (int i = 0; i < characterCount; ++i)
-        {
-            //TODO: Generate Weapon
+        {   
+            PlaceGear(Systems.GenerateRandomGear(GearType.RightWeapon));
         }
 
         for (int i = 0; i < totalStarterGear - characterCount; ++i)
         {
-            //TODO: Generate Random gear
+            PlaceGear(Systems.GenerateRandomGear());
         }
     }
 
@@ -153,7 +162,7 @@ public class Arena : MonoBehaviour
 
     private void PlaceGear(IGear gear)
     {
-        const float minGearDropProximity = 0.35f;
+        const float minGearDropProximity = 0.7f;
         
         List<ArenaTile> availableTiles = new List<ArenaTile>();
         foreach (ArenaTile tile in Tiles)
@@ -176,10 +185,24 @@ public class Arena : MonoBehaviour
                 }
             }
 
+            foreach(PlayerCharacterBehavior characterView in gameplayManager.CharacterViews)
+            {
+                if ((characterView.transform.position - tilePosition).magnitude < minGearDropProximity)
+                {
+                    isValid = false;
+                    break;
+                }
+            }
+
             if (isValid)
             {
                 availableTiles.Add(tile);
             }
+        }
+
+        if(availableTiles.Count == 0)
+        {
+            return;
         }
 
         GameObject newGear = Instantiate(gearViewPrefab) as GameObject;
