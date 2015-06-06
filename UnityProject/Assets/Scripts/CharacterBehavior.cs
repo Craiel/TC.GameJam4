@@ -51,7 +51,7 @@
 
         [SerializeField]
         public Animator mechController;
-
+        
         public InputDevice InputDevice
         {
             get
@@ -88,19 +88,28 @@
             this.projectileParent = new GameObject(this.character.Name + "_Bullets");
 
             // Create the movement controller
-            if (this.useFixedAxisController)
+            if (StaticSettings.EnableInControl)
             {
-                this.movementController = new FixedAxisPlayerController(this.gameObject);
+                this.movementController = new InControlPlayerController(this.gameObject);
             }
             else
             {
-                this.movementController = new FreeFormPlayerController(this.gameObject);
+                if (this.useFixedAxisController)
+                {
+                    this.movementController = new FixedAxisPlayerController(this.gameObject);
+                }
+                else
+                {
+                    this.movementController = new FreeFormPlayerController(this.gameObject);
+                }
             }
         }
 
         [UsedImplicitly]
         private void Update()
         {
+            this.character.Update();
+
             float fireLeft = Input.GetAxis("Fire1");
             float fireRight = Input.GetAxis("Fire2");
 

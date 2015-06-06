@@ -73,7 +73,7 @@
                 {
                     foreach (CharacterBehavior behavior in this.charactersToInputDevices.Keys)
                     {
-                        if (this.charactersToInputDevices[behavior] != null)
+                        if (this.charactersToInputDevices[behavior] == null)
                         {
                             this.charactersToInputDevices[behavior] = device;
                             this.inputDevicesToCharacters.Add(device, behavior);

@@ -7,5 +7,7 @@
         string Name { get; }
 
         float GetStat(StatType type);
+
+        void Update();
     }
 }
