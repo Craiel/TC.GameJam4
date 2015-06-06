@@ -99,12 +99,12 @@
 
             if (Math.Abs(fireLeft) > float.Epsilon)
             {
-                this.FireWeapon(this.Character.LeftWeapon);
+                this.FireWeapon(this.Character.GetGear(GearType.LeftWeapon) as IWeapon);
             }
 
             if (Math.Abs(fireRight) > float.Epsilon)
             {
-                this.FireWeapon(this.Character.RightWeapon);
+                this.FireWeapon(this.Character.GetGear(GearType.RightWeapon) as IWeapon);
             }
 
             this.movementController.Velocity = this.Character.GetStat(StatType.Velocity);

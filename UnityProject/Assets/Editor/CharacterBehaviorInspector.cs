@@ -6,7 +6,6 @@
     using Assets.Scripts;
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Logic;
-    using Assets.Scripts.Weapons;
 
     using UnityEditor;
 
@@ -39,63 +38,69 @@
             EditorGUILayout.LabelField(string.Format("\t\t ---- {0} ---- \t\t", text));
         }
 
-        private void AddArmorGui(string title, IArmor armor)
+        private void AddGearGui(ICharacter actor, GearType type)
         {
-            string armorName = armor != null ? armor.Name : "none";
-            EditorGUILayout.LabelField(string.Format("{0}: {1}", title, armorName));
-
-            if (GUILayout.Button("Generate Random"))
-            {
-                // Todo
-            }
-
-            if (armor == null)
-            {
-                return;
-            }
-
-            EditorGUILayout.TextField("Armor: ", armor.GetStat(StatType.Armor).ToString(CultureInfo.InvariantCulture));
-        }
-
-        private void AddWeaponGui(string title, IWeapon weapon)
-        {
-            string weaponName = weapon != null ? weapon.Name : "none";
-            EditorGUILayout.LabelField(string.Format("{0}: {1}", title, weaponName));
+            IGear gear = actor.GetGear(type);
+            string gearName = gear != null ? gear.Name : "none";
+            EditorGUILayout.LabelField(string.Format("{0}: {1}", type, gearName));
 
             if (GUILayout.Button("Generate Random"))
             {
                 PlayerCharacterBehavior characterBehavior = (PlayerCharacterBehavior)this.target;
-                characterBehavior.Character.RightWeapon = new PlainCannon();
-                characterBehavior.Character.LeftWeapon = new EnergyCannon();
-                // Todo
+                characterBehavior.Character.SetGear(type, Systems.GenerateRandomGear(type));
             }
 
-            if (weapon == null)
+            if (gear == null)
             {
                 return;
             }
 
-            EditorGUILayout.TextField("Damage: ", weapon.GetStat(StatType.Damage).ToString(CultureInfo.InvariantCulture));
-        }
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.LabelField(" -- Internal: ");
+            foreach (StatType statType in Enum.GetValues(typeof(StatType)))
+            {
+                float value = gear.GetInternalStat(statType);
+                if (value > 0)
+                {
+                    EditorGUILayout.TextField(statType.ToString(), value.ToString(CultureInfo.InvariantCulture));
+                }
+            }
+            EditorGUILayout.EndVertical();
 
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.LabelField(" -- Inherited: ");
+            foreach (StatType statType in Enum.GetValues(typeof(StatType)))
+            {
+                float value = gear.GetInheritedStat(statType);
+                if (value > 0)
+                {
+                    EditorGUILayout.TextField(statType.ToString(), value.ToString(CultureInfo.InvariantCulture));
+                }
+            }
+            EditorGUILayout.EndVertical();
+        }
+        
         private void BuildCharacterInspectorGui(ICharacter actor)
         {
-            this.AddHeaderGuiSection("Gear");
-            
-            this.AddArmorGui("HEAD", actor.Head);
-            this.AddArmorGui("CHEST", actor.Chest);
-            this.AddArmorGui("LEGS", actor.Legs);
-            this.AddWeaponGui("LEFT_WEAPON", actor.LeftWeapon);
-            this.AddWeaponGui("RIGHT_WEAPON", actor.RightWeapon);
-
             this.AddHeaderGuiSection("Stats");
             EditorGUILayout.BeginVertical();
             foreach (StatType type in Enum.GetValues(typeof(StatType)))
             {
                 float value = actor.GetStat(type);
-                EditorGUILayout.TextField(type.ToString(), value.ToString(CultureInfo.InvariantCulture));
+                if (value > 0)
+                {
+                    EditorGUILayout.TextField(type.ToString(), value.ToString(CultureInfo.InvariantCulture));
+                }
             }
             EditorGUILayout.EndVertical();
+
+            this.AddHeaderGuiSection("Gear");
+
+            this.AddGearGui(actor, GearType.Head);
+            this.AddGearGui(actor, GearType.Chest);
+            this.AddGearGui(actor, GearType.Legs);
+            this.AddGearGui(actor, GearType.LeftWeapon);
+            this.AddGearGui(actor, GearType.RightWeapon);
         }
     }
 }

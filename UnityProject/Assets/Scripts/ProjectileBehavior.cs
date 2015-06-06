@@ -58,7 +58,7 @@
                 return;
             }
 
-            StatUtils.ApplyDamage(other.gameObject, this.Damage);
+            Systems.ApplyDamage(other.gameObject, this.Damage);
             this.Dispose();
         }
     }

@@ -40,7 +40,7 @@
         [UsedImplicitly]
         private void Start()
         {
-            this.character = new PlayerCharacter { Name = "Player" };
+            this.character = new Character { Name = "Player" };
         }
     }
 }

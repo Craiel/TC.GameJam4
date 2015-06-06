@@ -17,9 +17,14 @@
         // -------------------------------------------------------------------
         public EnergyCannon()
         {
-            this.SetStat(StatType.Velocity, 0.1f);
-            this.SetStat(StatType.ProjectileLifeSpan, 1f);
-            this.SetStat(StatType.Interval, 0.1f);
+            var stats = new StatDictionary
+                {
+                    { StatType.Velocity, 0.1f },
+                    { StatType.ProjectileLifeSpan, 1f },
+                    { StatType.Interval, 0.1f }
+                };
+
+            this.InternalStats.Merge(stats);
         }
 
         // -------------------------------------------------------------------);
