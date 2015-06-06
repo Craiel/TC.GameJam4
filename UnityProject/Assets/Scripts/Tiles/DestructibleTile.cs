@@ -17,12 +17,7 @@ public class DestructibleTile : MonoBehaviour
         currentHitPoints = hitPoints;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        //TODO: Implement Projectile collision detection
-    }
-
-    private void TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         currentHitPoints -= damage;
         if(currentHitPoints <= 0f)
