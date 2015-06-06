@@ -1,13 +1,19 @@
 ﻿namespace Assets.Scripts
 {
+    using Assets.Scripts.Logic;
     using System;
-
-    using JetBrains.Annotations;
-
     using UnityEngine;
 
-    public class ProjectileBehavior : MonoBehaviour
+    public abstract class ProjectileBehavior : MonoBehaviour
     {
+        // -------------------------------------------------------------------
+        // Constructor
+        // -------------------------------------------------------------------
+        public ProjectileBehavior()
+        {
+            IsAlive = true;
+        }
+
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -19,6 +25,10 @@
 
         public float LifeSpan { get; set; }
 
+        public GameObject Origin { get; set; }
+
+        public bool IsAlive { get; set; }
+        
         public void Dispose()
         {
             this.Dispose(true);
@@ -32,14 +42,20 @@
         {
             if (isDisposing)
             {
+                IsAlive = false;
                 Destroy(this.gameObject);
             }
         }
 
-        [UsedImplicitly]
-        private void Update()
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            this.transform.Translate(StaticSettings.DefaultMoveDirection * this.Velocity);
+            if (other.gameObject == Origin)
+            {
+                return;
+            }
+
+            StatUtils.ApplyDamage(other.gameObject, Damage);
+            Dispose();
         }
     }
 }

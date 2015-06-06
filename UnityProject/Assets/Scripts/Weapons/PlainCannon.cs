@@ -21,6 +21,7 @@
             this.SetStat(StatType.Velocity, 0.1f);
             this.SetStat(StatType.ProjectileLifeSpan, 1f);
             this.SetStat(StatType.Interval, 0.1f);
+            this.SetStat(StatType.HeatGeneration, 1.0f);
         }
 
         // -------------------------------------------------------------------
@@ -30,10 +31,11 @@
         {
             GameObject instance = (GameObject)Object.Instantiate(this.projectilePrefab, origin.transform.position, origin.transform.rotation);
 
-            ProjectileBehavior behavior = instance.AddComponent<ProjectileBehavior>();
+            BulletProjectileBehavior behavior = instance.AddComponent<BulletProjectileBehavior>();
             behavior.Damage = this.GetStat(StatType.Damage);
             behavior.Velocity = this.GetStat(StatType.Velocity);
             behavior.LifeSpan = Time.time + this.GetStat(StatType.ProjectileLifeSpan);
+            behavior.Origin = origin;
 
             return new List<ProjectileBehavior> { behavior };
         }

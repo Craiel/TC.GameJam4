@@ -18,6 +18,7 @@
         Armor,
         Shield,
 
+        HeatGeneration,
         HeatMax,
         HeatCoolingRate,
 

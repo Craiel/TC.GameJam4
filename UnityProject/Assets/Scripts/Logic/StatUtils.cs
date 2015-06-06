@@ -1,4 +1,5 @@
-﻿namespace Assets.Scripts.Logic
+﻿using UnityEngine;
+namespace Assets.Scripts.Logic
 {
     public static class StatUtils
     {
@@ -6,6 +7,22 @@
         {
             // Todo
             return first + second;
+        }
+
+        public static void ApplyDamage(GameObject target, float damage)
+        {
+            DestructibleTile destructibleTile = target.GetComponent<DestructibleTile>();
+            if (destructibleTile != null)
+            {
+                destructibleTile.TakeDamage(damage);
+                return;
+            }
+
+            CharacterBehavior characterBehavior = target.GetComponent<CharacterBehavior>();
+            if (characterBehavior != null)
+            {
+                //TODO: Apply Damage to Character
+            }
         }
     }
 }

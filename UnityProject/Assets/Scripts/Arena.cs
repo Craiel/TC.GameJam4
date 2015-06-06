@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.IO;
 
 public class Arena : MonoBehaviour 
 {
@@ -12,7 +13,63 @@ public class Arena : MonoBehaviour
 
     public void Start()
     {
-        InitFromTexture(Resources.Load("Maps/TestMap3") as Texture2D);
+        InitFromText("moredest.txt");
+        //InitFromTexture(Resources.Load("Maps/TestMap3") as Texture2D);
+    }
+
+    public void InitFromText(string fileName)
+    {
+        StreamReader streamReader = new StreamReader(Application.dataPath + "/Resources/Maps/" + fileName);
+
+        string indestructible = "x";
+        string empty = "o";
+        string destructible = "d";
+        string half = "h";
+        string spawn = "s";
+
+        int i = 0;
+
+        string line;
+        using (streamReader)
+        {
+            do
+            {
+                line = streamReader.ReadLine();
+                if (!string.IsNullOrEmpty(line))
+                {
+                    for(int j=0; j<line.Length; ++j)
+                    {
+                        string character = line.Substring(j, 1);
+                        int tileIndex = 0;
+                        if(character == indestructible)
+                        {
+                            tileIndex = 1;
+                        }
+                        else if(character == destructible)
+                        {
+                            tileIndex = 2;
+                        }
+                        else if(character == half)
+                        {
+                            tileIndex = 3;
+                        }
+                        else if(character == spawn)
+                        {
+                            //TODO: Record spawn point
+                        }
+
+                        GameObject tile = Instantiate(tiles[tileIndex]) as GameObject;
+
+                        tile.transform.SetParent(this.transform);
+                        tile.transform.localPosition = new Vector3(-5.25f + j * 0.35f, 5.25f - i * 0.35f, 0f);
+                    }
+
+                    i++;
+                }
+
+            }
+            while (line != null);
+        }
     }
     
     public void InitFromTexture(Texture2D texture)
