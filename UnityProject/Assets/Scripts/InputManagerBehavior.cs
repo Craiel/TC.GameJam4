@@ -12,6 +12,8 @@
 
     public class InputManagerBehavior : MonoBehaviour
     {
+        private static InputManagerBehavior instance;
+
         private readonly IDictionary<ICharacter, InputDevice> charactersToInputDevices;
         private readonly IDictionary<InputDevice, ICharacter> inputDevicesToCharacters;
 
@@ -27,11 +29,32 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        public static InputManagerBehavior Instance
+        {
+            get
+            {
+                if(instance == null) {
+                    GameObject existing = GameObject.Find(typeof(InputManagerBehavior).Name);
+                    if(existing == null) {
+                        existing = new GameObject(typeof(InputManagerBehavior).Name);
+                        instance = existing.AddComponent<InputManagerBehavior>();
+                    } else {
+                        instance = existing.GetComponent<InputManagerBehavior>();
+                    }
+                }
+
+                return instance;
+            }
+        }
+
         [SerializeField]
         public bool enableInControl;
 
         [SerializeField]
         private GameplayManager gameplayManager;
+
+        [SerializeField]
+        private UIManager UIManager;
 
         public IList<ICharacter> GetCharacters()
         {
@@ -42,6 +65,18 @@
         // Private
         // -------------------------------------------------------------------
         [UsedImplicitly]
+        private void Awake()
+        {
+            if (Instance != this)
+            {
+                Destroy(this);
+                return;
+            }
+
+            DontDestroyOnLoad(this);
+        }
+
+        [UsedImplicitly]
         private void Start()
         {
             InputManager.OnDeviceDetached += this.OnDeviceDetached;
@@ -50,6 +85,7 @@
             {   
                 var newPlayer = new Character();
                 this.charactersToInputDevices.Add(newPlayer, null);
+                UIManager.Init(GetCharacters());
             }
 
             // Override the static InControl setting
@@ -61,12 +97,6 @@
         {
             if(InputManager.Devices == null)
             {
-                return;
-            }
-            
-            if(!gameplayManager.IsPlaying && InputManager.ActiveDevice.Command.Value > 0)
-            {
-                gameplayManager.SetupMatch(GetCharacters());
                 return;
             }
 

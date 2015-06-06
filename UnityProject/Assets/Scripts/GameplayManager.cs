@@ -20,6 +20,12 @@ public class GameplayManager : MonoBehaviour
     public bool IsPlaying { get; private set; }
 
     public IList<ICharacter> Characters { get; private set; }
+    public List<PlayerCharacterBehavior> CharacterViews { get; private set; }
+
+    private void Awake()
+    {
+        CharacterViews = new List<PlayerCharacterBehavior>();
+    }
 
     public void SetupMatch(IList<ICharacter> characters)
     {
@@ -57,6 +63,7 @@ public class GameplayManager : MonoBehaviour
             GameObject newMech = Instantiate(mechPrefab) as GameObject;
             newMech.GetComponent<PlayerCharacterBehavior>().Character = character;
             newMech.transform.SetParent(arena.transform);
+            CharacterViews.Add(newMech.GetComponent<PlayerCharacterBehavior>());
 
             if (arena.SpawnPoints.Count > 0)
             {
