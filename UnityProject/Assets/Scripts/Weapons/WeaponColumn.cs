@@ -7,7 +7,7 @@
 
     using UnityEngine;
 
-    public class EnergyCannon : BaseWeapon
+    public class WeaponColumn : BaseWeapon
     {
         private readonly Object projectilePrefab;
         private float timeChanged;
@@ -15,7 +15,7 @@
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public EnergyCannon()
+        public WeaponColumn()
         {
             var stats = new StatDictionary
                 {
@@ -27,7 +27,12 @@
             this.InternalStats.Merge(stats);
         }
 
-        // -------------------------------------------------------------------);
+        // -------------------------------------------------------------------
+        // Public
+        // -------------------------------------------------------------------
+        
+
+        // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
         protected override IList<ProjectileBehavior> DoFire(GameObject origin, ICharacter source)

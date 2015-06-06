@@ -60,7 +60,7 @@
                         rollData.RequiredStats.Add(StatType.Health);
                         rollData.OptionalStats.AddRange(StaticSettings.ChestRollMetaFlags);
                         rollData.BudgetValues.Merge(StaticSettings.ChestRollBudgets);
-                        return new DefaultHeadArmor(null, GenerateRandomStats(rollData));
+                        return new DefaultChestArmor(null, GenerateRandomStats(rollData));
                     }
 
                 case GearType.Legs:
@@ -69,17 +69,17 @@
                         rollData.RequiredStats.Add(StatType.Health);
                         rollData.OptionalStats.AddRange(StaticSettings.LegsRollMetaFlags);
                         rollData.BudgetValues.Merge(StaticSettings.LegsRollBudgets);
-                        return new DefaultHeadArmor(null, GenerateRandomStats(rollData));
+                        return new DefaultLegArmor(null, GenerateRandomStats(rollData));
                     }
 
                 case GearType.LeftWeapon:
                     {
-                        return new EnergyCannon();
+                        return new WeaponColumn();
                     }
 
                 case GearType.RightWeapon:
                     {
-                        return new PlainCannon();
+                        return new WeaponRanged();
                     }
             }
             return null;

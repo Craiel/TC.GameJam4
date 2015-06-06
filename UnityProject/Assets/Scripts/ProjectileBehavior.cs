@@ -31,6 +31,8 @@
         public GameObject Origin { get; set; }
 
         public bool IsAlive { get; set; }
+
+        public bool IsBouncing { get; set; }
         
         public void Dispose()
         {

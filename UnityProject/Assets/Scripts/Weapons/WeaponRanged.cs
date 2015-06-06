@@ -7,14 +7,14 @@
 
     using UnityEngine;
 
-    public class PlainCannon : BaseWeapon
+    public class WeaponRanged : BaseWeapon
     {
         private readonly Object projectilePrefab;
 
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public PlainCannon()
+        public WeaponRanged()
         {
             this.projectilePrefab = Resources.Load("Projectiles/Bullet");
 

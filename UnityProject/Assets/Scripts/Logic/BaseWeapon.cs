@@ -15,6 +15,7 @@
         {
             // Make it all left by default and sort it out later
             this.Type = GearType.LeftWeapon;
+            this.WeaponType = WeaponType.Projectile;
  
             this.InternalStats.Merge(StaticSettings.WeaponBaseStats);
         }
@@ -27,6 +28,8 @@
         public float LastShotFired { get; private set; }
         
         public long ProjectileLimit { get; protected set; }
+
+        public WeaponType WeaponType { get; set; }
 
         public virtual bool CanFire()
         {
