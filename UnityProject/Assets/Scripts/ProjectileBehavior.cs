@@ -69,5 +69,11 @@
             Combat.Resolve(data);
             this.Dispose();
         }
+
+        [UsedImplicitly]
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            //TODO: beam dmg cal on each mech and walls it hits
+        }
     }
 }

@@ -76,7 +76,7 @@
                 direction = -(this.InvertAccellerationAxis ? up : -up);
             }
 
-            direction *= DefaultSpeedMultiplier;
+            direction *= DefaultSpeedMultiplier * target.GetComponent<PlayerCharacterBehavior>().Character.GetCurrentStat(Logic.StatType.Velocity);
 
             this.target.transform.Translate(StaticSettings.DefaultMoveDirection * direction);
             return true;
@@ -103,7 +103,7 @@
                 rotate = -(this.InvertAccellerationAxis ? -right : right);
             }
 
-            rotate *= DefaultRotationMultiplier;
+            rotate *= DefaultRotationMultiplier * target.GetComponent<PlayerCharacterBehavior>().Character.GetCurrentStat(Logic.StatType.RotationSpeed);
 
             this.target.transform.Rotate(Vector3.forward, rotate);
             return true;

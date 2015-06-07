@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using Assets.Scripts.Contracts;
+using Assets.Scripts;
 
 public class UIPlayerManager : MonoBehaviour
 {
@@ -13,10 +14,46 @@ public class UIPlayerManager : MonoBehaviour
         Ready 
     }
 
-    private UIState currentState =UIState.NotJoined;
+    [SerializeField]
+    private Text mechName;
+
+    [SerializeField]
+    private Text health;
+
+    [SerializeField]
+    private Text cooling;
+
+    [SerializeField]
+    private Text speed;
+
+    [SerializeField]
+    private Text rotationSpeed;
+
+    [SerializeField]
+    private Text armor;
+
+    [SerializeField]
+    private Text shield;
+
+    [SerializeField]
+    private Text rangedAccuracy;
+
+    [SerializeField]
+    private Text meleeAccuracy;
     
-    public GameObject mechPreview;
-    public GameObject mechStats;
+    [SerializeField]
+    private Text targetingDistance;
+
+    [SerializeField]
+    private Text targetingLockTime;
+
+    [SerializeField]
+    private GameObject joinScreen;
+
+    [SerializeField]
+    private GameObject mechSelectionScreen;
+
+    private UIState currentState =UIState.NotJoined;
 
     private ICharacter character;
 
@@ -24,13 +61,21 @@ public class UIPlayerManager : MonoBehaviour
 
     private bool isInitialized;
 
+    private int currentLoadoutIndex;
+
     public UIState CurrentState { get { return currentState; } }
     public ICharacter Character { get { return character; } }
+
+    public MechLoadouts.MechLoadout Loadout { get { return MechLoadouts.Loadouts[currentLoadoutIndex]; } }
     
     public void Init(ICharacter character, UIManager UIManager)
     {
         this.character = character;
         this.UIManager = UIManager;
+        currentLoadoutIndex = 0;
+
+        UpdateUI();
+        UpdateMechSelection();
         isInitialized = true;
     }
     
@@ -64,15 +109,25 @@ public class UIPlayerManager : MonoBehaviour
             }
             else if(character.InputDevice.DPadRight.WasPressed)
             {
-                //TODO: Move right in selection menu
+                currentLoadoutIndex++;
+                if(currentLoadoutIndex >= MechLoadouts.Loadouts.Count)
+                {
+                    currentLoadoutIndex = 0;
+                }
+                UpdateMechSelection();
             }
             else if(character.InputDevice.DPadLeft.WasPressed)
             {
-                //TODO: Move left in selection menu
+                currentLoadoutIndex--;
+                if(currentLoadoutIndex < 0)
+                {
+                    currentLoadoutIndex = MechLoadouts.Loadouts.Count - 1;
+                }
+                UpdateMechSelection();
             }
             else if(character.InputDevice.Action2.WasPressed)
             {
-                character.InputDevice = null;
+                InputManagerBehavior.Instance.DetachDevice(character.InputDevice);
                 currentState = UIState.NotJoined;
             }
         }
@@ -96,11 +151,34 @@ public class UIPlayerManager : MonoBehaviour
         switch(currentState)
         {
             case UIState.NotJoined:
+                joinScreen.SetActive(true);
+                mechSelectionScreen.SetActive(false);
                 break;
             case UIState.Joined:
+                joinScreen.SetActive(false);
+                mechSelectionScreen.SetActive(true);
                 break;
             case UIState.Ready:
+                joinScreen.SetActive(false);
+                mechSelectionScreen.SetActive(false);
                 break;
         }
+    }
+
+    private void UpdateMechSelection()
+    {
+        MechLoadouts.MechLoadout loadout = MechLoadouts.Loadouts[currentLoadoutIndex];
+        
+        mechName.text = loadout.Name;
+        health.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.Health].ToString();
+        cooling.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.HeatCoolingRate].ToString();
+        speed.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.Velocity].ToString();
+        rotationSpeed.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.RotationSpeed].ToString();
+        armor.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.Armor].ToString();
+        shield.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.Shield].ToString();
+        rangedAccuracy.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.RangedAccuracy].ToString();
+        meleeAccuracy.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.MeleeAccuracy].ToString();
+        targetingDistance.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.TargetingDistance].ToString();
+        targetingLockTime.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.TargetingLockTime].ToString();
     }
 }
