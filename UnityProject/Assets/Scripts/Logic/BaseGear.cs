@@ -38,10 +38,10 @@
 
         public virtual void Update(GameObject gameObject)
         {
-            float heatMax = this.GetCurrentStat(StatType.Heat);
+            float heatMax = this.GetMaxStat(StatType.Heat);
             if (heatMax > 0)
             {
-                float heat = this.GetCurrentStat(StatType.HeatGeneration);
+                float heat = this.GetCurrentStat(StatType.Heat);
                 float heatGeneration = this.GetCurrentStat(StatType.HeatGeneration);
 
                 this.IsOverheated = heat + heatGeneration > heatMax;

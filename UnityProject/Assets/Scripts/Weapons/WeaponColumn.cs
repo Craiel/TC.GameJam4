@@ -50,8 +50,6 @@
 
             var collider = instance.AddComponent<PolygonCollider2D>();
             collider.isTrigger = true;
-            collider.transform.localScale = new Vector3(1f, 1.1f);
-            // collider.size = new Vector2(0.5f, 1.1f);
 
             StaticProjectileBehavior behavior = instance.AddComponent<StaticProjectileBehavior>();
             behavior.DamageInfo = new CombatInfo

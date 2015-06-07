@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
-using Assets.Scripts;
 using Assets.Scripts.Contracts;
 using Assets.Scripts.Logic;
 
@@ -15,7 +12,13 @@ public class UIManager : MonoBehaviour
     private GameObject playerSelect;
 
     [SerializeField]
+    private GameObject gameScene;
+
+    [SerializeField]
     private GameObject CombatTextPrefab;
+
+    [SerializeField]
+    private List<PlayerGamePanel> playerGamePanels;
 
     public List<UIPlayerManager> players;
     private IList<ICharacter> characters;
@@ -26,6 +29,9 @@ public class UIManager : MonoBehaviour
         {
             players[i].Init(characters[i], this);
         }
+
+        playerSelect.SetActive(true);
+        gameScene.SetActive(false);
     }
 
     private void Update()
@@ -48,13 +54,27 @@ public class UIManager : MonoBehaviour
             //TODO: Make this actually 2, dummy
             if(characters.Count > 0)
             {
-                foreach(ICharacter character in characters.Keys)
+                playerSelect.SetActive(false);
+                gameScene.SetActive(true);
+
+                int playerPanelIndex = 0;
+                foreach (ICharacter character in characters.Keys)
                 {
                     character.SetBaseStats(characters[character].BasicStats);
+
+                    if(character.InputDevice != null)
+                    {
+                        playerGamePanels[playerPanelIndex].Init(character);
+                    }
+                    else
+                    {
+                        playerGamePanels[playerPanelIndex].gameObject.SetActive(false);
+                    }
+                    
+                    playerPanelIndex++;
                 }
 
                 gameplayManager.SetupMatch(new List<ICharacter>(characters.Keys));
-                playerSelect.SetActive(false);
             }
         }
         else
