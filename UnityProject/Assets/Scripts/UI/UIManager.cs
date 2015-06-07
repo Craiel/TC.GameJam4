@@ -14,6 +14,9 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject playerSelect;
 
+    [SerializeField]
+    private GameObject CombatTextPrefab;
+
     public List<UIPlayerManager> players;
     private IList<ICharacter> characters;
 
@@ -52,6 +55,23 @@ public class UIManager : MonoBehaviour
 
                 gameplayManager.SetupMatch(new List<ICharacter>(characters.Keys));
                 playerSelect.SetActive(false);
+            }
+        }
+        else
+        {
+            foreach(CombatResult combatResult in Combat.PollResults())
+            {
+                GameObject combatText = Instantiate(CombatTextPrefab) as GameObject;
+                combatText.transform.SetParent(this.transform);
+
+                if(combatResult.WasMiss)
+                {
+                    combatText.GetComponent<CombatText>().Init("miss", new Color(0.6f, 0.6f, 0.6f), combatResult.Location);
+                }
+                else
+                {
+                    combatText.GetComponent<CombatText>().Init(Mathf.RoundToInt(combatResult.DamageDealtTotal).ToString(), new Color(1, 0.4f, 0.4f), combatResult.Location);
+                }
             }
         }
     }

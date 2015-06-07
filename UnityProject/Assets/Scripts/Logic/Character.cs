@@ -9,23 +9,12 @@
 
     using UnityEngine;
 
-    public class Character : ICharacter
+    public class Character : StatHolder, ICharacter
     {
         private static int nextId;
 
-        private readonly StatDictionary baseStats;
-
-        private readonly StatDictionary fullStats;
-
-        // For buffs and temp modifications
-        private readonly StatDictionary temporaryStats;
-
-        private readonly StatDictionary currentStats;
-
         private readonly IDictionary<GearType, IGear> gear;
  
-        private bool needStatUpdate = true;
-
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
@@ -33,13 +22,12 @@
         {
             this.Id = nextId++;
 
-            this.baseStats = new StatDictionary();
-            this.fullStats = new StatDictionary();
-            this.temporaryStats = new StatDictionary();
-            this.currentStats = new StatDictionary();
             this.gear = new Dictionary<GearType, IGear>();
 
-            this.baseStats.Merge(StaticSettings.PlayerBaseStats);
+            // Set some defaults but will be override later
+            this.SetBaseStats(StaticSettings.PlayerBaseStats);
+
+            this.ResetCurrentStats();
         }
 
         // -------------------------------------------------------------------
@@ -62,14 +50,7 @@
 
             return null;
         }
-
-        public void SetBaseStats(StatDictionary baseStats)
-        {
-            this.baseStats.Clear();
-            this.baseStats.Merge(baseStats);
-            needStatUpdate = true;
-        }
-
+        
         public void SetGear(GearType type, IGear newGear)
         {
             System.Diagnostics.Trace.Assert(newGear != null, "New Gear was null, call RemoveGear instead!");
@@ -83,7 +64,7 @@
                 this.gear.Add(type, newGear);
             }
 
-            this.needStatUpdate = true;
+            this.NeedStatUpdate = true;
         }
 
         public void RemoveGear(GearType type)
@@ -91,40 +72,8 @@
             if (this.gear.ContainsKey(type))
             {
                 this.gear.Remove(type);
-                this.needStatUpdate = true;
+                this.NeedStatUpdate = true;
             }
-        }
-
-        public float GetCurrentStat(StatType type)
-        {
-            if (this.needStatUpdate)
-            {
-                this.UpdateStats();
-            }
-
-            return this.currentStats.GetStat(type);
-        }
-
-        public float GetMaxStat(StatType type)
-        {
-            if (this.needStatUpdate)
-            {
-                this.UpdateStats();
-            }
-
-            return this.fullStats.GetStat(type);
-        }
-
-        public void SetTemporaryStat(StatType type, float value)
-        {
-            this.temporaryStats.SetStat(type, value);
-            this.needStatUpdate = true;
-        }
-
-        public void RemoveTemporaryStat(StatType type)
-        {
-            this.temporaryStats.RemoveStat(type);
-            this.needStatUpdate = true;
         }
 
         public void TakeDamage(float damage)
@@ -145,17 +94,10 @@
             }
         }
 
-        // -------------------------------------------------------------------
-        // Private
-        // -------------------------------------------------------------------
-        private void UpdateStats()
+        protected override IList<StatDictionary> GetAdditionalMergeDictionaries()
         {
-            this.needStatUpdate = false;
+            IList<StatDictionary> results = new List<StatDictionary>();
 
-            this.fullStats.Clear();
-            this.fullStats.Merge(this.baseStats);
-
-            // Items come in second after the base stats
             foreach (GearType type in this.gear.Keys)
             {
                 if (this.gear[type] == null)
@@ -163,27 +105,14 @@
                     continue;
                 }
 
-                this.fullStats.Merge(this.gear[type].GetInheritedStats());
+                StatDictionary inherited = this.gear[type].GetInheritedStats();
+                if (inherited != null)
+                {
+                    results.Add(inherited);
+                }
             }
 
-            // Temporary stats are applied last
-            this.fullStats.Merge(this.temporaryStats);
-
-            // Save all the persistent values before we update the current stats
-            StatDictionary persistentValues = new StatDictionary();
-            foreach (StatType type in StaticSettings.PersistentPlayerStats)
-            {
-                persistentValues.SetStat(type, this.currentStats.GetStat(type));
-            }
-
-            this.currentStats.Clear();
-            this.currentStats.Merge(this.fullStats);
-
-            // Re-set the persistent stats
-            foreach (StatType type in persistentValues.Keys)
-            {
-                this.currentStats.SetStat(type, persistentValues[type]);
-            }
+            return results;
         }
     }
 }

@@ -27,7 +27,7 @@
                     { StatType.HeatGeneration, 1.0f },
                 };
 
-            this.InternalStats.Merge(stats);
+            this.SetBaseStats(stats);
         }
 
         // -------------------------------------------------------------------

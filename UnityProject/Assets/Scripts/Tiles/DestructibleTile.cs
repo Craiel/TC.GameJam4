@@ -19,13 +19,20 @@ public class DestructibleTile : MonoBehaviour
         currentHitPoints = hitPoints;
     }
 
-    public void TakeDamage(float damage)
+    public bool TakeDamage(float damage)
     {
+        if (this.IsDestroyed || this.currentHitPoints < 0)
+        {
+            return false;
+        }
+
         currentHitPoints -= damage;
         if(currentHitPoints <= 0f)
         {
             Destroy();
         }
+
+        return true;
     }
 
     private void Destroy()

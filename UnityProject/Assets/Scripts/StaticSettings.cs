@@ -22,6 +22,8 @@
 
         public static readonly Vector3 DefaultMoveDirection = new Vector3(0, 1, 0);
 
+        public static readonly float DefaultProjectileMoveSpeed = 10f;
+
         public static readonly StatDictionary ArmorBaseStats = new StatDictionary();
 
         public static readonly StatDictionary WeaponBaseStats = new StatDictionary
@@ -34,6 +36,7 @@
 
         public static StatDictionary PlayerBaseStats = new StatDictionary
         {
+            { StatType.Scale, 1.0f },
             { StatType.Health, 100.0f },
             { StatType.Velocity, 1.0f },
             { StatType.RotationSpeed, 1.0f },
@@ -42,14 +45,12 @@
             { StatType.TargetingDistance, 20f},
         };
 
-
-
         public static bool EnableInControl = false;
 
         public static IList<StatType> ArmorInternalStats = new List<StatType>
                                                           {
                                                               StatType.Health,
-                                                              StatType.HeatMax,
+                                                              StatType.Heat,
                                                               StatType.HeatGeneration
                                                           };
 
@@ -106,7 +107,7 @@
                                                                { StatType.Velocity, 1f },
                                                                { StatType.HeatCoolingRate, 5f },
                                                                { StatType.Health, 100f },
-                                                               { StatType.HeatMax, 100f },
+                                                               { StatType.Heat, 100f },
                                                                { StatType.HeatGeneration, -9f }
                                                            };
 
@@ -119,7 +120,6 @@
                                                           {
                                                               StatType.Damage,
                                                               StatType.Health,
-                                                              StatType.HeatMax,
                                                               StatType.HeatGeneration
                                                           };
 
@@ -127,7 +127,6 @@
                                                            {
                                                                { StatType.Damage, 50f },
                                                                { StatType.Health, 200f },
-                                                               { StatType.HeatMax, 100f },
                                                                { StatType.HeatGeneration, -19f },
                                                            };
 
@@ -148,26 +147,27 @@
                                                             {
                                                                 typeof(WeaponColumn),
                                                                 typeof(WeaponRanged),
-                                                                typeof(WeaponMelee),
-                                                                typeof(WeaponHeal),
-                                                                typeof(WeaponSpeedBoost),
+                                                                //typeof(WeaponMelee),
+                                                                //typeof(WeaponHeal),
+                                                                //typeof(WeaponSpeedBoost),
                                                                 typeof(WeaponBomb),
-                                                                typeof(WeaponInvisibility)
+                                                                //typeof(WeaponInvisibility)
                                                             };
 
         public static IList<Type> RightHandWeaponTypes = new List<Type>
                                                             {
                                                                 typeof(WeaponRanged),
-                                                                typeof(WeaponMelee),
-                                                                typeof(WeaponGrapple),
-                                                                typeof(WeaponSlow),
-                                                                typeof(WeaponHeat),
-                                                                typeof(WeaponHoming)
+                                                                //typeof(WeaponMelee),
+                                                                //typeof(WeaponGrapple),
+                                                                //typeof(WeaponSlow),
+                                                                //typeof(WeaponHeat),
+                                                                //typeof(WeaponHoming)
                                                             };
 
-        public static IList<StatType> PersistentPlayerStats = new List<StatType>
+        public static IList<StatType> PersistentStats = new List<StatType>
                                                           {
-                                                              StatType.Health
+                                                              StatType.Health,
+                                                              StatType.Heat
                                                           };
     }
 }

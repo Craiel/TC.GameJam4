@@ -81,13 +81,22 @@
             }
 
             var data = new CombatResolve(this.DamageInfo)
-                              {
-                                  Source = this.Origin,
-                                  Target = other.gameObject
-                              };
-            
+            {
+                Source = this.Origin,
+                Target = other.gameObject
+            };
+
             Combat.Resolve(data);
-            this.Dispose();
+
+            switch (this.Type)
+            {
+                case ProjectileType.bullet:
+                case ProjectileType.bomb:
+                    {
+                        this.Dispose();
+                        break;
+                    }
+            }
         }
 
         [UsedImplicitly]

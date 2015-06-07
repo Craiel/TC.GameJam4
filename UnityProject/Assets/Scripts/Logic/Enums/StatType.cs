@@ -2,6 +2,7 @@
 {
     public enum StatType
     {
+        Scale,
         Velocity,
         RotationSpeed,
 
@@ -18,8 +19,8 @@
         Armor,
         Shield,
 
+        Heat,
         HeatGeneration,
-        HeatMax,
         HeatCoolingRate,
 
         ProjectileLifeSpan,

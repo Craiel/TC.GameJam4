@@ -24,13 +24,14 @@
 
             var stats = new StatDictionary
                 {
-                    { StatType.Velocity, 0.1f },
+                    { StatType.Velocity, 0.8f },
                     { StatType.ProjectileLifeSpan, 1f },
-                    { StatType.Interval, 0.1f },
+                    { StatType.Interval, 0.5f },
                     { StatType.HeatGeneration, 1.0f },
                 };
 
-            this.InternalStats.Merge(stats);
+            stats.Merge(internalStats);
+            this.SetBaseStats(stats);
         }
 
         // -------------------------------------------------------------------
@@ -43,13 +44,15 @@
             BulletProjectileBehavior behavior = instance.AddComponent<BulletProjectileBehavior>();
             behavior.DamageInfo = new CombatInfo
                                       {
-                                          Damage = this.GetInternalStat(StatType.Damage),
+                                          Damage = this.GetCurrentStat(StatType.Damage),
                                           DamageType = this.DamageType,
-                                          CombatType = CombatType.Ranged
+                                          CombatType = CombatType.Ranged,
+                                          ModValue = 0.75f,
+                                          LogNMultiplier = 5f
                                       };
             behavior.Type = ProjectileType.bullet;
-            behavior.Velocity = this.GetInternalStat(StatType.Velocity);
-            behavior.LifeSpan = Time.time + this.GetInternalStat(StatType.ProjectileLifeSpan);
+            behavior.Velocity = this.GetCurrentStat(StatType.Velocity);
+            behavior.LifeSpan = Time.time + this.GetCurrentStat(StatType.ProjectileLifeSpan);
             behavior.Origin = origin;
 
             return new List<ProjectileBehavior> { behavior };

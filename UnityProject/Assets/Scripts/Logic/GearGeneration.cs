@@ -22,11 +22,12 @@
 
         public static IWeapon GenerateRandomWeapon(GearType type, Type weaponType, DamageType? damageType = null)
         {
+            StatDictionary stats = GetRandomWeaponStats();
             switch (type)
             {
                 case GearType.LeftWeapon:
                     {
-                        IWeapon weapon = (IWeapon)Activator.CreateInstance(weaponType, GetRandomWeaponStats());
+                        IWeapon weapon = (IWeapon)Activator.CreateInstance(weaponType, stats);
                         weapon.SetWeaponGearType(GearType.LeftWeapon);
                         weapon.DamageType = damageType ?? PickRandomWeaponType();
                         return weapon;
@@ -34,7 +35,7 @@
 
                 case GearType.RightWeapon:
                     {
-                        IWeapon weapon = (IWeapon)Activator.CreateInstance(weaponType, GetRandomWeaponStats());
+                        IWeapon weapon = (IWeapon)Activator.CreateInstance(weaponType, stats);
                         weapon.IsTargeted = true;
                         weapon.SetWeaponGearType(GearType.RightWeapon);
                         weapon.DamageType = damageType ?? PickRandomWeaponType();
@@ -81,11 +82,11 @@
                         var rollData = new StatRollData { OptionalStatPicks = StaticSettings.LegsRollOptionalPicks };
                         rollData.RequiredStats.Add(StatType.Health);
                         rollData.RequiredStats.Add(StatType.HeatGeneration);
-                        rollData.RequiredStats.Add(StatType.HeatMax);
                         rollData.OptionalStats.AddRange(StaticSettings.LegsRollMetaFlags);
                         rollData.BudgetValues.Merge(StaticSettings.LegsRollBudgets);
                         rollData.BaseLineValues.Merge(StaticSettings.LegsRollBaseLineStats);
                         rollData.InternalStats.AddRange(StaticSettings.ArmorInternalStats);
+                        rollData.FixedStats.Add(StatType.Heat, 100f);
 
                         return CreateRandomArmor<DefaultLegArmor>(rollData);
                     }
@@ -111,6 +112,7 @@
         private static IArmor CreateRandomArmor<T>(StatRollData rollData)
         {
             StatDictionary result = GenerateRandomStats(rollData);
+            result.Merge(rollData.FixedStats);
 
             StatDictionary inheritedStats = new StatDictionary();
             StatDictionary internalStats = new StatDictionary();
@@ -125,7 +127,7 @@
                     inheritedStats.Add(dataPair.Key, dataPair.Value);
                 }
             }
-
+            
             return (IArmor)Activator.CreateInstance(typeof(T), internalStats, inheritedStats);
         }
 
@@ -135,6 +137,7 @@
             rollData.RequiredStats.AddRange(StaticSettings.WeaponRollFlags);
             rollData.BudgetValues.AddRange(StaticSettings.WeaponRollBudgets);
             rollData.BaseLineValues.AddRange(StaticSettings.WeaponRollBaseLineStats);
+            rollData.FixedStats.Add(StatType.Heat, 100f);
             return GenerateRandomStats(rollData);
         }
 
@@ -193,6 +196,9 @@
                 Debug.Log(string.Format("Roll:{0}  Normlized:{1}  Budget:{2}  Score:{3}", baseRoll[type], normalized, budget, score));
                 result.SetStat(type, score);
             }
+
+            // Add the fixed stats
+            result.Merge(data.FixedStats);
 
             return result;
         }

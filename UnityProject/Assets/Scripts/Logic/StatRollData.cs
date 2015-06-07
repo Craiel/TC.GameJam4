@@ -16,6 +16,7 @@
             this.InternalStats = new List<StatType>();
             this.BaseLineValues = new StatDictionary();
             this.BudgetValues = new StatDictionary();
+            this.FixedStats = new StatDictionary();
         }
 
         // -------------------------------------------------------------------
@@ -29,5 +30,6 @@
 
         public StatDictionary BaseLineValues { get; private set; }
         public StatDictionary BudgetValues { get; private set; }
+        public StatDictionary FixedStats { get; private set; }
     }
 }

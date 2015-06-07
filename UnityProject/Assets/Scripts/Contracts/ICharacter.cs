@@ -1,13 +1,12 @@
 ﻿namespace Assets.Scripts.Contracts
 {
-    using Assets.Scripts.Logic;
     using Assets.Scripts.Logic.Enums;
 
     using InControl;
 
     using UnityEngine;
 
-    public interface ICharacter
+    public interface ICharacter : IStatHolder
     {
         int Id { get; }
 
@@ -22,16 +21,7 @@
         void SetGear(GearType type, IGear newGear);
 
         void RemoveGear(GearType type);
-
-        float GetCurrentStat(StatType type);
-        float GetMaxStat(StatType type);
-
-        void SetBaseStats(StatDictionary baseStats);
-
-        void SetTemporaryStat(StatType type, float value);
-
-        void RemoveTemporaryStat(StatType type);
-
+        
         void TakeDamage(float damage);
 
         void Update(GameObject gameObject);

@@ -1,6 +1,7 @@
 ﻿namespace Assets.Scripts
 {
     using JetBrains.Annotations;
+    using UnityEngine;
 
     public class BulletProjectileBehavior : ProjectileBehavior
     {
@@ -10,7 +11,7 @@
         [UsedImplicitly]
         private void Update()
         {
-            this.transform.Translate(StaticSettings.DefaultMoveDirection * this.Velocity);
+            this.transform.Translate(StaticSettings.DefaultMoveDirection * StaticSettings.DefaultProjectileMoveSpeed * this.Velocity * Time.deltaTime);
         }
     }
 }

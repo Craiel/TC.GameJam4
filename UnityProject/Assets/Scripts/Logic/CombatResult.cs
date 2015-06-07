@@ -24,6 +24,11 @@
         public CombatInfo Info { get; set; }
 
         public bool WasHit { get; set; }
+        public bool WasHitOnGear { get; set; }
+
+        public bool WasMiss { get; set; }
+
+        public bool WasAbsorbed { get; set; }
 
         public int HitCount { get; set; }
 

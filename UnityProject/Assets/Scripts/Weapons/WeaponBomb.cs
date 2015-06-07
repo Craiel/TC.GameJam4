@@ -26,7 +26,8 @@
                     { StatType.HeatGeneration, 1.0f },
                 };
 
-            this.InternalStats.Merge(stats);
+            stats.Merge(internalStats);
+            this.SetBaseStats(stats);
         }
 
         // -------------------------------------------------------------------
@@ -39,8 +40,10 @@
             StaticProjectileBehavior behavior = instance.AddComponent<StaticProjectileBehavior>();
             behavior.DamageInfo = new CombatInfo
             {
-                Damage = this.GetInternalStat(StatType.Damage),
-                DamageType = this.DamageType
+                Damage = this.GetCurrentStat(StatType.Damage),
+                DamageType = this.DamageType,
+                ModValue = 1f,
+                LogNMultiplier = 5f
             };
             behavior.Type = ProjectileType.bomb;
             behavior.LifeSpan = Time.time + 5f;

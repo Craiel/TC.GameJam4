@@ -9,10 +9,12 @@
         // -------------------------------------------------------------------
         protected BaseArmor(StatDictionary internalStats, StatDictionary inheritedStats)
         {
-            this.InternalStats.Merge(StaticSettings.ArmorBaseStats);
-            this.InternalStats.Merge(internalStats);
+            this.SetInheritedStats(inheritedStats);
 
-            this.InheritedStats.Merge(inheritedStats);
+            StatDictionary baseStats = new StatDictionary();
+            baseStats.Merge(StaticSettings.ArmorBaseStats);
+            baseStats.Merge(internalStats);
+            this.SetBaseStats(baseStats);
         }
 
         // -------------------------------------------------------------------

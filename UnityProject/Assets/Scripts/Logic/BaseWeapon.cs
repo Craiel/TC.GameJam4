@@ -17,9 +17,11 @@
             // Make it all left by default and sort it out later
             this.Type = GearType.LeftWeapon;
             this.DamageType = DamageType.Projectile;
- 
-            this.InternalStats.Merge(StaticSettings.WeaponBaseStats);
-            this.InternalStats.Merge(stats);
+
+            StatDictionary baseStats = new StatDictionary();
+            baseStats.Merge(StaticSettings.WeaponBaseStats);
+            baseStats.Merge(stats);
+            this.SetBaseStats(baseStats);
         }
 
         // -------------------------------------------------------------------
@@ -38,7 +40,7 @@
         public virtual bool CanFire()
         {
             float currentTime = Time.time;
-            if (currentTime < this.LastShotFired + this.GetInternalStat(StatType.Interval))
+            if (currentTime < this.LastShotFired + this.GetCurrentStat(StatType.Interval))
             {
                 return false;
             }
@@ -55,6 +57,13 @@
         {
             if (this.CanFire())
             {
+                float maxHeat = this.GetMaxStat(StatType.Heat);
+                if (maxHeat > 0)
+                {
+                    float heatIncrease = this.GetCurrentStat(StatType.HeatGeneration);
+                    this.ModifyStat(StatType.Heat, heatIncrease);
+                }
+
                 this.LastShotFired = Time.time;
 
                 IList<ProjectileBehavior> projectiles = this.DoFire(origin, source);
