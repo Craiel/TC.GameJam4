@@ -89,7 +89,7 @@ namespace Assets.Scripts.Arena
 
             foreach (GearView view in this.UnclaimedGear)
             {
-                Destroy(view);
+                Destroy(view.gameObject);
             }
 
             this.UnclaimedGear.Clear();
