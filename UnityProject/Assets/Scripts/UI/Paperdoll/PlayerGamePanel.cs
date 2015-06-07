@@ -14,6 +14,18 @@ public class PlayerGamePanel : MonoBehaviour
     [SerializeField]
     private Text meleeAccuracy;
 
+    [SerializeField]
+    private Text cooling;
+
+    [SerializeField]
+    private Text armor;
+
+    [SerializeField]
+    private Text shield;
+
+    [SerializeField]
+    private Text hull;
+
     private ICharacter character;
 
     private bool isInitialized;
@@ -40,5 +52,9 @@ public class PlayerGamePanel : MonoBehaviour
 
         rangedAccuracy.text = (int)(character.GetCurrentStat(Assets.Scripts.Logic.Enums.StatType.RangedAccuracy)*100) + "%";
         meleeAccuracy.text = (int)(character.GetCurrentStat(Assets.Scripts.Logic.Enums.StatType.MeleeAccuracy) * 100) + "%";
+        cooling.text = (int)character.GetCurrentStat(Assets.Scripts.Logic.Enums.StatType.HeatCoolingRate) + "/s";
+        armor.text = ((int)character.GetCurrentStat(Assets.Scripts.Logic.Enums.StatType.Armor)).ToString();
+        shield.text = ((int)character.GetCurrentStat(Assets.Scripts.Logic.Enums.StatType.Shield)).ToString();
+        hull.text = (int)character.GetCurrentStat(Assets.Scripts.Logic.Enums.StatType.Health) + "/" + (int)character.GetMaxStat(Assets.Scripts.Logic.Enums.StatType.Health);
     }
 }
