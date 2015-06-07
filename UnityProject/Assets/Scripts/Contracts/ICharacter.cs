@@ -12,6 +12,8 @@
 
         string Name { get; set; }
 
+        Color myColor { get; set; }
+
         ICharacter Target { get; set; }
 
         InputDevice InputDevice { get; set; }
