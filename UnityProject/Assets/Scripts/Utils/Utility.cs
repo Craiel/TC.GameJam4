@@ -15,12 +15,14 @@ public class Utility {
 	private Utility() {}
 
 	private Dictionary<StatType,string> 	StatAbbreviations { get; set; }
+	private Dictionary<StatType,string>		StatUnits { get; set; }
 	private Dictionary<DamageType,string> 	DamageAbbreviations { get; set; }
 	private Dictionary<CombatType,string> 	WeaponAbbreviations { get; set; }
 
 	public void Load() {
 
-		this.StatAbbreviations = new Dictionary<StatType, string>();
+		this.StatAbbreviations	 = new Dictionary<StatType, string>();
+		this.StatUnits			 = new Dictionary<StatType, string>();
 		this.DamageAbbreviations = new Dictionary<DamageType, string>();
 		this.WeaponAbbreviations = new Dictionary<CombatType, string>();
 
@@ -28,14 +30,19 @@ public class Utility {
 		StatAbbreviations.Add (StatType.RotationSpeed, "ROT");
 		StatAbbreviations.Add (StatType.Damage, "DMG");
 		StatAbbreviations.Add (StatType.RangedAccuracy, "RNG");
+		StatUnits.Add (StatType.RangedAccuracy, "%");
 		StatAbbreviations.Add (StatType.MeleeAccuracy, "MEL");
+		StatUnits.Add (StatType.MeleeAccuracy, "%");
 		StatAbbreviations.Add (StatType.TargetingDistance, "DIS");
+		StatUnits.Add (StatType.TargetingDistance, "m");
 		StatAbbreviations.Add (StatType.TargetingLockTime, "LCK");
+		StatUnits.Add (StatType.TargetingLockTime, "s");
 		StatAbbreviations.Add (StatType.Health, "HUL");
 		StatAbbreviations.Add (StatType.Armor, "ARM");
 		StatAbbreviations.Add (StatType.Shield, "SHD");
 		StatAbbreviations.Add (StatType.HeatGeneration, "HET");
 		StatAbbreviations.Add (StatType.HeatCoolingRate, "COL");
+		StatUnits.Add (StatType.HeatCoolingRate, "/s");
 
 		WeaponAbbreviations.Add (CombatType.Melee, "MEL");
 		WeaponAbbreviations.Add (CombatType.Ranged, "RNG");
@@ -46,9 +53,22 @@ public class Utility {
 
 	}
 
+
+	public string GetUnits(StatType statType) {
+
+		if(StatUnits.ContainsKey(statType)) {
+			return StatUnits[statType];
+		}
+		return "";
+
+	}
+
 	public string GetCode(StatType statType) {
 
-		return StatAbbreviations[statType];
+		if(StatAbbreviations.ContainsKey(statType)) {
+			return StatAbbreviations[statType];
+		}
+		return "";
 
 	}
 
