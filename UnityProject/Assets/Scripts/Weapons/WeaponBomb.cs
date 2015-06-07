@@ -8,6 +8,8 @@
     public class WeaponBomb : BaseWeapon
     {
         private readonly Object projectilePrefab;
+        private readonly Object effectPrefab;
+
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
@@ -16,10 +18,12 @@
         {
             this.Name = "Bomb";
             this.projectilePrefab = Resources.Load("Projectiles/Bomb");
+            this.effectPrefab = Resources.Load("Projectiles/bombArea");
 
             var stats = new StatDictionary
                 {
-                    { StatType.Interval, 0.1f },
+                    { StatType.Interval, 1f },
+                    { StatType.ProjectileLifeSpan, 2f },
                     { StatType.HeatGeneration, 1.0f },
                 };
 
@@ -44,8 +48,10 @@
                 LogNMultiplier = 5f
             };
             behavior.Type = ProjectileType.bomb;
-            behavior.LifeSpan = Time.time + 5f;
+            behavior.LifeSpan = Time.time + this.GetCurrentStat(StatType.ProjectileLifeSpan);
             behavior.Origin = context.Origin;
+            behavior.EffectParent = context.ProjectileParent;
+            behavior.EffectPrefab = this.effectPrefab;
         }
     }
 }

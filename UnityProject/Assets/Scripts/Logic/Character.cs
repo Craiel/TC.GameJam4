@@ -14,6 +14,8 @@
         private static int nextId;
 
         private readonly IDictionary<GearType, IGear> gear;
+
+        private float nextCoolingTick;
  
         // -------------------------------------------------------------------
         // Constructor
@@ -83,14 +85,66 @@
 
         public void Update(GameObject gameObject)
         {
-            foreach (GearType type in this.gear.Keys)
+            foreach (GearType type in EnumLists.GearTypes)
             {
-                if (this.gear[type] == null)
+                this.UpdateGear(gameObject, type);
+            }
+
+            if (Time.time >= this.nextCoolingTick)
+            {
+                foreach (GearType type in EnumLists.GearTypes)
                 {
-                    continue;
+                    this.UpdateGearCooling(type);
                 }
 
-                this.gear[type].Update(gameObject);
+                this.nextCoolingTick = Time.time + StaticSettings.CoolingTickDelay;
+            }
+        }
+
+        private void UpdateGear(GameObject gameObject, GearType type)
+        {
+            if (!this.gear.ContainsKey(type) || this.gear[type] == null)
+            {
+                return;
+            }
+
+            IGear current = this.gear[type];
+
+            // Check if the gear was destroyed
+            float healthMax = current.GetMaxStat(StatType.Health);
+            float health = current.GetCurrentStat(StatType.Health);
+            if (healthMax > 0 && health <= 0)
+            {
+                this.RemoveGear(type);
+                Debug.Log(string.Format("Item {0} is destroyed, removing!", type));
+                return;
+            }
+            
+            current.Update(gameObject);
+        }
+
+        private void UpdateGearCooling(GearType type)
+        {
+            if (!this.gear.ContainsKey(type) || this.gear[type] == null)
+            {
+                return;
+            }
+
+            IGear current = this.gear[type];
+
+            // Deduct heat based on the cooling
+            float heatMax = current.GetMaxStat(StatType.Heat);
+            float heat = current.GetCurrentStat(StatType.Heat);
+            float cooling = this.GetCurrentStat(StatType.HeatCoolingRate);
+            if (heatMax > 0 && heat > 0)
+            {
+                float value = cooling;
+                if (cooling > heat)
+                {
+                    value = heat;
+                }
+
+                current.ModifyStat(StatType.Heat, -value);
             }
         }
 
