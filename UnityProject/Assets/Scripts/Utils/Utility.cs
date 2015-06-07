@@ -54,12 +54,30 @@ public class Utility {
 	}
 
 
-	public string GetUnits(StatType statType) {
+	public string ValueWithUnits(StatType statType, double value) {
 
 		if(StatUnits.ContainsKey(statType)) {
-			return StatUnits[statType];
+
+			string code = StatUnits[statType];
+
+			if(code == "%") {
+				value = value * 100;
+				return Convert.ToString(Math.Round (value, 0)) + StatUnits[statType];
+			
+			} else if (code == "s") {
+				return Convert.ToString(Math.Round (value, 2)) + StatUnits[statType];
+			}
+
+			return Convert.ToString(Math.Round (value, 0)) + StatUnits[statType];
 		}
-		return "";
+
+		if (statType == StatType.Velocity) {
+			return Math.Round (value, 2) + StatUnits[statType];
+		} else if (statType == StatType.RotationSpeed) {
+			return Convert.ToString(Math.Round (value, 2)) + StatUnits[statType];
+		}
+
+		return Convert.ToString(Math.Round (value, 0));
 
 	}
 
@@ -68,7 +86,7 @@ public class Utility {
 		if(StatAbbreviations.ContainsKey(statType)) {
 			return StatAbbreviations[statType];
 		}
-		return "";
+		return "ERR";
 
 	}
 
@@ -108,7 +126,7 @@ public class Utility {
 
 		} else if (weapon is WeaponHeat) {
 			s1 = "DMG";
-			s2 = "HEA";
+			s2 = "HET";
 			s3 = DamageAbbreviations [weapon.DamageType];
 		
 			

@@ -8,6 +8,7 @@
     public class WeaponColumn : BaseWeapon
     {
         private readonly Object projectilePrefab;
+        private readonly Object particlePrefab;
 
         // -------------------------------------------------------------------
         // Constructor
@@ -18,6 +19,7 @@
             this.Name = "Beam";
 
             this.projectilePrefab = Resources.Load("Projectiles/EnergyBullet");
+            this.particlePrefab = Resources.Load("Particle/Fog");
 
             var stats = new StatDictionary
                 {
