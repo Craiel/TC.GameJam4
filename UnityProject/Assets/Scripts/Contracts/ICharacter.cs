@@ -25,6 +25,8 @@
         float GetCurrentStat(StatType type);
         float GetMaxStat(StatType type);
 
+        void SetBaseStats(StatDictionary baseStats);
+
         void SetTemporaryStat(StatType type, float value);
 
         void RemoveTemporaryStat(StatType type);
