@@ -43,7 +43,7 @@
                 return false;
             }
 
-            return true;
+            return !this.IsOverheated;
         }
 
         public void SetWeaponGearType(GearType type)

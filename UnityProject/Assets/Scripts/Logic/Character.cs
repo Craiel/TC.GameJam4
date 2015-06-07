@@ -15,6 +15,8 @@
 
         private readonly IDictionary<GearType, IGear> gear;
 
+        private readonly IDictionary<GearType, bool> gearEnableState;
+
         private float nextCoolingTick;
  
         // -------------------------------------------------------------------
@@ -25,6 +27,12 @@
             this.Id = nextId++;
 
             this.gear = new Dictionary<GearType, IGear>();
+            this.gearEnableState = new Dictionary<GearType, bool>();
+
+            foreach (GearType type in EnumLists.GearTypes)
+            {
+                this.gearEnableState.Add(type, false);
+            }
 
             // Set some defaults but will be override later
             this.SetBaseStats(StaticSettings.PlayerBaseStats);
@@ -105,6 +113,8 @@
         {
             if (!this.gear.ContainsKey(type) || this.gear[type] == null)
             {
+                // There is no gear here, check if we had it enabled previously
+                this.CheckGearDisableState(type, false);
                 return;
             }
 
@@ -116,11 +126,24 @@
             if (healthMax > 0 && health <= 0)
             {
                 this.RemoveGear(type);
+                this.CheckGearDisableState(type, false);
                 Debug.Log(string.Format("Item {0} is destroyed, removing!", type));
                 return;
             }
             
             current.Update(gameObject);
+
+            // Update the enabled state to be non-overheated
+            this.CheckGearDisableState(type, !current.IsOverheated);
+        }
+
+        private void CheckGearDisableState(GearType type, bool isEnabled)
+        {
+            if (this.gearEnableState[type] != isEnabled)
+            {
+                this.gearEnableState[type] = isEnabled;
+                this.NeedStatUpdate = true;
+            }
         }
 
         private void UpdateGearCooling(GearType type)
@@ -154,7 +177,7 @@
 
             foreach (GearType type in this.gear.Keys)
             {
-                if (this.gear[type] == null)
+                if (this.gear[type] == null || !this.gearEnableState[type])
                 {
                     continue;
                 }
