@@ -16,6 +16,8 @@
 
         public const float MaxRotationDelay = 2f;
 
+        public const float CoolingTickDelay = 1f;
+
         public const float DefaultProjectileLifespan = 5.0f;
 
         public const string MapFileFilter = "/Resources/Maps/{0}.txt";
@@ -169,5 +171,7 @@
                                                               StatType.Health,
                                                               StatType.Heat
                                                           };
+
+        
     }
 }
