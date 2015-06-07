@@ -2,8 +2,6 @@
 {
     using Assets.Scripts.Logic;
     
-    using JetBrains.Annotations;
-
     using UnityEngine;
     using Assets.Scripts.Logic.Enums;
 
@@ -58,50 +56,6 @@
                 this.ExpireProjectile();
                 this.LifeSpan = null;
             }
-        }
-
-        // -------------------------------------------------------------------
-        // Private
-        // -------------------------------------------------------------------
-        [UsedImplicitly]
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.gameObject == this.Origin)
-            {
-                return;
-            }
-
-            switch (this.Type)
-            {
-                case ProjectileType.bullet:
-                case ProjectileType.beam:
-                    {
-                        var data = new CombatResolve(this.DamageInfo)
-                        {
-                            Source = this.Origin,
-                            Target = other.gameObject
-                        };
-
-                        Combat.Resolve(data);
-                        break;
-                    }
-            }
-            
-            switch (this.Type)
-            {
-                case ProjectileType.bullet:
-                case ProjectileType.bomb:
-                    {
-                        this.ExpireProjectile();
-                        break;
-                    }
-            }
-        }
-
-        [UsedImplicitly]
-        private void OnTriggerStay2D(Collider2D other)
-        {
-            //TODO: beam dmg cal on each mech and walls it hits
         }
     }
 }
