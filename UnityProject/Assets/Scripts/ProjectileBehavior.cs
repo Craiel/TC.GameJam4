@@ -70,7 +70,7 @@
             {
                 return;
             }
-            
+
             switch (this.Type)
             {
                 case ProjectileType.bullet:
@@ -83,10 +83,13 @@
                         };
 
                         Combat.Resolve(data);
-                        this.ExpireProjectile();
                         break;
                     }
-
+            }
+            
+            switch (this.Type)
+            {
+                case ProjectileType.bullet:
                 case ProjectileType.bomb:
                     {
                         this.ExpireProjectile();
