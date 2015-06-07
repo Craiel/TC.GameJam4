@@ -68,7 +68,7 @@ namespace Assets.Scripts
             this.SpawnMechs(characters);
             this.arena.PlaceStarterGear();
 
-            this.timeUntilSpawn = Time.time + 30f;
+            this.timeUntilSpawn = 30f;
             this.IsPlaying = true;
         }
 
@@ -135,6 +135,7 @@ namespace Assets.Scripts
                         arena.PlaceGear(GearGeneration.GenerateRandomGear());
                     }
                 }
+                this.timeUntilSpawn = 30f;
             }
         }
 
