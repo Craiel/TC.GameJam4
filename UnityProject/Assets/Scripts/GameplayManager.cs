@@ -138,8 +138,8 @@ namespace Assets.Scripts
                     {
                         arena.PlaceGear(GearGeneration.GenerateRandomGear());
                     }
+                    this.timeUntilSpawn = 30f;
                 }
-                this.timeUntilSpawn = 30f;
             }
         }
 
@@ -237,8 +237,15 @@ namespace Assets.Scripts
                 }
             }
 
-            // Find a valid spawn point
-            Vector3 chosenSpawnPoint = availableSpawnPoints[Random.Range(0, availableSpawnPoints.Count)];
+            Vector3 chosenSpawnPoint = Vector3.zero;
+            if(availableSpawnPoints.Count == 0)
+            {
+                chosenSpawnPoint = this.arena.Data.SpawnPoints[Random.Range(0, availableSpawnPoints.Count)];
+            }
+            else
+            {
+                chosenSpawnPoint = availableSpawnPoints[Random.Range(0, availableSpawnPoints.Count)];
+            }
 
             // Set the player to the spawn point and reset it's rotation
             this.activePlayers[character].transform.localPosition = chosenSpawnPoint;
