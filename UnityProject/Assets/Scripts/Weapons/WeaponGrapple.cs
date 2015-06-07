@@ -43,15 +43,16 @@
             if (ray.collider != null)
             {
                 Vector3 depthOffset = new Vector3(0, 0, -1f);
-                LineRenderer line = origin.GetComponent<LineRenderer>();
-                line.SetPosition(0, origin.transform.position + depthOffset);
+                GameObject instance = (GameObject)Object.Instantiate(projectilePrefab, ray.transform.position, origin.transform.rotation);
+                LineRenderer line = instance.GetComponent<LineRenderer>();
+                line.SetPosition(0, instance.transform.position + depthOffset);
                 line.SetPosition(1, ray.transform.position + depthOffset);
 
-                GameObject instance = (GameObject)Object.Instantiate(projectilePrefab, ray.transform.position, origin.transform.rotation);
+                
                 StaticProjectileBehavior behavior = instance.AddComponent<StaticProjectileBehavior>();
                 behavior.DamageInfo = new CombatInfo
                 {
-                    Damage = this.GetInternalStat(StatType.Damage),
+                    Damage = this.GetCurrentStat(StatType.Damage),
                     DamageType = this.DamageType
                 };
                 behavior.Type = ProjectileType.grapple;
@@ -67,9 +68,10 @@
             if (timeChanged + 1 <= Time.time)
             {
                 var a = origin.GetComponent<LineRenderer>();
-                a.SetColors(new Color(0, 0, 0, 0), new Color(0, 0, 0, 0));
+                //a.enabled = false;
                 a.SetPosition(0, Vector3.zero);
                 a.SetPosition(1, Vector3.zero);
+                //a.enabled = true;
             }
 
         }

@@ -40,7 +40,7 @@
             MeleeProjectileBehavior behavior = instance.AddComponent<MeleeProjectileBehavior>();
             behavior.DamageInfo = new CombatInfo
             {
-                Damage = this.GetInternalStat(StatType.Damage),
+                Damage = this.GetCurrentStat(StatType.Damage),
                 DamageType = this.DamageType,
                 CombatType = CombatType.Ranged
             };
