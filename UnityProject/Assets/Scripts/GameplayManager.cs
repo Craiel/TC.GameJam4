@@ -216,11 +216,32 @@ namespace Assets.Scripts
         
         private void RespawnMech(ICharacter character)
         {
+            List<Vector3> availableSpawnPoints = new List<Vector3>();
+
+            foreach(Vector3 spawnPoint in this.arena.Data.SpawnPoints)
+            {
+                bool isValid = true;
+
+                foreach (PlayerCharacterBehavior characterView in CharacterViews)
+                {
+                    if ((characterView.transform.position - spawnPoint).magnitude < 1f)
+                    {
+                        isValid = false;
+                        break;
+                    }
+                }
+
+                if(isValid)
+                {
+                    availableSpawnPoints.Add(spawnPoint);
+                }
+            }
+
             // Find a valid spawn point
-            Vector3 spawnPoint = this.arena.Data.SpawnPoints[Random.Range(0, this.arena.Data.SpawnPoints.Count)];
+            Vector3 chosenSpawnPoint = availableSpawnPoints[Random.Range(0, availableSpawnPoints.Count)];
 
             // Set the player to the spawn point and reset it's rotation
-            this.activePlayers[character].transform.localPosition = spawnPoint;
+            this.activePlayers[character].transform.localPosition = chosenSpawnPoint;
             this.activePlayers[character].transform.rotation = Quaternion.identity;
 
             // Re-activate the character
