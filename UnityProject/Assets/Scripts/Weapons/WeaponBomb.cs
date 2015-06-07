@@ -40,9 +40,10 @@
             behavior.DamageInfo = new CombatInfo
             {
                 Damage = this.GetInternalStat(StatType.Damage),
-                Type = this.DamageType
+                DamageType = this.DamageType
             };
-            behavior.LifeSpan = Time.time + 10f;
+            behavior.Type = ProjectileType.bomb;
+            behavior.LifeSpan = Time.time + 5f;
             behavior.Origin = origin;
 
             return new List<ProjectileBehavior> { behavior };
