@@ -28,7 +28,7 @@
                     { StatType.Interval, 0.1f }
                 };
 
-            this.InternalStats.Merge(stats);
+            this.SetBaseStats(stats);
         }
 
         // -------------------------------------------------------------------
@@ -67,7 +67,7 @@
                 StaticProjectileBehavior behavior = instance.AddComponent<StaticProjectileBehavior>();
                 behavior.DamageInfo = new CombatInfo
                 {
-                    Damage = this.GetInternalStat(StatType.Damage),
+                    Damage = this.GetCurrentStat(StatType.Damage),
                     DamageType = this.DamageType
                 };
                 behavior.LifeSpan = Time.time + .5f; //Time.time + this.GetInternalStat(StatType.ProjectileLifeSpan);

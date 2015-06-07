@@ -1,6 +1,5 @@
 ﻿namespace Assets.Scripts.Logic
 {
-    using System;
     using System.Collections.Generic;
 
     using Assets.Scripts.Contracts;
@@ -106,6 +105,18 @@
                     }
             }
 
+            foreach (GearType gearType in EnumLists.GearTypes)
+            {
+                IGear gear = character.GetGear(gearType);
+                if (gear == null)
+                {
+                    continue;
+                }
+
+                //gear.Get
+                float partHealth = gear.GetCurrentStat(StatType.Health);
+                
+            }
             /*foreach (a a in a)
             {
                 

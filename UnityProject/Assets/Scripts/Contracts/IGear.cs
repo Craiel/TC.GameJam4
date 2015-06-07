@@ -5,20 +5,16 @@
 
     using UnityEngine;
 
-    public interface IGear
+    public interface IGear : IStatHolder
     {
         GearType Type { get; }
 
         string Name { get; }
 
         void Update(GameObject gameObject);
-
-        float GetInternalStat(StatType type);
-
+        
         float GetInheritedStat(StatType type);
-
-        StatDictionary GetInternalStats();
-
+        
         StatDictionary GetInheritedStats();
     }
 }

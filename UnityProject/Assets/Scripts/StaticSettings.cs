@@ -34,6 +34,7 @@
 
         public static StatDictionary PlayerBaseStats = new StatDictionary
         {
+            { StatType.Scale, 1.0f },
             { StatType.Health, 100.0f },
             { StatType.Velocity, 1.0f },
             { StatType.RotationSpeed, 1.0f },
@@ -41,8 +42,6 @@
             { StatType.TargetingLockTime, 2f},
             { StatType.TargetingDistance, 20f},
         };
-
-
 
         public static bool EnableInControl = false;
 
@@ -165,9 +164,10 @@
                                                                 typeof(WeaponHoming)
                                                             };
 
-        public static IList<StatType> PersistentPlayerStats = new List<StatType>
+        public static IList<StatType> PersistentStats = new List<StatType>
                                                           {
-                                                              StatType.Health
+                                                              StatType.Health,
+                                                              StatType.Heat
                                                           };
     }
 }

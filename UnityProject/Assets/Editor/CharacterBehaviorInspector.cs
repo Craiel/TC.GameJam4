@@ -57,10 +57,10 @@
             }
 
             EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField(" -- Internal: ");
+            EditorGUILayout.LabelField(" -- Current: ");
             foreach (StatType statType in EnumLists.StatTypes)
             {
-                float value = gear.GetInternalStat(statType);
+                float value = gear.GetCurrentStat(statType);
                 if (Math.Abs(value) > float.Epsilon)
                 {
                     EditorGUILayout.TextField(statType.ToString(), value.ToString(CultureInfo.InvariantCulture));

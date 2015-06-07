@@ -5,9 +5,8 @@
 
     using UnityEngine;
 
-    public abstract class BaseGear : IGear
+    public abstract class BaseGear : StatHolder, IGear
     {
-        private readonly StatDictionary internalStats;
         private readonly StatDictionary inheritedStats;
 
         // -------------------------------------------------------------------
@@ -15,7 +14,6 @@
         // -------------------------------------------------------------------
         protected BaseGear()
         {
-            this.internalStats = new StatDictionary();
             this.inheritedStats = new StatDictionary();
         }
 
@@ -25,22 +23,12 @@
         public GearType Type { get; protected set; }
 
         public string Name { get; protected set; }
-
-        public float GetInternalStat(StatType type)
-        {
-            return this.internalStats.GetStat(type);
-        }
-
+        
         public float GetInheritedStat(StatType type)
         {
             return this.inheritedStats.GetStat(type);
         }
-
-        public StatDictionary GetInternalStats()
-        {
-            return new StatDictionary(this.internalStats);
-        }
-
+        
         public StatDictionary GetInheritedStats()
         {
             return new StatDictionary(this.inheritedStats);
@@ -53,20 +41,10 @@
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
-        protected StatDictionary InternalStats
+        protected void SetInheritedStats(StatDictionary stats)
         {
-            get
-            {
-                return this.internalStats;
-            }
-        }
-
-        protected StatDictionary InheritedStats
-        {
-            get
-            {
-                return this.inheritedStats;
-            }
+            this.inheritedStats.Clear();
+            this.inheritedStats.Merge(stats);
         }
     }
 }

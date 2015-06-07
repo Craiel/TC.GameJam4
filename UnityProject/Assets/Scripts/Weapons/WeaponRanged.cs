@@ -30,7 +30,7 @@
                     { StatType.HeatGeneration, 1.0f },
                 };
 
-            this.InternalStats.Merge(stats);
+            this.SetBaseStats(stats);
         }
 
         // -------------------------------------------------------------------
@@ -43,12 +43,12 @@
             BulletProjectileBehavior behavior = instance.AddComponent<BulletProjectileBehavior>();
             behavior.DamageInfo = new CombatInfo
                                       {
-                                          Damage = this.GetInternalStat(StatType.Damage),
+                                          Damage = this.GetCurrentStat(StatType.Damage),
                                           DamageType = this.DamageType,
                                           CombatType = CombatType.Ranged
                                       };
-            behavior.Velocity = this.GetInternalStat(StatType.Velocity);
-            behavior.LifeSpan = Time.time + this.GetInternalStat(StatType.ProjectileLifeSpan);
+            behavior.Velocity = this.GetCurrentStat(StatType.Velocity);
+            behavior.LifeSpan = Time.time + this.GetCurrentStat(StatType.ProjectileLifeSpan);
             behavior.Origin = origin;
 
             return new List<ProjectileBehavior> { behavior };
