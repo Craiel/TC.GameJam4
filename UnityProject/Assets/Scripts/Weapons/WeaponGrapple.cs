@@ -22,7 +22,7 @@
             var stats = new StatDictionary
                 {
                     { StatType.ProjectileLifeSpan, 10f},
-                    { StatType.Interval, 0.1f },
+                    { StatType.Interval, 5f },
                     { StatType.HeatGeneration, 1.0f },
                 };
 

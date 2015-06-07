@@ -23,7 +23,9 @@
         public GearType Type { get; protected set; }
 
         public string Name { get; protected set; }
-        
+
+        public bool IsOverheated { get; protected set; }
+
         public float GetInheritedStat(StatType type)
         {
             return this.inheritedStats.GetStat(type);
@@ -36,6 +38,14 @@
 
         public virtual void Update(GameObject gameObject)
         {
+            float heatMax = this.GetCurrentStat(StatType.Heat);
+            if (heatMax > 0)
+            {
+                float heat = this.GetCurrentStat(StatType.HeatGeneration);
+                float heatGeneration = this.GetCurrentStat(StatType.HeatGeneration);
+
+                this.IsOverheated = heat + heatGeneration > heatMax;
+            }
         }
 
         // -------------------------------------------------------------------

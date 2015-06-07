@@ -11,6 +11,8 @@
 
         string Name { get; }
 
+        bool IsOverheated { get; }
+
         void Update(GameObject gameObject);
         
         float GetInheritedStat(StatType type);
