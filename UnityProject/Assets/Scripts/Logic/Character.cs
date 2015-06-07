@@ -53,6 +53,13 @@
             return null;
         }
 
+        public void SetBaseStats(StatDictionary baseStats)
+        {
+            this.baseStats.Clear();
+            this.baseStats.Merge(baseStats);
+            needStatUpdate = true;
+        }
+
         public void SetGear(GearType type, IGear newGear)
         {
             System.Diagnostics.Trace.Assert(newGear != null, "New Gear was null, call RemoveGear instead!");

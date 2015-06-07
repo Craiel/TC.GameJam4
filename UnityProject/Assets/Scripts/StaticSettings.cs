@@ -37,6 +37,8 @@
             { StatType.HeatCoolingRate, 1.0f }
         };
 
+
+
         public static bool EnableInControl = false;
 
         public static IList<StatType> HeadRollMetaFlags = new List<StatType>
