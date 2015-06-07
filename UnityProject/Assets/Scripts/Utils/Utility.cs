@@ -86,7 +86,7 @@ public class Utility {
 		if(StatAbbreviations.ContainsKey(statType)) {
 			return StatAbbreviations[statType];
 		}
-		return "";
+		return "ERR";
 
 	}
 
