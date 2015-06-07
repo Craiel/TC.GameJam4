@@ -5,8 +5,12 @@ using Assets.Scripts;
 using Assets.Scripts.Contracts;
 using Assets.Scripts.Logic;
 
-public class UIManager : MonoBehaviour 
+using JetBrains.Annotations;
+
+public class UIManager : MonoBehaviour
 {
+    private bool waitingForCharacterSelection = true;
+
     [SerializeField]
     private GameplayManager gameplayManager;
 
@@ -35,55 +39,82 @@ public class UIManager : MonoBehaviour
         playerSelect.SetActive(true);
         gameScene.SetActive(false);
     }
-
-    private void Update()
+    
+    private IDictionary<ICharacter, MechLoadouts.MechLoadout> GetReadyPlayers()
     {
-        if(!gameplayManager.IsPlaying)
+        var result = new Dictionary<ICharacter, MechLoadouts.MechLoadout>();
+        foreach (UIPlayerManager playerManager in this.players)
         {
-            Dictionary<ICharacter, MechLoadouts.MechLoadout> characters = new Dictionary<ICharacter, MechLoadouts.MechLoadout>();
-            foreach(UIPlayerManager playerManager in players)
+            if (playerManager.CurrentState == UIPlayerManager.UIState.Ready)
             {
-                if(playerManager.CurrentState == UIPlayerManager.UIState.Joined)
-                {
-                    return;
-                }
-                if(playerManager.CurrentState == UIPlayerManager.UIState.Ready)
-                {
-                    characters.Add(playerManager.Character, playerManager.Loadout);
-                }
+                result.Add(playerManager.Character, playerManager.Loadout);
+            }
+        }
+
+        return result;
+    }
+
+    private void SetupMatch(IDictionary<ICharacter, MechLoadouts.MechLoadout> players)
+    {
+        this.playerSelect.SetActive(false);
+        this.gameScene.SetActive(true);
+
+        int playerPanelIndex = 0;
+        foreach (ICharacter character in players.Keys)
+        {
+            character.SetBaseStats(players[character].BasicStats);
+
+            if (character.InputDevice != null)
+            {
+                this.playerGamePanels[playerPanelIndex].Init(character);
+            }
+            else
+            {
+                this.playerGamePanels[playerPanelIndex].gameObject.SetActive(false);
             }
 
-            //TODO: Make this actually 2, dummy
-            if(characters.Count > 0)
+            playerPanelIndex++;
+        }
+
+        this.gameplayManager.SetupMatch(new List<ICharacter>(players.Keys));
+    }
+
+    private void SetupPlayerSelection()
+    {
+        this.playerSelect.SetActive(true);
+        this.gameScene.SetActive(false);
+
+        foreach (PlayerGamePanel gamePanel in this.playerGamePanels)
+        {
+            gamePanel.gameObject.SetActive(false);
+        }
+
+        this.waitingForCharacterSelection = true;
+    }
+
+    [UsedImplicitly]
+    private void Update()
+    {
+        if(!this.gameplayManager.IsPlaying)
+        {
+            if (this.gameplayManager.HasEnded && !this.waitingForCharacterSelection)
             {
-                playerSelect.SetActive(false);
-                gameScene.SetActive(true);
-
-                int playerPanelIndex = 0;
-                foreach (ICharacter character in characters.Keys)
+                this.SetupPlayerSelection();
+            }
+            else if (this.gameplayManager.HasEnded && this.waitingForCharacterSelection)
+            {
+                IDictionary<ICharacter, MechLoadouts.MechLoadout> readyPlayers = this.GetReadyPlayers();
+                if (readyPlayers.Count > 1)
                 {
-                    character.SetBaseStats(characters[character].BasicStats);
-
-                    if(character.InputDevice != null)
-                    {
-                        playerGamePanels[playerPanelIndex].Init(character);
-                    }
-                    else
-                    {
-                        playerGamePanels[playerPanelIndex].gameObject.SetActive(false);
-                    }
-                    
-                    playerPanelIndex++;
+                    this.SetupMatch(readyPlayers);
                 }
-
-                gameplayManager.SetupMatch(new List<ICharacter>(characters.Keys));
             }
         }
         else
         {
             foreach(CombatResult combatResult in Combat.PollResults())
             {
-                GameObject combatText = Instantiate(CombatTextPrefab) as GameObject;
+                GameObject combatText = Instantiate(this.CombatTextPrefab);
                 combatText.transform.SetParent(this.transform);
 
                 if(combatResult.WasMiss)

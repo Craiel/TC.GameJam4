@@ -49,6 +49,8 @@ namespace Assets.Scripts
 
         public bool IsPlaying { get; private set; }
 
+        public bool HasEnded { get; private set; }
+
         public IList<ICharacter> Characters { get; private set; }
 
         public List<PlayerCharacterBehavior> CharacterViews { get; private set; }
@@ -65,6 +67,7 @@ namespace Assets.Scripts
             this.SpawnMechs(characters);
             this.arena.PlaceStarterGear();
 
+            this.HasEnded = false;
             this.IsPlaying = true;
         }
 
@@ -139,6 +142,8 @@ namespace Assets.Scripts
 
             this.activePlayers.Clear();
             this.Characters.Clear();
+
+            this.HasEnded = true;
         }
 
         private bool KillCharacter(ICharacter character)
