@@ -1,10 +1,7 @@
 ﻿﻿using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
-
-﻿using Assets.Scripts;
-﻿using Assets.Scripts.Arena;
-
+ 
 ﻿using JetBrains.Annotations;
 using Assets.Scripts.Contracts;
 using Assets.Scripts.Logic;
@@ -15,14 +12,7 @@ namespace Assets.Scripts.Arena
     public class Arena : MonoBehaviour
     {
         private static Arena instance;
-
-        private const string TagIndestructible = "x";
-        private const string TagDestructible = "d";
-        private const string TagHalf = "h";
-        private const string TagSpawn = "s";
-
-        private int currentLineToProcess;
-
+        
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -53,92 +43,81 @@ namespace Assets.Scripts.Arena
         // -------------------------------------------------------------------
         public Arena()
         {
-            UnclaimedGear = new List<GearView>();
+            this.UnclaimedGear = new List<GearView>();
         }
-
-        // -------------------------------------------------------------------
-        // Private
-        // -------------------------------------------------------------------
-        [SerializeField]
-        private List<Color> tileColorKeys;
-
-        [SerializeField]
-        private List<GameObject> tiles;
-
-        [SerializeField]
-        private GameObject gearViewPrefab;
-
-        [SerializeField]
-        private GameplayManager gameplayManager;
 
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public List<Vector3> SpawnPoints { get; private set; }
+        [SerializeField]
+        public List<Color> tileColorKeys;
+
+        [SerializeField]
+        public List<GameObject> tilePrefabs;
+
+        [SerializeField]
+        public GameObject gearViewPrefab;
+
+        [SerializeField]
+        public GameplayManager gameplayManager;
+
         public List<ArenaTile> Tiles { get; private set; }
         public List<GearView> UnclaimedGear { get; private set; }
 
-        public void InitFromText(string fileName)
-        {
-            StreamReader streamReader = new StreamReader(Application.dataPath + string.Format(StaticSettings.MapFileFilter, fileName));
+        public ArenaData Data { get; private set; }
 
-            this.currentLineToProcess = 0;
-            using (streamReader)
+        public void Initialize(ArenaData newData)
+        {
+            // Clear out the map contents
+            this.Uninitialize();
+            this.Data = newData;
+
+            for (var i = 0; i < newData.TileIndizes.Count; i++)
             {
-                string line;
-                do
-                {
-                    line = streamReader.ReadLine();
-                    this.ProcessLine(line);
-                }
-                while (line != null);
+                this.BuildTile(newData.TileIndizes[i], newData.Positions[i]);
             }
         }
 
-        public void InitFromTexture(Texture2D texture)
+        public void Uninitialize()
         {
-            Vector2 mapDimensions = new Vector2(texture.width, texture.height);
-
-            int currentIndex = 0;
-            Color[] colors = texture.GetPixels();
-            for (int i = 0; i < mapDimensions.x; i++)
+            foreach (ArenaTile tile in this.Tiles)
             {
-                for (int j = 0; j < mapDimensions.y; j++)
-                {
-                    int tileIndex = this.tileColorKeys.IndexOf(colors[currentIndex]);
-                    GameObject tile = Instantiate(this.tiles[tileIndex]);
-
-                    tile.transform.SetParent(this.transform);
-                    tile.transform.localPosition = new Vector3(-5.25f + j * 0.35f, 5.25f - i * 0.35f, 0f);
-
-                    currentIndex++;
-                }
+                Destroy(tile.TileView);
             }
-            //TODO: Recognize spawns
+
+            this.Tiles.Clear();
+
+            foreach (GearView view in this.UnclaimedGear)
+            {
+                Destroy(view);
+            }
+
+            this.UnclaimedGear.Clear();
+            this.Data = null;
         }
 
         public void PlaceStarterGear()
         {
-            int characterCount = gameplayManager.Characters.Count;
+            int characterCount = this.gameplayManager.Characters.Count;
             int totalStarterGear = StaticSettings.NumGearDropsPerCharacterAtStart * characterCount;
 
             for (int i = 0; i < characterCount; ++i)
             {
-                PlaceGear(GearGeneration.GenerateRandomGear(GearType.RightWeapon));
+                this.PlaceGear(GearGeneration.GenerateRandomGear(GearType.RightWeapon));
             }
 
             for (int i = 0; i < totalStarterGear - characterCount; ++i)
             {
-                PlaceGear(GearGeneration.GenerateRandomGear());
+                this.PlaceGear(GearGeneration.GenerateRandomGear());
             }
         }
 
         public void ClaimGear(IGear gear)
         {
-            GearView gearView = UnclaimedGear.Find(g => g.Gear == gear);
+            GearView gearView = this.UnclaimedGear.Find(g => g.Gear == gear);
             if (gearView != null)
             {
-                UnclaimedGear.Remove(gearView);
+                this.UnclaimedGear.Remove(gearView);
             }
             Destroy(gearView.gameObject);
         }
@@ -150,54 +129,34 @@ namespace Assets.Scripts.Arena
         private void Awake()
         {
             this.Tiles = new List<ArenaTile>();
-            this.SpawnPoints = new List<Vector3>();
         }
 
         [UsedImplicitly]
         private void Update()
         {
-
         }
 
-        private void ProcessLine(string line)
+        private ArenaTileType GetTileType(int index)
         {
-            if (!string.IsNullOrEmpty(line))
+            switch (index)
             {
-                for (int j = 0; j < line.Length; ++j)
-                {
-                    string character = line.Substring(j, 1);
-                    int tileIndex = 0;
-                    ArenaTileType type = ArenaTileType.Ground;
-                    if (character == TagIndestructible)
-                    {
-                        tileIndex = 1;
-                        type = ArenaTileType.Indestructible;
-                    }
-                    else if (character == TagDestructible)
-                    {
-                        tileIndex = 2;
-                        type = ArenaTileType.Destructible;
-                    }
-                    else if (character == TagHalf)
-                    {
-                        tileIndex = 3;
-                        type = ArenaTileType.HalfWall;
-                    }
-                    else if (character == TagSpawn)
-                    {
-                        this.SpawnPoints.Add(new Vector3(-5.25f + j * 0.35f, 5.25f - this.currentLineToProcess * 0.35f, 0f));
-                        type = ArenaTileType.Spawn;
-                    }
-
-                    GameObject tile = Instantiate(this.tiles[tileIndex]);
-                    this.Tiles.Add(new ArenaTile { CurrentType = type, TileView = tile });
-
-                    tile.transform.SetParent(this.transform);
-                    tile.transform.localPosition = new Vector3(-5.25f + j * 0.35f, 5.25f - this.currentLineToProcess * 0.35f, 0f);
-                }
-
-                this.currentLineToProcess++;
+                case 1: return ArenaTileType.Indestructible;
+                case 2: return ArenaTileType.Destructible;
+                case 3: return ArenaTileType.HalfWall;
+                case 4: return ArenaTileType.Spawn;
             }
+
+            return ArenaTileType.Ground;
+        }
+
+        private void BuildTile(int tileIndex, Vector3 position)
+        {
+            ArenaTileType type = this.GetTileType(tileIndex);
+            GameObject tile = Instantiate(this.tilePrefabs[tileIndex]);
+            this.Tiles.Add(new ArenaTile { CurrentType = type, TileView = tile });
+
+            tile.transform.SetParent(this.transform);
+            tile.transform.localPosition = position;
         }
 
         private void PlaceGear(IGear gear)
@@ -205,7 +164,7 @@ namespace Assets.Scripts.Arena
             const float minGearDropProximity = 0.7f;
 
             List<ArenaTile> availableTiles = new List<ArenaTile>();
-            foreach (ArenaTile tile in Tiles)
+            foreach (ArenaTile tile in this.Tiles)
             {
                 if (tile.CurrentType != ArenaTileType.Ground)
                 {
@@ -216,7 +175,7 @@ namespace Assets.Scripts.Arena
 
                 bool isValid = true;
 
-                foreach (GearView gearView in UnclaimedGear)
+                foreach (GearView gearView in this.UnclaimedGear)
                 {
                     if ((gearView.transform.position - tilePosition).magnitude < minGearDropProximity)
                     {
@@ -225,7 +184,7 @@ namespace Assets.Scripts.Arena
                     }
                 }
 
-                foreach (PlayerCharacterBehavior characterView in gameplayManager.CharacterViews)
+                foreach (PlayerCharacterBehavior characterView in this.gameplayManager.CharacterViews)
                 {
                     if ((characterView.transform.position - tilePosition).magnitude < minGearDropProximity)
                     {
@@ -245,13 +204,13 @@ namespace Assets.Scripts.Arena
                 return;
             }
 
-            GameObject newGear = Instantiate(gearViewPrefab) as GameObject;
+            GameObject newGear = Instantiate(this.gearViewPrefab);
             newGear.transform.SetParent(this.transform);
             newGear.transform.position = availableTiles[Random.Range(0, availableTiles.Count)].TileView.transform.position;
 
             GearView newGearView = newGear.GetComponent<GearView>();
             newGearView.Init(gear);
-            UnclaimedGear.Add(newGearView);
+            this.UnclaimedGear.Add(newGearView);
         }
     }
 }

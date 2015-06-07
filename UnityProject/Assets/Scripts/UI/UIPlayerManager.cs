@@ -57,8 +57,6 @@ public class UIPlayerManager : MonoBehaviour
 
     private ICharacter character;
 
-    private UIManager UIManager;
-
     private bool isInitialized;
 
     private int currentLoadoutIndex;
@@ -68,10 +66,9 @@ public class UIPlayerManager : MonoBehaviour
 
     public MechLoadouts.MechLoadout Loadout { get { return MechLoadouts.Loadouts[currentLoadoutIndex]; } }
     
-    public void Init(ICharacter character, UIManager UIManager)
+    public void Init(ICharacter character)
     {
         this.character = character;
-        this.UIManager = UIManager;
         currentLoadoutIndex = 0;
 
         UpdateUI();

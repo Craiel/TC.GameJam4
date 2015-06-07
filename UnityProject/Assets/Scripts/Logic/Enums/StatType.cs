@@ -18,6 +18,7 @@
         Health,
         Armor,
         Shield,
+        Level,
 
         Heat,
         HeatGeneration,

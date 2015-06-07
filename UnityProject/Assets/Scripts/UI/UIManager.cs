@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+
+using Assets.Scripts;
 using Assets.Scripts.Contracts;
 using Assets.Scripts.Logic;
 
@@ -27,7 +29,7 @@ public class UIManager : MonoBehaviour
     {   
         for (var i = 0; i < characters.Count; i++)
         {
-            players[i].Init(characters[i], this);
+            players[i].Init(characters[i]);
         }
 
         playerSelect.SetActive(true);
