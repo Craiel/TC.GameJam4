@@ -238,7 +238,7 @@
                     case CombatType.Melee:
                         {
                             float accuracy = sourceBehavior.Character.GetCurrentStat(StatType.RangedAccuracy);
-                            if (UnityEngine.Random.Range(0f, 1f) < accuracy)
+                            if (UnityEngine.Random.Range(0f, 1f) > accuracy)
                             {
                                 return true;
                             }
@@ -249,7 +249,7 @@
                     case CombatType.Ranged:
                         {
                             float accuracy = sourceBehavior.Character.GetCurrentStat(StatType.RangedAccuracy);
-                            if (UnityEngine.Random.Range(0f, 1f) < accuracy)
+                            if (UnityEngine.Random.Range(0f, 1f) > accuracy)
                             {
                                 return true;
                             }
