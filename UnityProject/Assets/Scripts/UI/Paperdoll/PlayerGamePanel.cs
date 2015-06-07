@@ -106,7 +106,7 @@ public class PlayerGamePanel : MonoBehaviour
         {
             SetActiveGearSlot(FindPreviousGearSlot());
         }
-        else if (character.InputDevice.Action3)
+        else if (character.InputDevice.Action3.WasPressed)
         {
             if (gearSlots[activeGearSlot].Gear != null)
             {
