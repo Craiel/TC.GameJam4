@@ -118,6 +118,12 @@
             this.IsDead = health <= 0;
         }
 
+        public override void ResetCurrentStats()
+        {
+            base.ResetCurrentStats();
+            this.IsDead = false;
+        }
+
         private void UpdateGear(GameObject gameObject, GearType type)
         {
             if (!this.gear.ContainsKey(type) || this.gear[type] == null)

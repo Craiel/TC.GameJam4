@@ -110,7 +110,7 @@
 
         private Vector3 GetTilePosition(int x, int y)
         {
-            return new Vector3(-5.25f + y * 0.35f, 5.25f - x * 0.35f, 0f);
+            return new Vector3(-5.25f + x * 0.35f, 5.25f - y * 0.35f, 0f);
         }
 
         private void ProcessLine(string line)

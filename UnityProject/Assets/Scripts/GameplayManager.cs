@@ -48,9 +48,10 @@ namespace Assets.Scripts
         [SerializeField]
         public GameObject mechPrefab;
 
+        public bool IsPlaying { get; private set; }
         private float timeUntilSpawn;
 
-        public bool IsPlaying { get; private set; }
+        public bool HasEnded { get; private set; }
 
         public IList<ICharacter> Characters { get; private set; }
 
@@ -63,11 +64,14 @@ namespace Assets.Scripts
                 throw new InvalidOperationException("Game is underway");
             }
 
+            this.CharacterViews.Clear();
+
             this.Characters = characters;
             this.InitializeRandomArena();
             this.SpawnMechs(characters);
             this.arena.PlaceStarterGear();
 
+            this.HasEnded = false;
             this.timeUntilSpawn = 30f;
             this.IsPlaying = true;
         }
@@ -128,9 +132,9 @@ namespace Assets.Scripts
             else
             {
                 this.timeUntilSpawn -= Time.deltaTime;
-                if(this.timeUntilSpawn < 0)
+                if (this.timeUntilSpawn < 0)
                 {
-                    for(int i=0; i<aliveCharacters; ++i)
+                    for (int i = 0; i < aliveCharacters; ++i)
                     {
                         arena.PlaceGear(GearGeneration.GenerateRandomGear());
                     }
@@ -155,6 +159,8 @@ namespace Assets.Scripts
 
             this.activePlayers.Clear();
             this.Characters.Clear();
+
+            this.HasEnded = true;
         }
 
         private bool KillCharacter(ICharacter character)

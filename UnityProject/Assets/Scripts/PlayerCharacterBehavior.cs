@@ -85,13 +85,13 @@
 
             if (this.generateRandomStartupGear && !this.startupGearGenerated)
             {
-                foreach (GearType gearType in EnumLists.GearTypes)
+                /*foreach (GearType gearType in EnumLists.GearTypes)
                 {
                     this.Character.SetGear(gearType, GearGeneration.GenerateRandomGear(gearType));
-                }
+                }*/
 
                 // Todo: Remove these when we are done debugging
-                this.Character.SetGear(GearType.LeftWeapon, GearGeneration.GenerateRandomWeapon(GearType.LeftWeapon, typeof(WeaponColumn)));
+                //this.Character.SetGear(GearType.LeftWeapon, GearGeneration.GenerateRandomWeapon(GearType.LeftWeapon, typeof(WeaponColumn)));
                 this.Character.SetGear(GearType.RightWeapon, GearGeneration.GenerateRandomWeapon(GearType.RightWeapon, typeof(WeaponRanged)));
                 
                 this.startupGearGenerated = true;

@@ -5,12 +5,14 @@ using Assets.Scripts.Logic.Enums;
 
 public class MechLoadouts
 {
+    private const float DefaultMechLevels = 5f;
+
     public static MechLoadout wilsonInterceptor = new MechLoadout
     {
         Name = "Wilson Interceptor",
         BasicStats = new StatDictionary
         {
-            { StatType.Level, 5.0f },
+            { StatType.Level, DefaultMechLevels },
             { StatType.Scale, 0.8f },
             { StatType.RangedAccuracy, 0.25f },
             { StatType.MeleeAccuracy, 0.8f},
@@ -30,7 +32,7 @@ public class MechLoadouts
         Name = "Blahuta Platform",
         BasicStats = new StatDictionary
         {
-            { StatType.Level, 5.0f },
+            { StatType.Level, DefaultMechLevels },
             { StatType.Scale, 0.9f },
             { StatType.RangedAccuracy, 0.75f },
             { StatType.MeleeAccuracy, 0.3f},
@@ -50,7 +52,7 @@ public class MechLoadouts
         Name = "Gustaevel MK.IV",
         BasicStats = new StatDictionary
         {
-            { StatType.Level, 5.0f },
+            { StatType.Level, DefaultMechLevels },
             { StatType.Scale, 1.0f },
             { StatType.RangedAccuracy, 0.5f },
             { StatType.MeleeAccuracy, 0.5f},
@@ -70,7 +72,7 @@ public class MechLoadouts
         Name = "T-Williams",
         BasicStats = new StatDictionary
         {
-            { StatType.Level, 5.0f },
+            { StatType.Level, DefaultMechLevels },
             { StatType.Scale, 0.9f },
             { StatType.RangedAccuracy, 0.7f },
             { StatType.MeleeAccuracy, 0.25f},
