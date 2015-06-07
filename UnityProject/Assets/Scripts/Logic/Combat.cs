@@ -1,8 +1,10 @@
 ﻿namespace Assets.Scripts.Logic
 {
+    using System;
     using System.Collections.Generic;
 
     using Assets.Scripts.Contracts;
+    using Assets.Scripts.Logic.Enums;
 
     public static class Combat
     {
@@ -64,7 +66,9 @@
             float hit = data.Info.Damage;
             tile.TakeDamage(hit);
 
-            data.Result.RegisterHit(data.Info.Type, hit);
+            UnityEngine.Debug.Log("TileHit: " + hit);
+
+            data.Result.RegisterHit(data.Info.DamageType, hit);
             Results.Add(data.Result);
         }
 
@@ -76,13 +80,75 @@
             System.Diagnostics.Trace.Assert(character != null);
 
             data.Result.TargetPlayerId = character.Id;
-            /*switch (data.Info.Type)
+
+            // Check for miss
+            bool isMiss = CheckPlayerHitMiss(data);
+            if (isMiss)
             {
-                    case DamageType.Energy:
+                UnityEngine.Debug.Log("Missed player hit");
+                Results.Add(data.Result);
+                return;
+            }
+
+            float hit = data.Info.Damage;
+            switch (data.Info.DamageType)
+            {
+                case DamageType.Projectile:
                     {
-                        character
+                        hit -= character.GetCurrentStat(StatType.Armor);
+                        break;
                     }
-            }*/
+
+                case DamageType.Energy:
+                    {
+                        hit -= character.GetCurrentStat(StatType.Shield);
+                        break;
+                    }
+            }
+
+            /*foreach (a a in a)
+            {
+                
+            }
+            character.GetGear()*/
+
+            data.Result.RegisterHit(data.Info.DamageType, hit);
+            UnityEngine.Debug.Log(string.Format("Character Hit: {0} -> {1} for {2}", data.Result.SourcePlayerId, data.Result.TargetPlayerId, data.Result.DamageDealtTotal));
+            Results.Add(data.Result);
+        }
+
+        public static bool CheckPlayerHitMiss(CombatResolve data)
+        {
+            var sourceBehavior = data.Source.GetComponent<PlayerCharacterBehavior>();
+            if (sourceBehavior != null)
+            {
+                switch (data.Info.CombatType)
+                {
+                    case CombatType.Melee:
+                        {
+                            float accuracy = sourceBehavior.Character.GetCurrentStat(StatType.RangedAccuracy);
+                            if (UnityEngine.Random.Range(0f, 1f) < accuracy)
+                            {
+                                return true;
+                            }
+
+                            break;
+                        }
+
+                    case CombatType.Ranged:
+                        {
+                            float accuracy = sourceBehavior.Character.GetCurrentStat(StatType.RangedAccuracy);
+                            if (UnityEngine.Random.Range(0f, 1f) < accuracy)
+                            {
+                                return true;
+                            }
+
+                            break;
+                        }
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -6,6 +6,7 @@
 
     using Assets.Scripts.Armor;
     using Assets.Scripts.Contracts;
+    using Assets.Scripts.Logic.Enums;
 
     using UnityEngine;
     
@@ -16,8 +17,7 @@
         // -------------------------------------------------------------------
         public static IGear GenerateRandomGear()
         {
-            IList<GearType> types = Enum.GetValues(typeof(GearType)).Cast<GearType>().ToList();
-            return GenerateRandomGear(types[UnityEngine.Random.Range(0, types.Count)]);
+            return GenerateRandomGear(EnumLists.GearTypes[UnityEngine.Random.Range(0, EnumLists.GearTypes.Count)]);
         }
 
         public static IWeapon GenerateRandomWeapon(GearType type, Type weaponType, DamageType? damageType = null)
@@ -140,8 +140,7 @@
 
         private static DamageType PickRandomWeaponType()
         {
-            IList<DamageType> types = Enum.GetValues(typeof(DamageType)).Cast<DamageType>().ToList();
-            return types[UnityEngine.Random.Range(0, types.Count)];
+            return EnumLists.DamageTypes[UnityEngine.Random.Range(0, EnumLists.DamageTypes.Count)];
         }
 
         private static StatDictionary GenerateRandomStats(StatRollData data)

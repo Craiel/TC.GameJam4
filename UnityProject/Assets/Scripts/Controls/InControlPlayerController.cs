@@ -1,11 +1,10 @@
 ﻿namespace Assets.Scripts.Controls
 {
     using System;
-
     using Assets.Scripts.Contracts;
+    using Assets.Scripts.Logic.Enums;
 
     using InControl;
-
     using UnityEngine;
 
     public class InControlPlayerController : IMovementController
@@ -70,13 +69,14 @@
             if (Math.Abs(down) > float.Epsilon)
             {
                 direction = this.InvertAccellerationAxis ? down : -down;
+                direction *= 0.5f; //Half-speed for backing up
             } 
             else if (Math.Abs(up) > float.Epsilon)
             {
                 direction = -(this.InvertAccellerationAxis ? up : -up);
             }
 
-            direction *= DefaultSpeedMultiplier * target.GetComponent<PlayerCharacterBehavior>().Character.GetCurrentStat(Logic.StatType.Velocity);
+            direction *= DefaultSpeedMultiplier * target.GetComponent<PlayerCharacterBehavior>().Character.GetCurrentStat(StatType.Velocity);
 
             this.target.transform.Translate(StaticSettings.DefaultMoveDirection * direction);
             return true;
@@ -103,7 +103,7 @@
                 rotate = -(this.InvertAccellerationAxis ? -right : right);
             }
 
-            rotate *= DefaultRotationMultiplier * target.GetComponent<PlayerCharacterBehavior>().Character.GetCurrentStat(Logic.StatType.RotationSpeed);
+            rotate *= DefaultRotationMultiplier * target.GetComponent<PlayerCharacterBehavior>().Character.GetCurrentStat(StatType.RotationSpeed);
 
             this.target.transform.Rotate(Vector3.forward, rotate);
             return true;

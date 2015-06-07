@@ -1,6 +1,7 @@
 ﻿namespace Assets.Scripts.Contracts
 {
     using Assets.Scripts.Logic;
+    using Assets.Scripts.Logic.Enums;
 
     using InControl;
 

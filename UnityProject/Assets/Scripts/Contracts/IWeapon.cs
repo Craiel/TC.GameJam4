@@ -3,6 +3,7 @@
     using System.Collections.Generic;
 
     using Assets.Scripts.Logic;
+    using Assets.Scripts.Logic.Enums;
 
     using UnityEngine;
 

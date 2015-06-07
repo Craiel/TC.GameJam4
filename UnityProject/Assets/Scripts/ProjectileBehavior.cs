@@ -69,7 +69,7 @@
 
             var data = new CombatResolve(this.DamageInfo)
                               {
-                                  Source = this.gameObject,
+                                  Source = this.Origin,
                                   Target = other.gameObject
                               };
             

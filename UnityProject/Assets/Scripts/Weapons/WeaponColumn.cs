@@ -4,6 +4,7 @@
 
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Logic;
+    using Assets.Scripts.Logic.Enums;
 
     using UnityEngine;
 
@@ -67,7 +68,7 @@
                 behavior.DamageInfo = new CombatInfo
                 {
                     Damage = this.GetInternalStat(StatType.Damage),
-                    Type = this.DamageType
+                    DamageType = this.DamageType
                 };
                 behavior.LifeSpan = Time.time + .5f; //Time.time + this.GetInternalStat(StatType.ProjectileLifeSpan);
                 behavior.Origin = origin;

@@ -8,6 +8,7 @@ using System.IO;
 ﻿using JetBrains.Annotations;
 using Assets.Scripts.Contracts;
 using Assets.Scripts.Logic;
+﻿using Assets.Scripts.Logic.Enums;
 
 public class Arena : MonoBehaviour
 {

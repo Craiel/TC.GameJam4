@@ -1,6 +1,8 @@
 ﻿using Assets.Scripts.Logic;
 using System.Collections.Generic;
 
+using Assets.Scripts.Logic.Enums;
+
 public class MechLoadouts
 {
     public static MechLoadout wilsonInterceptor = new MechLoadout
