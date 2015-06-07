@@ -14,6 +14,8 @@
 
         bool IsDead { get; }
 
+        Color Color { get; set; }
+
         ICharacter Target { get; set; }
 
         InputDevice InputDevice { get; set; }
