@@ -1,5 +1,5 @@
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xoooooooooooooxxooooooooooooox
+xsooooooooooooxxoooooooooooosx
 xoooooooooooooxxooooooooooooox
 xoooooooooooooooooooooooooooox
 xoooooddddooooooooooddddooooox
@@ -26,6 +26,6 @@ xoooooooooooooooooooooooooooox
 xoooooddddooooooooooddddooooox
 xoooooooooooooooooooooooooooox
 xoooooooooooooxxooooooooooooox
-xoooooooooooooxxooooooooooooox
+xsooooooooooooxxoooooooooooosx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
