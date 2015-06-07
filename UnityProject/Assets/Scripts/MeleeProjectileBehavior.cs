@@ -1,9 +1,7 @@
 ﻿namespace Assets.Scripts
 {
     using JetBrains.Annotations;
-    using UnityEngine;
-
-    public class BulletProjectileBehavior : ProjectileBehavior
+    class MeleeProjectileBehavior : ProjectileBehavior
     {
         // -------------------------------------------------------------------
         // Protected
@@ -13,7 +11,7 @@
         {
             base.Update();
 
-            this.transform.Translate(StaticSettings.DefaultMoveDirection * StaticSettings.DefaultProjectileMoveSpeed * this.Velocity * Time.deltaTime);
+            this.transform.position = this.Origin.transform.position;
         }
     }
 }

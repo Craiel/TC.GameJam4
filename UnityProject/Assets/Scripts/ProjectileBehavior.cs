@@ -28,7 +28,7 @@
 
         public float Velocity { get; set; }
 
-        public float LifeSpan { get; set; }
+        public float? LifeSpan { get; set; }
 
         public GameObject Origin { get; set; }
 
@@ -51,6 +51,15 @@
             Destroy(this.gameObject);
         }
 
+        protected virtual void Update()
+        {
+            if (this.LifeSpan != null && Time.time > this.LifeSpan)
+            {
+                this.ExpireProjectile();
+                this.LifeSpan = null;
+            }
+        }
+
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
@@ -65,6 +74,7 @@
             switch (this.Type)
             {
                 case ProjectileType.bullet:
+                case ProjectileType.beam:
                     {
                         var data = new CombatResolve(this.DamageInfo)
                         {

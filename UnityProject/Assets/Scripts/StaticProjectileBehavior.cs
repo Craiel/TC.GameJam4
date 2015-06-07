@@ -1,7 +1,6 @@
 ﻿namespace Assets.Scripts
 {
-    public class StaticProjectileBehavior : ProjectileBehavior
+    class StaticProjectileBehavior : ProjectileBehavior
     {
-        // Nothing needs to happen here
     }
 }

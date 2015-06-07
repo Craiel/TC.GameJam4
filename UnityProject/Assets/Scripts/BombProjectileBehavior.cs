@@ -26,12 +26,11 @@
             this.DestroyProjectile();
         }
 
-        // -------------------------------------------------------------------
-        // Private
-        // -------------------------------------------------------------------
         [UsedImplicitly]
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
+
             // Check for the delayed destroy
             if (this.destroyDelay != null && Time.time > this.destroyDelay)
             {
