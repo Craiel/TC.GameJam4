@@ -25,7 +25,7 @@
                     { StatType.Interval, 5f },
                     { StatType.HeatGeneration, 1.0f },
                 };
-
+            stats.Merge(internalStats);
             this.SetBaseStats(stats);
         }
 
