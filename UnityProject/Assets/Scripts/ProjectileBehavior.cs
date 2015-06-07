@@ -55,16 +55,20 @@
                 if(this.Type == ProjectileType.bomb)
                 {
                     this.gameObject.GetComponentInChildren<Animator>().SetTrigger("expload");
-                    StartCoroutine(DelayDispose());
+                    StartCoroutine(DelayDispose(2));
+                }
+                else if(this.Type == ProjectileType.grapple)
+                {
+                    StartCoroutine(DelayDispose(1));
                 }
                 else
                     Destroy(this.gameObject);
             }
         }
         
-        IEnumerator DelayDispose()
+        IEnumerator DelayDispose(int time)
         {
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(time);
             Destroy(this.gameObject);
         }
 
@@ -77,13 +81,22 @@
             }
 
             var data = new CombatResolve(this.DamageInfo)
-                              {
-                                  Source = this.Origin,
-                                  Target = other.gameObject
-                              };
-            
+            {
+                Source = this.Origin,
+                Target = other.gameObject
+            };
+
             Combat.Resolve(data);
-            this.Dispose();
+
+            switch (this.Type)
+            {
+                case ProjectileType.bullet:
+                case ProjectileType.bomb:
+                    {
+                        this.Dispose();
+                        break;
+                    }
+            }
         }
 
         [UsedImplicitly]

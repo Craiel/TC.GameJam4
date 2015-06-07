@@ -11,7 +11,6 @@
     public class WeaponColumn : BaseWeapon
     {
         private readonly Object projectilePrefab;
-        private float timeChanged;
 
         // -------------------------------------------------------------------
         // Constructor
@@ -26,8 +25,8 @@
             var stats = new StatDictionary
                 {
                     { StatType.Velocity, 0.1f },
-                    { StatType.ProjectileLifeSpan, .001f },
-                    { StatType.Interval, 0.1f }
+                    { StatType.ProjectileLifeSpan, .9f },
+                    { StatType.Interval, 0.85f }
                 };
 
             stats.Merge(internalStats);
@@ -41,7 +40,7 @@
         {
             Vector3 forward = origin.transform.rotation * StaticSettings.DefaultMoveDirection;
             origin.layer = 2;
-            RaycastHit2D ray = Physics2D.Raycast(origin.transform.position, forward);
+            RaycastHit2D ray = Physics2D.Raycast(origin.transform.position, forward, Mathf.Infinity, LayerMask.GetMask("Wall", "Mech"));
             Debug.DrawRay(origin.transform.position, forward, Color.red);
             origin.layer = 0;
             if (ray.collider == null)
@@ -70,10 +69,9 @@
             };
 
             behavior.Type = ProjectileType.beam;
-            behavior.LifeSpan = Time.time + .5f;
+            behavior.LifeSpan = Time.time + this.GetCurrentStat(StatType.ProjectileLifeSpan);
             behavior.Origin = origin;
 
-            this.timeChanged = Time.time;
             return new List<ProjectileBehavior> { behavior };
         }
 

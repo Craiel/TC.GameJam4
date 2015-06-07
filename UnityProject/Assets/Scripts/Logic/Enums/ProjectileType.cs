@@ -4,6 +4,8 @@
     {
         bullet,
         bomb,
-        beam
+        beam,
+        melee,
+        grapple
     }
 }
