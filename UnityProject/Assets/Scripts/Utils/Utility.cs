@@ -54,12 +54,30 @@ public class Utility {
 	}
 
 
-	public string GetUnits(StatType statType) {
+	public string ValueWithUnits(StatType statType, double value) {
 
 		if(StatUnits.ContainsKey(statType)) {
-			return StatUnits[statType];
+
+			string code = StatUnits[statType];
+
+			if(code == "%") {
+				value = value * 100;
+				return Math.Round (value, 0) + StatUnits[statType];
+			
+			} else if (code == "s") {
+				return Math.Round (value, 2) + StatUnits[statType];
+			}
+
+			return Math.Round (value, 0) + StatUnits[statType];
 		}
-		return "";
+
+		if (statType == StatType.Velocity) {
+			return Math.Round (value, 2) + StatUnits[statType];
+		} else if (statType == StatType.RotationSpeed) {
+			return Math.Round (value, 2) + StatUnits[statType];
+		}
+
+		return Math.Round (value, 0);
 
 	}
 
