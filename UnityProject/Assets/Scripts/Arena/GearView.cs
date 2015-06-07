@@ -14,6 +14,7 @@ public class GearView : MonoBehaviour
 
     public void Init(IGear gear)
     {
+        Gear = gear;
         GetComponent<SpriteRenderer>().sprite = sprites[(int)gear.Type];
     }
 }
