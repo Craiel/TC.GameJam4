@@ -86,7 +86,7 @@
             this.NeedStatUpdate = true;
         }
 
-        public void ResetCurrentStats()
+        public virtual void ResetCurrentStats()
         {
             this.UpdateStats(false);
         }

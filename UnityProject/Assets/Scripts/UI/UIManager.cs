@@ -56,6 +56,14 @@ public class UIManager : MonoBehaviour
 
     private void SetupMatch(IDictionary<ICharacter, MechLoadouts.MechLoadout> players)
     {
+        // Reset the persistent stats
+        foreach (ICharacter character in players.Keys)
+        {
+            character.ResetCurrentStats();
+        }
+
+        this.gameplayManager.SetupMatch(new List<ICharacter>(players.Keys));
+
         this.playerSelect.SetActive(false);
         this.gameScene.SetActive(true);
 
@@ -63,10 +71,11 @@ public class UIManager : MonoBehaviour
         foreach (ICharacter character in players.Keys)
         {
             character.SetBaseStats(players[character].BasicStats);
-
+            
             if (character.InputDevice != null)
             {
                 this.playerGamePanels[playerPanelIndex].Init(character);
+                this.playerGamePanels[playerPanelIndex].gameObject.SetActive(true);
             }
             else
             {
@@ -75,8 +84,6 @@ public class UIManager : MonoBehaviour
 
             playerPanelIndex++;
         }
-
-        this.gameplayManager.SetupMatch(new List<ICharacter>(players.Keys));
     }
 
     private void SetupPlayerSelection()

@@ -64,6 +64,8 @@ namespace Assets.Scripts
                 throw new InvalidOperationException("Game is underway");
             }
 
+            this.CharacterViews.Clear();
+
             this.Characters = characters;
             this.InitializeRandomArena();
             this.SpawnMechs(characters);
