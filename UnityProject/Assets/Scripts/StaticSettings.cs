@@ -158,7 +158,7 @@
 
         public static IList<Type> RightHandWeaponTypes = new List<Type>
                                                             {
-                                                                typeof(WeaponRanged),
+                                                                //typeof(WeaponRanged),
                                                                 //typeof(WeaponMelee),
                                                                 typeof(WeaponGrapple),
                                                                 //typeof(WeaponSlow),

@@ -2,7 +2,7 @@
 {
     using Assets.Scripts.Logic;
     using Assets.Scripts.Logic.Enums;
-
+    using System.Collections.Generic;
     using UnityEngine;
 
     public class WeaponGrapple : BaseWeapon
@@ -21,6 +21,7 @@
 
             var stats = new StatDictionary
                 {
+                    { StatType.ProjectileLifeSpan, 10f},
                     { StatType.Interval, 0.1f },
                     { StatType.HeatGeneration, 1.0f },
                 };
@@ -33,13 +34,6 @@
         // -------------------------------------------------------------------
         public override void Update(GameObject origin)
         {
-            if (this.timeChanged + 1 <= Time.time)
-            {
-                var a = origin.GetComponent<LineRenderer>();
-                a.SetColors(new Color(0, 0, 0, 0), new Color(0, 0, 0, 0));
-                a.SetPosition(0, Vector3.zero);
-                a.SetPosition(1, Vector3.zero);
-            }
         }
 
         // -------------------------------------------------------------------
@@ -66,7 +60,7 @@
                 DamageType = this.DamageType
             };
             behavior.Type = ProjectileType.grapple;
-            behavior.LifeSpan = Time.time + .5f; //Time.time + this.GetInternalStat(StatType.ProjectileLifeSpan);
+            behavior.LifeSpan = Time.time + this.GetCurrentStat(StatType.ProjectileLifeSpan); //Time.time + this.GetInternalStat(StatType.ProjectileLifeSpan);
             behavior.Origin = context.Origin;
 
             this.timeChanged = Time.time;
@@ -77,14 +71,38 @@
         // -------------------------------------------------------------------
         private bool RayHitTest(GameObject origin, out Vector3 distance)
         {
+            int index = 0;
+            float d = 0f;
             Vector3 forward = origin.transform.rotation * StaticSettings.DefaultMoveDirection;
+            Transform[] T = origin.GetComponentsInChildren<Transform>();
+            List<RaycastHit2D> ray = new List<RaycastHit2D>();
             int originalLayer = origin.layer;
             origin.layer = 2;
-            RaycastHit2D ray = Physics2D.Raycast(origin.transform.position, forward);
-            Debug.DrawRay(origin.transform.position, forward, Color.red);
+            ray.Add(Physics2D.Raycast(origin.transform.position, forward));
+            for (int i = 0; i < T.Length; i++ )
+            {
+                ray.Add(Physics2D.Raycast(T[i].transform.position,forward));
+            }
             origin.layer = originalLayer;
-            distance = ray.transform.position;
-            return ray.collider != null;
+            for(int j = 0; j < ray.Count; j++)
+            {
+                if(ray[j].distance > d)
+                {
+                    d = ray[j].distance;
+                    index = j;
+                }
+            }
+            if(ray[index])
+            {
+                distance = ray[index].transform.position;
+                return ray[index].collider != null;
+            }
+            else
+            {
+                distance = Vector3.zero;
+                return false;
+            }
+            
         }
     }
 }
