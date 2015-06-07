@@ -20,6 +20,7 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        
         public CombatInfo DamageInfo { get; set; }
 
         public Vector2 Direction { get; set; }
@@ -48,7 +49,13 @@
             if (isDisposing)
             {
                 this.IsAlive = false;
-                Destroy(this.gameObject);
+                if(this.gameObject.name == "Bomb")
+                {
+                    Debug.Log("Here before expload");
+                    this.gameObject.GetComponentInChildren<Animator>().SetTrigger("expload");
+                }
+                else
+                    Destroy(this.gameObject);
             }
         }
 

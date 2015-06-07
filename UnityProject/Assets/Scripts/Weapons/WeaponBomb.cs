@@ -9,6 +9,7 @@
 
     public class WeaponBomb : BaseWeapon
     {
+        private readonly Object projectilePrefab;
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
@@ -16,6 +17,7 @@
             : base(internalStats)
         {
             this.Name = "Bomb";
+            this.projectilePrefab = Resources.Load("Projectiles/Bomb");
 
             var stats = new StatDictionary
                 {
@@ -31,8 +33,18 @@
         // -------------------------------------------------------------------
         protected override IList<ProjectileBehavior> DoFire(GameObject origin, ICharacter source)
         {
-            // Todo: 
-            return null;
+            GameObject instance = (GameObject)Object.Instantiate(this.projectilePrefab, origin.transform.position, origin.transform.rotation);
+
+            StaticProjectileBehavior behavior = instance.AddComponent<StaticProjectileBehavior>();
+            behavior.DamageInfo = new CombatInfo
+            {
+                Damage = this.GetInternalStat(StatType.Damage),
+                Type = this.DamageType
+            };
+            behavior.LifeSpan = Time.time + 10f;
+            behavior.Origin = origin;
+
+            return new List<ProjectileBehavior> { behavior };
         }
     }
 }
