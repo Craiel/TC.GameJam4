@@ -46,6 +46,7 @@
 
         public static StatDictionary PlayerBaseStats = new StatDictionary
         {
+            { StatType.Level, 5.0f },
             { StatType.Scale, 1.0f },
             { StatType.Health, 100.0f },
             { StatType.Velocity, 1.0f },
@@ -177,7 +178,8 @@
         public static IList<StatType> PersistentStats = new List<StatType>
                                                           {
                                                               StatType.Health,
-                                                              StatType.Heat
+                                                              StatType.Heat,
+                                                              StatType.Level
                                                           };
 
         

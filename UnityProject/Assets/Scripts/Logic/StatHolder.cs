@@ -80,6 +80,12 @@
             this.NeedStatUpdate = true;
         }
 
+        public void SetStat(StatType type, float value)
+        {
+            this.currentStats.SetStat(type, value);
+            this.NeedStatUpdate = true;
+        }
+
         public void ResetCurrentStats()
         {
             this.UpdateStats(false);

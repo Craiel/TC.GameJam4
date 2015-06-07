@@ -12,7 +12,9 @@
 
         string Name { get; set; }
 
-        Color myColor { get; set; }
+        bool IsDead { get; }
+
+        Color Color { get; set; }
 
         ICharacter Target { get; set; }
 

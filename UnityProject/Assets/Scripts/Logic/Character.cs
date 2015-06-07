@@ -49,9 +49,11 @@
 
         public string Name { get; set; }
 
-        public Color myColor { get; set; }
+        public Color Color { get; set; }
 
         public InputDevice InputDevice { get; set; }
+
+        public bool IsDead { get; private set; }
 
         public ICharacter Target { get; set; }
 
@@ -111,6 +113,9 @@
 
                 this.nextCoolingTick = Time.time + StaticSettings.CoolingTickDelay;
             }
+
+            float health = this.GetCurrentStat(StatType.Health);
+            this.IsDead = health <= 0;
         }
 
         private void UpdateGear(GameObject gameObject, GearType type)
