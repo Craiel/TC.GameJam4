@@ -46,7 +46,9 @@
                                       {
                                           Damage = this.GetCurrentStat(StatType.Damage),
                                           DamageType = this.DamageType,
-                                          CombatType = CombatType.Ranged
+                                          CombatType = CombatType.Ranged,
+                                          ModValue = 0.75f,
+                                          LogNMultiplier = 5f
                                       };
             behavior.Velocity = this.GetCurrentStat(StatType.Velocity);
             behavior.LifeSpan = Time.time + this.GetCurrentStat(StatType.ProjectileLifeSpan);

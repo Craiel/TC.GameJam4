@@ -68,7 +68,9 @@
                 behavior.DamageInfo = new CombatInfo
                 {
                     Damage = this.GetCurrentStat(StatType.Damage),
-                    DamageType = this.DamageType
+                    DamageType = this.DamageType,
+                    ModValue = 0.33f,
+                    LogNMultiplier = 5f
                 };
                 behavior.LifeSpan = Time.time + .5f; //Time.time + this.GetInternalStat(StatType.ProjectileLifeSpan);
                 behavior.Origin = origin;

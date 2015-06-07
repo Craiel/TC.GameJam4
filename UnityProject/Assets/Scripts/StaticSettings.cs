@@ -118,7 +118,6 @@
                                                           {
                                                               StatType.Damage,
                                                               StatType.Health,
-                                                              StatType.Heat,
                                                               StatType.HeatGeneration
                                                           };
 
@@ -126,7 +125,6 @@
                                                            {
                                                                { StatType.Damage, 50f },
                                                                { StatType.Health, 200f },
-                                                               { StatType.Heat, 100f },
                                                                { StatType.HeatGeneration, -19f },
                                                            };
 

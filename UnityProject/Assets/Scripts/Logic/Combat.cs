@@ -5,6 +5,8 @@
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Logic.Enums;
 
+    using UnityEngine;
+
     public static class Combat
     {
         private static readonly IList<CombatResult> Results;
@@ -102,7 +104,8 @@
             }
 
             // Calculate the hit, substract armor and shield based on type
-            float hit = data.Info.Damage;
+            float hit = data.Info.Damage * data.Info.ModValue;
+            hit = Mathf.Log(Mathf.Pow(hit, 2) + 1) * data.Info.LogNMultiplier;
             if (!(hit > 0))
             {
                 // Should not happen but we bail out anyway
@@ -161,6 +164,7 @@
 
         private static bool ApplyHitToGear(float hit, ICharacter character, CombatResolve data)
         {
+            IList<IGear> targetGear = new List<IGear>();
             foreach (GearType gearType in EnumLists.GearTypes)
             {
                 IGear gear = character.GetGear(gearType);
@@ -178,11 +182,7 @@
                             float partCurrentHealth = gear.GetCurrentStat(StatType.Health);
                             if (partHealth > 0 && partCurrentHealth > 0)
                             {
-                                // Todo: Apply damage to this gear
-                                gear.ModifyStat(StatType.Health, -hit);
-                                data.Result.RegisterHit(data.Info.DamageType, hit);
-                                data.Result.WasHitOnGear = true;
-                                return true;
+                                targetGear.Add(gear);
                             }
 
                             break;
@@ -194,10 +194,7 @@
                             float partCurrentHeat = gear.GetCurrentStat(StatType.Heat);
                             if (partHeat > 0 && partCurrentHeat < partHeat)
                             {
-                                gear.ModifyStat(StatType.Heat, hit);
-                                data.Result.RegisterHit(data.Info.DamageType, hit);
-                                data.Result.WasHitOnGear = true;
-                                return true;
+                                targetGear.Add(gear);
                             }
 
                             break;
@@ -205,6 +202,30 @@
                 }
             }
 
+            if (targetGear.Count > 0)
+            {
+                IGear gear = targetGear[UnityEngine.Random.Range(0, targetGear.Count)];
+                switch (data.Info.DamageType)
+                {
+                    case DamageType.Energy:
+                    case DamageType.Projectile:
+                        {
+                            gear.ModifyStat(StatType.Health, -hit);
+                            data.Result.RegisterHit(data.Info.DamageType, hit);
+                            data.Result.WasHitOnGear = true;
+                            return true;
+                        }
+
+                    case DamageType.Heat:
+                        {
+                            gear.ModifyStat(StatType.Heat, hit);
+                            data.Result.RegisterHit(data.Info.DamageType, hit);
+                            data.Result.WasHitOnGear = true;
+                            return true;
+                        }
+                }
+            }
+                 
             return false;
         }
 
