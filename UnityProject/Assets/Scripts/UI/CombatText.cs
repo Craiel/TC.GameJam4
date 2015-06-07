@@ -23,7 +23,8 @@ public class CombatText : MonoBehaviour
         Vector2 screenSpacePosition = new Vector2((viewportPoint.x * canvasRect.sizeDelta.x) - (canvasRect.sizeDelta.x * 0.5f),
                                                     (viewportPoint.y * canvasRect.sizeDelta.y) - (canvasRect.sizeDelta.y * 0.5f));
 
-        GetComponent<RectTransform>().anchoredPosition = screenSpacePosition + new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+        float delta = 15f;
+        GetComponent<RectTransform>().anchoredPosition = screenSpacePosition + new Vector2(Random.Range(-delta, delta), Random.Range(-delta, delta));
 
         isInitialized = true;
     }
