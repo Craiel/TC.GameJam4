@@ -1,75 +1,208 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using Assets.Scripts;
+﻿using System.Collections.Generic;
+
 using Assets.Scripts.Contracts;
-using Assets.Scripts.Arena;
 
-public class GameplayManager : MonoBehaviour 
+using UnityEngine;
+
+namespace Assets.Scripts
 {
-    [SerializeField]
-    private List<Object> textArenas;
+    using System;
 
-    [SerializeField]
-    private List<Texture2D> imageArenas;
+    using Assets.Scripts.Arena;
+    using Assets.Scripts.Logic.Enums;
 
-    [SerializeField]
-    private Arena arena;
+    using JetBrains.Annotations;
 
-    [SerializeField]
-    private GameObject mechPrefab;
+    using Object = UnityEngine.Object;
+    using Random = UnityEngine.Random;
 
-    public bool IsPlaying { get; private set; }
-
-    public IList<ICharacter> Characters { get; private set; }
-    public List<PlayerCharacterBehavior> CharacterViews { get; private set; }
-
-    private void Awake()
+    public class GameplayManager : MonoBehaviour
     {
-        CharacterViews = new List<PlayerCharacterBehavior>();
-    }
-
-    public void SetupMatch(IList<ICharacter> characters)
-    {
-        Characters = characters;
-        IsPlaying = true;
+        private readonly IDictionary<ICharacter, GameObject> activePlayers;
         
-        ChooseArena();
-        SpawnMechs(characters);
-        arena.PlaceStarterGear();
-    }
+        private readonly IList<ArenaData> arenaData; 
 
-    private void ChooseArena()
-    {
-        int chosenIndex = Random.Range(0, textArenas.Count + imageArenas.Count);
-
-        if (chosenIndex < textArenas.Count)
+        // -------------------------------------------------------------------
+        // Constructor
+        // -------------------------------------------------------------------
+        public GameplayManager()
         {
-            arena.InitFromText(textArenas[chosenIndex].name);
+            this.activePlayers = new Dictionary<ICharacter, GameObject>();
+
+            this.arenaData = new List<ArenaData>();
         }
-        else
-        {
-            arena.InitFromTexture(imageArenas[chosenIndex - textArenas.Count]);
-        }
-    }
 
-    private void SpawnMechs(IList<ICharacter> characters)
-    {
-        foreach(ICharacter character in characters)
+        // -------------------------------------------------------------------
+        // Public
+        // -------------------------------------------------------------------
+        [SerializeField]
+        public List<Object> textArenas;
+
+        [SerializeField]
+        public List<Texture2D> imageArenas;
+
+        [SerializeField]
+        public Arena.Arena arena;
+
+        [SerializeField]
+        public GameObject mechPrefab;
+
+        public bool IsPlaying { get; private set; }
+
+        public IList<ICharacter> Characters { get; private set; }
+
+        public List<PlayerCharacterBehavior> CharacterViews { get; private set; }
+
+        public void SetupMatch(IList<ICharacter> characters)
         {
-            if(character.InputDevice == null)
+            if (this.IsPlaying)
             {
-                continue;
+                throw new InvalidOperationException("Game is underway");
             }
 
-            GameObject newMech = Instantiate(mechPrefab) as GameObject;
-            newMech.GetComponent<PlayerCharacterBehavior>().Character = character;
-            newMech.transform.SetParent(arena.transform);
-            CharacterViews.Add(newMech.GetComponent<PlayerCharacterBehavior>());
+            this.Characters = characters;
+            this.InitializeRandomArena();
+            this.SpawnMechs(characters);
+            this.arena.PlaceStarterGear();
 
-            if (arena.SpawnPoints.Count > 0)
+            this.IsPlaying = true;
+        }
+
+        // -------------------------------------------------------------------
+        // Private
+        // -------------------------------------------------------------------
+        [UsedImplicitly]
+        private void Awake()
+        {
+            this.CharacterViews = new List<PlayerCharacterBehavior>();
+
+            foreach (Texture2D texture in this.imageArenas)
             {
-                newMech.transform.localPosition = arena.SpawnPoints[Random.Range(0, arena.SpawnPoints.Count)];
+                var data = new ArenaData { Name = texture.name };
+                data.InitFromTexture(texture, this.arena.tileColorKeys);
+                if (data.IsValid)
+                {
+                    this.arenaData.Add(data);
+                }
             }
+
+            foreach (Object textFile in this.textArenas)
+            {
+                var data = new ArenaData { Name = textFile.name };
+                data.InitFromText(textFile.name);
+                if (data.IsValid)
+                {
+                    this.arenaData.Add(data);
+                }
+            }
+        }
+
+        [UsedImplicitly]
+        private void Update()
+        {
+            if (!this.IsPlaying)
+            {
+                return;
+            }
+
+            int aliveCharacters = this.activePlayers.Count;
+            foreach (ICharacter character in this.activePlayers.Keys)
+            {
+                if (character.IsDead)
+                {
+                    if (!this.KillCharacter(character))
+                    {
+                        aliveCharacters--;
+                    }
+                }
+            }
+
+            if (aliveCharacters <= 1)
+            {
+                this.EndGame();
+            }
+        }
+
+        private void EndGame()
+        {
+            // Mark that we have stopped playing first to disable all updates
+            this.IsPlaying = false;
+
+            // Clear out the arena
+            this.arena.Uninitialize();
+
+            // Destroy all players
+            foreach (ICharacter player in this.activePlayers.Keys)
+            {
+                Destroy(this.activePlayers[player]);
+            }
+
+            this.activePlayers.Clear();
+            this.Characters.Clear();
+        }
+
+        private bool KillCharacter(ICharacter character)
+        {
+            float levels = character.GetCurrentStat(StatType.Level);
+            if (levels < 1)
+            {
+                // Character is dead for good
+                return false;
+            }
+
+            character.ResetCurrentStats();
+            character.SetStat(StatType.Level, levels - 1);
+            this.RespawnMech(character);
+            return true;
+        }
+
+        private void ChangeArena()
+        {
+            this.InitializeRandomArena();
+
+            foreach (ICharacter player in this.activePlayers.Keys)
+            {
+                this.RespawnMech(player);
+            }
+        }
+
+        private void InitializeRandomArena()
+        {
+            int index = Random.Range(0, this.arenaData.Count);
+            this.arena.Initialize(this.arenaData[index]);
+        }
+
+        private void SpawnMechs(IList<ICharacter> characters)
+        {
+            foreach(ICharacter character in characters)
+            {
+                if(character.InputDevice == null)
+                {
+                    continue;
+                }
+
+                GameObject newMech = Instantiate(this.mechPrefab);
+                newMech.GetComponent<PlayerCharacterBehavior>().Character = character;
+                newMech.transform.SetParent(this.arena.transform);
+                this.activePlayers.Add(character, newMech);
+                this.CharacterViews.Add(newMech.GetComponent<PlayerCharacterBehavior>());
+
+                // Spawn it
+                this.RespawnMech(character);
+            }
+        }
+        
+        private void RespawnMech(ICharacter character)
+        {
+            // Find a valid spawn point
+            Vector3 spawnPoint = this.arena.Data.SpawnPoints[Random.Range(0, this.arena.Data.SpawnPoints.Count)];
+
+            // Set the player to the spawn point and reset it's rotation
+            this.activePlayers[character].transform.localPosition = spawnPoint;
+            this.activePlayers[character].transform.rotation = Quaternion.identity;
+
+            // Re-activate the character
+            this.activePlayers[character].SetActive(true);
         }
     }
 }

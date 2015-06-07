@@ -16,6 +16,8 @@
 
         void ModifyStat(StatType type, float modifier);
 
+        void SetStat(StatType type, float value);
+
         void ResetCurrentStats();
     };
 }

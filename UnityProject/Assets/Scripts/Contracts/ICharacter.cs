@@ -12,6 +12,8 @@
 
         string Name { get; set; }
 
+        bool IsDead { get; }
+
         ICharacter Target { get; set; }
 
         InputDevice InputDevice { get; set; }
