@@ -52,9 +52,8 @@ public class UIManager : MonoBehaviour
                     characters.Add(playerManager.Character, playerManager.Loadout);
                 }
             }
-
-            //TODO: Make this actually 2, dummy
-            if(characters.Count > 0)
+            
+            if(characters.Count > 1)
             {
                 playerSelect.SetActive(false);
                 gameScene.SetActive(true);
