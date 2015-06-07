@@ -50,6 +50,7 @@
                                           ModValue = 0.75f,
                                           LogNMultiplier = 5f
                                       };
+            behavior.Type = ProjectileType.bullet;
             behavior.Velocity = this.GetCurrentStat(StatType.Velocity);
             behavior.LifeSpan = Time.time + this.GetCurrentStat(StatType.ProjectileLifeSpan);
             behavior.Origin = origin;

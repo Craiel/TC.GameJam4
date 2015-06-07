@@ -6,6 +6,8 @@
     using JetBrains.Annotations;
 
     using UnityEngine;
+    using Assets.Scripts.Logic.Enums;
+    using System.Collections;
 
     public abstract class ProjectileBehavior : MonoBehaviour
     {
@@ -20,6 +22,8 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        public ProjectileType Type { get; set; }
+
         public CombatInfo DamageInfo { get; set; }
 
         public Vector2 Direction { get; set; }
@@ -48,8 +52,20 @@
             if (isDisposing)
             {
                 this.IsAlive = false;
-                Destroy(this.gameObject);
+                if(this.Type == ProjectileType.bomb)
+                {
+                    this.gameObject.GetComponentInChildren<Animator>().SetTrigger("expload");
+                    StartCoroutine(DelayDispose());
+                }
+                else
+                    Destroy(this.gameObject);
             }
+        }
+        
+        IEnumerator DelayDispose()
+        {
+            yield return new WaitForSeconds(2);
+            Destroy(this.gameObject);
         }
 
         [UsedImplicitly]
