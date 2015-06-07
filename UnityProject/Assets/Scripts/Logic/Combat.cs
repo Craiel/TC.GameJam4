@@ -1,6 +1,5 @@
 ﻿namespace Assets.Scripts.Logic
 {
-    using System;
     using System.Collections.Generic;
 
     using Assets.Scripts.Contracts;

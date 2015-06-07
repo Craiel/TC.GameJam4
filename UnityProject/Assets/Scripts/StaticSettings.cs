@@ -22,6 +22,8 @@
 
         public static readonly Vector3 DefaultMoveDirection = new Vector3(0, 1, 0);
 
+        public static readonly float DefaultProjectileMoveSpeed = 10f;
+
         public static readonly StatDictionary ArmorBaseStats = new StatDictionary();
 
         public static readonly StatDictionary WeaponBaseStats = new StatDictionary
