@@ -153,7 +153,12 @@
             GearView gearView = other.gameObject.GetComponent<GearView>();
             if(gearView != null)
             {
-                Debug.Log("Walked over Unclaimed Gear");
+                IGear currentGear = Character.GetGear(gearView.Gear.Type);
+                if(currentGear == null)
+                {
+                    Character.SetGear(gearView.Gear.Type, gearView.Gear);
+                    Arena.Arena.Instance.ClaimGear(gearView.Gear);
+                }
             }
         }
 
