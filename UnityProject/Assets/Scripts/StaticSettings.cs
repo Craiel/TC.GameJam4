@@ -147,21 +147,21 @@
                                                             {
                                                                 typeof(WeaponColumn),
                                                                 typeof(WeaponRanged),
-                                                                typeof(WeaponMelee),
-                                                                typeof(WeaponHeal),
-                                                                typeof(WeaponSpeedBoost),
+                                                                //typeof(WeaponMelee),
+                                                                //typeof(WeaponHeal),
+                                                                //typeof(WeaponSpeedBoost),
                                                                 typeof(WeaponBomb),
-                                                                typeof(WeaponInvisibility)
+                                                                //typeof(WeaponInvisibility)
                                                             };
 
         public static IList<Type> RightHandWeaponTypes = new List<Type>
                                                             {
                                                                 typeof(WeaponRanged),
-                                                                typeof(WeaponMelee),
-                                                                typeof(WeaponGrapple),
-                                                                typeof(WeaponSlow),
-                                                                typeof(WeaponHeat),
-                                                                typeof(WeaponHoming)
+                                                                //typeof(WeaponMelee),
+                                                                //typeof(WeaponGrapple),
+                                                                //typeof(WeaponSlow),
+                                                                //typeof(WeaponHeat),
+                                                                //typeof(WeaponHoming)
                                                             };
 
         public static IList<StatType> PersistentStats = new List<StatType>

@@ -81,7 +81,6 @@
             UnityEngine.Debug.Log("TileHit: " + hit);
 
             data.Result.RegisterHit(data.Info.DamageType, hit);
-            Results.Add(data.Result);
             return true;
         }
 
