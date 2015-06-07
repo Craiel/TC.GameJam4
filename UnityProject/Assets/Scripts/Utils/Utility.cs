@@ -126,7 +126,7 @@ public class Utility {
 
 		} else if (weapon is WeaponHeat) {
 			s1 = "DMG";
-			s2 = "HEA";
+			s2 = "HET";
 			s3 = DamageAbbreviations [weapon.DamageType];
 		
 			
