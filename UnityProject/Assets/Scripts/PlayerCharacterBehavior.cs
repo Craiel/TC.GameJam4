@@ -105,8 +105,8 @@
             float fireRight;
             if (StaticSettings.EnableInControl && this.Character.InputDevice != null)
             {
-                fireLeft = this.Character.InputDevice.LeftTrigger.Value;
-                fireRight = this.Character.InputDevice.RightTrigger.Value;
+                fireLeft = this.Character.InputDevice.Action1.Value;
+                fireRight = this.Character.InputDevice.Action2.Value;
             }
             else
             {

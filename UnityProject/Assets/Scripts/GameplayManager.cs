@@ -16,6 +16,7 @@ namespace Assets.Scripts
     using Object = UnityEngine.Object;
     using Random = UnityEngine.Random;
     using Assets.Scripts.Logic;
+    using InControl;
 
     public class GameplayManager : MonoBehaviour
     {
@@ -140,6 +141,11 @@ namespace Assets.Scripts
                     }
                     this.timeUntilSpawn = 30f;
                 }
+            }
+
+            if(InputManager.ActiveDevice.Command.WasPressed)
+            {
+                EndGame();
             }
         }
 
