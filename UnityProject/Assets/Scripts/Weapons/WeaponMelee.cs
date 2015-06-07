@@ -23,10 +23,11 @@
 
             var stats = new StatDictionary
                 {
-                    { StatType.Interval, 0.1f },
+                    { StatType.ProjectileLifeSpan,2f},
+                    { StatType.Interval, 1f },
                     { StatType.HeatGeneration, 1.0f },
                 };
-
+            stats.Merge(internalStats);
             this.SetBaseStats(stats);
         }
 
@@ -45,7 +46,7 @@
                 CombatType = CombatType.Ranged
             };
             behavior.Type = ProjectileType.melee;
-            behavior.LifeSpan = Time.time + .5f;
+            behavior.LifeSpan = Time.time + this.GetCurrentStat(StatType.ProjectileLifeSpan);
             behavior.Origin = context.Origin;
         }
     }
