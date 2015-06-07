@@ -70,7 +70,7 @@ public class UIManager : MonoBehaviour
                 }
                 else
                 {
-                    combatText.GetComponent<CombatText>().Init(Mathf.RoundToInt(combatResult.DamageDealtTotal).ToString(), new Color(1, 0.4f, 0.4f), combatResult.Location);
+                    combatText.GetComponent<CombatText>().Init(Mathf.RoundToInt(combatResult.DamageDealtTotal).ToString(), new Color(1, 0.1f, 0.2f), combatResult.Location);
                 }
             }
         }
