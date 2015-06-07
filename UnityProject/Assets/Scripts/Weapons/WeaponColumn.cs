@@ -21,6 +21,8 @@
         {
             this.Name = "Beam";
 
+            this.projectilePrefab = Resources.Load("Projectiles/EnergyBullet");
+
             var stats = new StatDictionary
                 {
                     { StatType.Velocity, 0.1f },
@@ -31,56 +33,48 @@
             stats.Merge(internalStats);
             this.SetBaseStats(stats);
         }
-
-        // -------------------------------------------------------------------
-        // Public
-        // -------------------------------------------------------------------
         
-
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
         protected override IList<ProjectileBehavior> DoFire(GameObject origin, ICharacter source)
         {
-            //this.target.transform.Translate(StaticSettings.DefaultMoveDirection * move);
-            //this.target.transform.Rotate(Vector3.forward, rotate);
             Vector3 forward = origin.transform.rotation * StaticSettings.DefaultMoveDirection;
             origin.layer = 2;
             RaycastHit2D ray = Physics2D.Raycast(origin.transform.position, forward);
             Debug.DrawRay(origin.transform.position, forward, Color.red);
             origin.layer = 0;
-            if (ray.collider != null)
+            if (ray.collider == null)
             {
-                //Vector3 depthOffset = new Vector3(0, 0, -1f);
-                //LineRenderer line = origin.GetComponent<LineRenderer>();
-                //line.SetPosition(0, origin.transform.position + depthOffset);
-                //line.SetPosition(1, ray.transform.position + depthOffset);
-                //Debug.Log(origin.name);
-                GameObject instance = (GameObject)Object.Instantiate(Resources.Load("Projectiles/EnergyBullet"), Vector3.zero, origin.transform.rotation);
-                Vector3 scale = new Vector3(1, ray.distance, 0);
-                Vector3 directionOffset = new Vector3(0, ray.distance / 2, 0);
-                instance.transform.position = origin.transform.position;
-                instance.transform.Translate(directionOffset);
-                instance.transform.localScale = scale;
-                instance.AddComponent<BoxCollider2D>();
-                instance.GetComponent<BoxCollider2D>().isTrigger = true;
-                instance.GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
-                StaticProjectileBehavior behavior = instance.AddComponent<StaticProjectileBehavior>();
-                behavior.DamageInfo = new CombatInfo
-                {
-                    Damage = this.GetCurrentStat(StatType.Damage),
-                    DamageType = this.DamageType,
-                    ModValue = 0.33f,
-                    LogNMultiplier = 5f
-                };
-                behavior.Type = ProjectileType.beam;
-                behavior.LifeSpan = Time.time + .5f; //Time.time + this.GetInternalStat(StatType.ProjectileLifeSpan);
-                behavior.Origin = origin;
-
-                timeChanged = Time.time;
-                return new List<ProjectileBehavior> { behavior };
+                return null;
             }
-            return null;
+
+            GameObject instance = (GameObject)Object.Instantiate(this.projectilePrefab, Vector3.zero, origin.transform.rotation);
+            Vector3 scale = new Vector3(1, ray.distance, 0);
+            Vector3 directionOffset = new Vector3(0, ray.distance / 2, 0);
+            instance.transform.position = origin.transform.position;
+            instance.transform.Translate(directionOffset);
+            instance.transform.localScale = scale;
+
+            var collider = instance.AddComponent<BoxCollider2D>();
+            collider.isTrigger = true;
+            collider.size = new Vector2(1, 1);
+
+            StaticProjectileBehavior behavior = instance.AddComponent<StaticProjectileBehavior>();
+            behavior.DamageInfo = new CombatInfo
+            {
+                Damage = this.GetCurrentStat(StatType.Damage),
+                DamageType = this.DamageType,
+                ModValue = 0.33f,
+                LogNMultiplier = 5f
+            };
+
+            behavior.Type = ProjectileType.beam;
+            behavior.LifeSpan = Time.time + .5f;
+            behavior.Origin = origin;
+
+            this.timeChanged = Time.time;
+            return new List<ProjectileBehavior> { behavior };
         }
 
         public override void Update(GameObject origin)
