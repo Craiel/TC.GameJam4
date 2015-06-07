@@ -28,6 +28,7 @@
                     { StatType.Interval, 0.1f }
                 };
 
+            stats.Merge(internalStats);
             this.SetBaseStats(stats);
         }
 
