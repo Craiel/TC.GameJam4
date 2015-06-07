@@ -1,12 +1,8 @@
 ﻿namespace Assets.Scripts.Contracts
 {
-    using System.Collections.Generic;
-
     using Assets.Scripts.Logic;
     using Assets.Scripts.Logic.Enums;
-
-    using UnityEngine;
-
+    
     public interface IWeapon : IGear
     {
         long ShotsFired { get; }
@@ -23,6 +19,6 @@
 
         void SetWeaponGearType(GearType type);
 
-        IList<ProjectileBehavior> Fire(GameObject origin, ICharacter source);
+        void Fire(WeaponFireContext context);
     }
 }

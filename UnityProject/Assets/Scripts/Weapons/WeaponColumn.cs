@@ -1,8 +1,5 @@
 ﻿namespace Assets.Scripts.Weapons
 {
-    using System.Collections.Generic;
-
-    using Assets.Scripts.Contracts;
     using Assets.Scripts.Logic;
     using Assets.Scripts.Logic.Enums;
 
@@ -36,22 +33,18 @@
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
-        protected override IList<ProjectileBehavior> DoFire(GameObject origin, ICharacter source)
+        protected override void DoFire(WeaponFireContext context)
         {
-            Vector3 forward = origin.transform.rotation * StaticSettings.DefaultMoveDirection;
-            origin.layer = 2;
-            RaycastHit2D ray = Physics2D.Raycast(origin.transform.position, forward, Mathf.Infinity, LayerMask.GetMask("Wall", "Mech"));
-            Debug.DrawRay(origin.transform.position, forward, Color.red);
-            origin.layer = 0;
-            if (ray.collider == null)
+            float distance;
+            if (!this.RayHitTest(context.Origin, out distance))
             {
-                return null;
+                return;
             }
 
-            GameObject instance = (GameObject)Object.Instantiate(this.projectilePrefab, Vector3.zero, origin.transform.rotation);
-            Vector3 scale = new Vector3(1, ray.distance, 0);
-            Vector3 directionOffset = new Vector3(0, ray.distance / 2, 0);
-            instance.transform.position = origin.transform.position;
+            GameObject instance = (GameObject)Object.Instantiate(this.projectilePrefab, Vector3.zero, context.Origin.transform.rotation);
+            Vector3 scale = new Vector3(1, distance, 0);
+            Vector3 directionOffset = new Vector3(0, distance / 2.0f, 0);
+            instance.transform.position = context.Origin.transform.position;
             instance.transform.Translate(directionOffset);
             instance.transform.localScale = scale;
 
@@ -70,19 +63,19 @@
 
             behavior.Type = ProjectileType.beam;
             behavior.LifeSpan = Time.time + this.GetCurrentStat(StatType.ProjectileLifeSpan);
-            behavior.Origin = origin;
-
-            return new List<ProjectileBehavior> { behavior };
+            behavior.Origin = context.Origin;
         }
 
-        public override void Update(GameObject origin)
+        private bool RayHitTest(GameObject origin, out float distance)
         {
-            //if (timeChanged + .1 <= Time.time)
-            //{
-            //    origin.GetComponent<LineRenderer>().SetPosition(0, new Vector3(0f, 0f, 0f));
-            //    origin.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0f, 0f, 0f));
-            //}
-                
+            Vector3 forward = origin.transform.rotation * StaticSettings.DefaultMoveDirection;
+            int originalLayer = origin.layer;
+            origin.layer = 2;
+            RaycastHit2D ray = Physics2D.Raycast(origin.transform.position, forward, Mathf.Infinity, LayerMask.GetMask("Wall", "Mech"));
+            Debug.DrawRay(origin.transform.position, forward, Color.red);
+            origin.layer = originalLayer;
+            distance = ray.distance;
+            return ray.collider != null;
         }
     }
 }

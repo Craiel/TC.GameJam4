@@ -1,9 +1,7 @@
 ﻿namespace Assets.Scripts
 {
     using System;
-
-    using System.Collections.Generic;
-
+    
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Controls;
     using Assets.Scripts.Logic;
@@ -16,8 +14,6 @@
 
     public class PlayerCharacterBehavior : MonoBehaviour
     {
-        private readonly IList<ProjectileBehavior> projectiles;
-        
         private IMovementController movementController;
 
         private GameObject projectileParent;
@@ -29,15 +25,7 @@
         private bool startupGearGenerated;
 
         private float changeTime;
-
-        // -------------------------------------------------------------------
-        // Constructor
-        // -------------------------------------------------------------------
-        public PlayerCharacterBehavior()
-        {
-            this.projectiles = new List<ProjectileBehavior>();
-        }
-
+        
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -143,8 +131,6 @@
 
             bool didUpdate = this.movementController.Update();
             this.UpdateMoveAnimation(didUpdate);
-
-            this.UpdateProjectileLifespan(currentTime);
         }
 
         [UsedImplicitly]
@@ -187,34 +173,14 @@
                 return;
             }
 
-            IList<ProjectileBehavior> newProjectiles = weapon.Fire(this.gameObject, this.Character);
-            if (newProjectiles == null)
-            {
-                return;
-            }
+            var context = new WeaponFireContext
+                              {
+                                  ProjectileParent = this.projectileParent,
+                                  Origin = this.gameObject,
+                                  Character = this.Character
+                              };
 
-            foreach (ProjectileBehavior projectile in newProjectiles)
-            {
-                projectile.transform.SetParent(this.projectileParent.transform);
-                this.projectiles.Add(projectile);
-            }
-        }
-
-        private void UpdateProjectileLifespan(float currentTime)
-        {
-            IList<ProjectileBehavior> projectileList = new List<ProjectileBehavior>(this.projectiles);
-            foreach (ProjectileBehavior projectile in projectileList)
-            {
-                if (currentTime > projectile.LifeSpan)
-                {
-                    this.projectiles.Remove(projectile);
-
-                    if(projectile.IsAlive)
-                    {
-                        projectile.Dispose();
-                    }
-                }
-            }
+            weapon.Fire(context);
         }
 
         private void UpdateMoveAnimation(bool didUpdate)

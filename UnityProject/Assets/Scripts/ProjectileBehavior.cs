@@ -1,13 +1,11 @@
 ﻿namespace Assets.Scripts
 {
     using Assets.Scripts.Logic;
-    using System;
     
     using JetBrains.Annotations;
 
     using UnityEngine;
     using Assets.Scripts.Logic.Enums;
-    using System.Collections;
 
     public abstract class ProjectileBehavior : MonoBehaviour
     {
@@ -38,36 +36,24 @@
 
         public bool IsBouncing { get; set; }
         
-        public void Dispose()
+        // -------------------------------------------------------------------
+        // Protected
+        // -------------------------------------------------------------------
+        protected virtual void ExpireProjectile()
         {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
+            // Called when the lifetime of the projectile has expired
+            this.DestroyProjectile();
+        }
+
+        protected virtual void DestroyProjectile()
+        {
+            this.IsAlive = false;
+            Destroy(this.gameObject);
         }
 
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
-        private void Dispose(bool isDisposing)
-        {
-            if (isDisposing)
-            {
-                this.IsAlive = false;
-                if(this.Type == ProjectileType.bomb)
-                {
-                    this.gameObject.GetComponentInChildren<Animator>().SetTrigger("expload");
-                    StartCoroutine(DelayDispose());
-                }
-                else
-                    Destroy(this.gameObject);
-            }
-        }
-        
-        IEnumerator DelayDispose()
-        {
-            yield return new WaitForSeconds(2);
-            Destroy(this.gameObject);
-        }
-
         [UsedImplicitly]
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -75,21 +61,25 @@
             {
                 return;
             }
-
-            var data = new CombatResolve(this.DamageInfo)
-            {
-                Source = this.Origin,
-                Target = other.gameObject
-            };
-
-            Combat.Resolve(data);
-
+            
             switch (this.Type)
             {
                 case ProjectileType.bullet:
+                    {
+                        var data = new CombatResolve(this.DamageInfo)
+                        {
+                            Source = this.Origin,
+                            Target = other.gameObject
+                        };
+
+                        Combat.Resolve(data);
+                        this.ExpireProjectile();
+                        break;
+                    }
+
                 case ProjectileType.bomb:
                     {
-                        this.Dispose();
+                        this.ExpireProjectile();
                         break;
                     }
             }
