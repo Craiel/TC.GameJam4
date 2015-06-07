@@ -25,6 +25,8 @@ public class GearSlot : MonoBehaviour
 
     IGear currentGear;
 
+    public IGear Gear { get { return currentGear; } }
+
     public void Init(ICharacter character)
     {
         this.character = character;
@@ -35,7 +37,7 @@ public class GearSlot : MonoBehaviour
         icon.enabled = isGearAssigned;
         hull.enabled = isGearAssigned;
         heat.enabled = isGearAssigned;
-        selectionBox.enabled = isGearAssigned;
+        selectionBox.enabled = false;
     }
 
     public void SetSelected(bool isSelected)
@@ -55,7 +57,6 @@ public class GearSlot : MonoBehaviour
             icon.enabled = isGearAssigned;
             hull.enabled = isGearAssigned;
             heat.enabled = isGearAssigned;
-            selectionBox.enabled = isGearAssigned;
         }
 
         if(currentGear != null)
