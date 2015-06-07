@@ -32,8 +32,8 @@
                                                           {
                                                               Color.red,
                                                               Color.blue,
-                                                              Color.yellow,
-                                                              Color.green
+                                                              Color.green,
+                                                              Color.yellow
                                                           };
 
         public static readonly StatDictionary WeaponBaseStats = new StatDictionary
