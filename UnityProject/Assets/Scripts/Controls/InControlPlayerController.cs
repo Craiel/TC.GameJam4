@@ -1,11 +1,8 @@
 ﻿namespace Assets.Scripts.Controls
 {
     using System;
-
     using Assets.Scripts.Contracts;
-
     using InControl;
-
     using UnityEngine;
 
     public class InControlPlayerController : IMovementController
@@ -70,6 +67,7 @@
             if (Math.Abs(down) > float.Epsilon)
             {
                 direction = this.InvertAccellerationAxis ? down : -down;
+                direction *= 0.5f; //Half-speed for backing up
             } 
             else if (Math.Abs(up) > float.Epsilon)
             {
