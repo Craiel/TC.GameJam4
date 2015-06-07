@@ -10,6 +10,7 @@
 
     public class WeaponMelee : BaseWeapon
     {
+        private readonly Object meleePrefab;
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
@@ -17,6 +18,8 @@
             : base(internalStats)
         {
             this.Name = "Melee";
+
+            this.meleePrefab = Resources.Load("Projectiles/EnergySaber");
 
             var stats = new StatDictionary
                 {
@@ -32,8 +35,20 @@
         // -------------------------------------------------------------------
         protected override IList<ProjectileBehavior> DoFire(GameObject origin, ICharacter source)
         {
-            // Todo: 
-            return null;
+            GameObject instance = (GameObject)Object.Instantiate(this.meleePrefab, origin.transform.position, origin.transform.rotation);
+            instance.GetComponent<Animator>().SetTrigger("Sword360");
+            MeleeProjectileBehavior behavior = instance.AddComponent<MeleeProjectileBehavior>();
+            behavior.DamageInfo = new CombatInfo
+            {
+                Damage = this.GetInternalStat(StatType.Damage),
+                DamageType = this.DamageType,
+                CombatType = CombatType.Ranged
+            };
+            behavior.Type = ProjectileType.melee;
+            behavior.LifeSpan = Time.time + .5f;
+            behavior.Origin = origin;
+
+            return new List<ProjectileBehavior> { behavior };
         }
     }
 }

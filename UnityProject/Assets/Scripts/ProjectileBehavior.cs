@@ -55,16 +55,20 @@
                 if(this.Type == ProjectileType.bomb)
                 {
                     this.gameObject.GetComponentInChildren<Animator>().SetTrigger("expload");
-                    StartCoroutine(DelayDispose());
+                    StartCoroutine(DelayDispose(2));
+                }
+                else if(this.Type == ProjectileType.grapple)
+                {
+                    StartCoroutine(DelayDispose(1));
                 }
                 else
                     Destroy(this.gameObject);
             }
         }
         
-        IEnumerator DelayDispose()
+        IEnumerator DelayDispose(int time)
         {
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(time);
             Destroy(this.gameObject);
         }
 
