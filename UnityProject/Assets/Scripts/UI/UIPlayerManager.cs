@@ -170,15 +170,15 @@ public class UIPlayerManager : MonoBehaviour
         MechLoadouts.MechLoadout loadout = MechLoadouts.Loadouts[currentLoadoutIndex];
         
         mechName.text = loadout.Name;
-        health.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.Health].ToString();
-        cooling.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.HeatCoolingRate].ToString();
-        speed.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.Velocity].ToString();
-        rotationSpeed.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.RotationSpeed].ToString();
-        armor.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.Armor].ToString();
-        shield.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.Shield].ToString();
-        rangedAccuracy.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.RangedAccuracy].ToString();
-        meleeAccuracy.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.MeleeAccuracy].ToString();
-        targetingDistance.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.TargetingDistance].ToString();
-        targetingLockTime.text = loadout.BasicStats[Assets.Scripts.Logic.StatType.TargetingLockTime].ToString();
+        health.text = loadout.BasicStats[Assets.Scripts.Logic.Enums.StatType.Health].ToString();
+        cooling.text = loadout.BasicStats[Assets.Scripts.Logic.Enums.StatType.HeatCoolingRate].ToString();
+        speed.text = loadout.BasicStats[Assets.Scripts.Logic.Enums.StatType.Velocity].ToString();
+        rotationSpeed.text = loadout.BasicStats[Assets.Scripts.Logic.Enums.StatType.RotationSpeed].ToString();
+        armor.text = loadout.BasicStats[Assets.Scripts.Logic.Enums.StatType.Armor].ToString();
+        shield.text = loadout.BasicStats[Assets.Scripts.Logic.Enums.StatType.Shield].ToString();
+        rangedAccuracy.text = loadout.BasicStats[Assets.Scripts.Logic.Enums.StatType.RangedAccuracy].ToString();
+        meleeAccuracy.text = loadout.BasicStats[Assets.Scripts.Logic.Enums.StatType.MeleeAccuracy].ToString();
+        targetingDistance.text = loadout.BasicStats[Assets.Scripts.Logic.Enums.StatType.TargetingDistance].ToString();
+        targetingLockTime.text = loadout.BasicStats[Assets.Scripts.Logic.Enums.StatType.TargetingLockTime].ToString();
     }
 }

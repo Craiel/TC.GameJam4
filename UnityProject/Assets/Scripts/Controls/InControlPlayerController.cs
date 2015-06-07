@@ -2,6 +2,8 @@
 {
     using System;
     using Assets.Scripts.Contracts;
+    using Assets.Scripts.Logic.Enums;
+
     using InControl;
     using UnityEngine;
 
@@ -74,7 +76,7 @@
                 direction = -(this.InvertAccellerationAxis ? up : -up);
             }
 
-            direction *= DefaultSpeedMultiplier * target.GetComponent<PlayerCharacterBehavior>().Character.GetCurrentStat(Logic.StatType.Velocity);
+            direction *= DefaultSpeedMultiplier * target.GetComponent<PlayerCharacterBehavior>().Character.GetCurrentStat(StatType.Velocity);
 
             this.target.transform.Translate(StaticSettings.DefaultMoveDirection * direction);
             return true;
@@ -101,7 +103,7 @@
                 rotate = -(this.InvertAccellerationAxis ? -right : right);
             }
 
-            rotate *= DefaultRotationMultiplier * target.GetComponent<PlayerCharacterBehavior>().Character.GetCurrentStat(Logic.StatType.RotationSpeed);
+            rotate *= DefaultRotationMultiplier * target.GetComponent<PlayerCharacterBehavior>().Character.GetCurrentStat(StatType.RotationSpeed);
 
             this.target.transform.Rotate(Vector3.forward, rotate);
             return true;
