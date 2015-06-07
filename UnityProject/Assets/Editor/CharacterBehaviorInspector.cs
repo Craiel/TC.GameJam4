@@ -47,7 +47,7 @@
             if (GUILayout.Button("Generate Random"))
             {
                 PlayerCharacterBehavior characterBehavior = (PlayerCharacterBehavior)this.target;
-                characterBehavior.Character.SetGear(type, Systems.GenerateRandomGear(type));
+                characterBehavior.Character.SetGear(type, GearGeneration.GenerateRandomGear(type));
             }
 
             if (gear == null)
@@ -86,7 +86,7 @@
             EditorGUILayout.BeginVertical();
             foreach (StatType type in Enum.GetValues(typeof(StatType)))
             {
-                float value = actor.GetStat(type);
+                float value = actor.GetCurrentStat(type);
                 if (Math.Abs(value) > float.Epsilon)
                 {
                     EditorGUILayout.TextField(type.ToString(), value.ToString(CultureInfo.InvariantCulture));

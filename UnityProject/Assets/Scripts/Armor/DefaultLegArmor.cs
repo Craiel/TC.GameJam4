@@ -7,6 +7,8 @@
         public DefaultLegArmor(StatDictionary instarnalStats, StatDictionary inheritedStats)
             : base(instarnalStats, inheritedStats)
         {
+            this.Name = "Legs";
+
             this.Type = GearType.Legs;
         }
     }

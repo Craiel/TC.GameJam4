@@ -7,7 +7,8 @@
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Controls;
     using Assets.Scripts.Logic;
-    
+    using Assets.Scripts.Weapons;
+
     using JetBrains.Annotations;
 
     using UnityEngine;
@@ -24,6 +25,8 @@
 
         private bool nextMove;
 
+        private bool startupGearGenerated;
+
         private float changeTime;
 
         // -------------------------------------------------------------------
@@ -39,6 +42,12 @@
         // -------------------------------------------------------------------
         [SerializeField]
         public bool useFixedAxisController = true;
+
+        [SerializeField]
+        public bool createCharacter = false;
+
+        [SerializeField]
+        public bool generateRandomStartupGear = false;
 
         [SerializeField]
         public Animator mechController;
@@ -75,7 +84,28 @@
         {
             if (this.Character == null)
             {
-                return;
+                if (this.createCharacter)
+                {
+                    this.Character = new Character();
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            if (this.generateRandomStartupGear && !this.startupGearGenerated)
+            {
+                foreach (GearType gearType in Enum.GetValues(typeof(GearType)))
+                {
+                    this.Character.SetGear(gearType, GearGeneration.GenerateRandomGear(gearType));
+                }
+
+                // Todo: Remove these when we are done debugging
+                this.Character.SetGear(GearType.LeftWeapon, GearGeneration.GenerateRandomWeapon(GearType.LeftWeapon, typeof(WeaponColumn)));
+                this.Character.SetGear(GearType.RightWeapon, GearGeneration.GenerateRandomWeapon(GearType.RightWeapon, typeof(WeaponRanged)));
+                
+                this.startupGearGenerated = true;
             }
 
             this.UpdateBehaviorState();
@@ -107,8 +137,8 @@
                 this.FireWeapon(this.Character.GetGear(GearType.RightWeapon) as IWeapon);
             }
 
-            this.movementController.Velocity = this.Character.GetStat(StatType.Velocity);
-            this.movementController.RotationSpeed = this.Character.GetStat(StatType.RotationSpeed);
+            this.movementController.Velocity = this.Character.GetCurrentStat(StatType.Velocity);
+            this.movementController.RotationSpeed = this.Character.GetCurrentStat(StatType.RotationSpeed);
 
             bool didUpdate = this.movementController.Update();
             this.UpdateMoveAnimation(didUpdate);

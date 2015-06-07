@@ -10,12 +10,16 @@
 
     public class Character : ICharacter
     {
+        private static int nextId;
+
         private readonly StatDictionary baseStats;
 
         private readonly StatDictionary fullStats;
 
         // For buffs and temp modifications
         private readonly StatDictionary temporaryStats;
+
+        private readonly StatDictionary currentStats;
 
         private readonly IDictionary<GearType, IGear> gear;
  
@@ -26,9 +30,12 @@
         // -------------------------------------------------------------------
         public Character()
         {
+            this.Id = nextId++;
+
             this.baseStats = new StatDictionary();
             this.fullStats = new StatDictionary();
             this.temporaryStats = new StatDictionary();
+            this.currentStats = new StatDictionary();
             this.gear = new Dictionary<GearType, IGear>();
 
             this.baseStats.Merge(StaticSettings.PlayerBaseStats);
@@ -37,6 +44,8 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        public int Id { get; private set; }
+
         public string Name { get; set; }
 
         public InputDevice InputDevice { get; set; }
@@ -85,7 +94,17 @@
             }
         }
 
-        public float GetStat(StatType type)
+        public float GetCurrentStat(StatType type)
+        {
+            if (this.needStatUpdate)
+            {
+                this.UpdateStats();
+            }
+
+            return this.currentStats.GetStat(type);
+        }
+
+        public float GetMaxStat(StatType type)
         {
             if (this.needStatUpdate)
             {
@@ -148,6 +167,22 @@
 
             // Temporary stats are applied last
             this.fullStats.Merge(this.temporaryStats);
+
+            // Save all the persistent values before we update the current stats
+            StatDictionary persistentValues = new StatDictionary();
+            foreach (StatType type in StaticSettings.PersistentPlayerStats)
+            {
+                persistentValues.SetStat(type, this.currentStats.GetStat(type));
+            }
+
+            this.currentStats.Clear();
+            this.currentStats.Merge(this.fullStats);
+
+            // Re-set the persistent stats
+            foreach (StatType type in persistentValues.Keys)
+            {
+                this.currentStats.SetStat(type, persistentValues[type]);
+            }
         }
     }
 }

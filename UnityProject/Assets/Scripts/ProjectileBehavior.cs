@@ -2,7 +2,7 @@
 {
     using Assets.Scripts.Logic;
     using System;
-
+    
     using JetBrains.Annotations;
 
     using UnityEngine;
@@ -20,7 +20,7 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public float Damage { get; set; }
+        public CombatInfo DamageInfo { get; set; }
 
         public Vector2 Direction { get; set; }
 
@@ -60,7 +60,13 @@
                 return;
             }
 
-            Systems.ApplyDamage(other.gameObject, this.Damage);
+            var data = new CombatResolve(this.DamageInfo)
+                              {
+                                  Source = this.gameObject,
+                                  Target = other.gameObject
+                              };
+            
+            Combat.Resolve(data);
             this.Dispose();
         }
     }

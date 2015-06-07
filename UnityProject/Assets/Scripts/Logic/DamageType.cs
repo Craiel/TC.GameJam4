@@ -1,6 +1,6 @@
 ﻿namespace Assets.Scripts.Logic
 {
-    public enum WeaponType
+    public enum DamageType
     {
         Projectile,
         Energy

@@ -8,6 +8,8 @@
 
     public interface ICharacter
     {
+        int Id { get; }
+
         string Name { get; set; }
 
         ICharacter Target { get; set; }
@@ -20,7 +22,8 @@
 
         void RemoveGear(GearType type);
 
-        float GetStat(StatType type);
+        float GetCurrentStat(StatType type);
+        float GetMaxStat(StatType type);
 
         void SetTemporaryStat(StatType type, float value);
 
