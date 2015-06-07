@@ -65,6 +65,8 @@ public class UIPlayerManager : MonoBehaviour
 
     public UIState CurrentState { get { return currentState; } }
     public ICharacter Character { get { return character; } }
+
+    public MechLoadouts.MechLoadout Loadout { get { return MechLoadouts.Loadouts[currentLoadoutIndex]; } }
     
     public void Init(ICharacter character, UIManager UIManager)
     {

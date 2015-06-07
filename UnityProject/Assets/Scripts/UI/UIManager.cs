@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using Assets.Scripts;
 using Assets.Scripts.Contracts;
+using Assets.Scripts.Logic;
 
 public class UIManager : MonoBehaviour 
 {
@@ -28,7 +29,7 @@ public class UIManager : MonoBehaviour
     {
         if(!gameplayManager.IsPlaying)
         {
-            List<ICharacter> characters = new List<ICharacter>();
+            Dictionary<ICharacter, MechLoadouts.MechLoadout> characters = new Dictionary<ICharacter, MechLoadouts.MechLoadout>();
             foreach(UIPlayerManager playerManager in players)
             {
                 if(playerManager.CurrentState == UIPlayerManager.UIState.Joined)
@@ -37,14 +38,19 @@ public class UIManager : MonoBehaviour
                 }
                 if(playerManager.CurrentState == UIPlayerManager.UIState.Ready)
                 {
-                    characters.Add(playerManager.Character);
+                    characters.Add(playerManager.Character, playerManager.Loadout);
                 }
             }
 
             //TODO: Make this actually 2, dummy
             if(characters.Count > 0)
             {
-                gameplayManager.SetupMatch(characters);
+                foreach(ICharacter character in characters.Keys)
+                {
+                    character.SetBaseStats(characters[character].BasicStats);
+                }
+
+                gameplayManager.SetupMatch(new List<ICharacter>(characters.Keys));
                 playerSelect.SetActive(false);
             }
         }
