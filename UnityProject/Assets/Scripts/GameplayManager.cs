@@ -15,6 +15,7 @@ namespace Assets.Scripts
 
     using Object = UnityEngine.Object;
     using Random = UnityEngine.Random;
+    using Assets.Scripts.Logic;
 
     public class GameplayManager : MonoBehaviour
     {
@@ -48,6 +49,7 @@ namespace Assets.Scripts
         public GameObject mechPrefab;
 
         public bool IsPlaying { get; private set; }
+        private float timeUntilSpawn;
 
         public bool HasEnded { get; private set; }
 
@@ -68,6 +70,7 @@ namespace Assets.Scripts
             this.arena.PlaceStarterGear();
 
             this.HasEnded = false;
+            this.timeUntilSpawn = 30f;
             this.IsPlaying = true;
         }
 
@@ -123,6 +126,18 @@ namespace Assets.Scripts
             if (aliveCharacters <= 1)
             {
                 this.EndGame();
+            }
+            else
+            {
+                this.timeUntilSpawn -= Time.deltaTime;
+                if (this.timeUntilSpawn < 0)
+                {
+                    for (int i = 0; i < aliveCharacters; ++i)
+                    {
+                        arena.PlaceGear(GearGeneration.GenerateRandomGear());
+                    }
+                }
+                this.timeUntilSpawn = 30f;
             }
         }
 
