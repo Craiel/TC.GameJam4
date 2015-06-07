@@ -39,7 +39,7 @@
 
         public void InitFromText(string fileName)
         {
-            StreamReader streamReader = new StreamReader(Application.dataPath + string.Format(StaticSettings.MapFileFilter, fileName));
+            StreamReader streamReader = new StreamReader(Application.streamingAssetsPath + string.Format(StaticSettings.MapFileFilter, fileName));
 
             this.currentLineToProcess = 0;
             using (streamReader)

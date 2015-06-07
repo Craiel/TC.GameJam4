@@ -37,7 +37,7 @@ namespace Assets.Scripts
         // Public
         // -------------------------------------------------------------------
         [SerializeField]
-        public List<Object> textArenas;
+        public List<string> textArenas;
 
         [SerializeField]
         public List<Texture2D> imageArenas;
@@ -90,10 +90,10 @@ namespace Assets.Scripts
                 }
             }
 
-            foreach (Object textFile in this.textArenas)
+            foreach (string textFile in this.textArenas)
             {
-                var data = new ArenaData { Name = textFile.name };
-                data.InitFromText(textFile.name);
+                var data = new ArenaData { Name = textFile };
+                data.InitFromText(textFile);
                 if (data.IsValid)
                 {
                     this.arenaData.Add(data);
