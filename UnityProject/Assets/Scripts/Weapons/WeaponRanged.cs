@@ -47,6 +47,7 @@
                                           DamageType = this.DamageType,
                                           CombatType = CombatType.Ranged
                                       };
+            behavior.Type = ProjectileType.bullet;
             behavior.Velocity = this.GetInternalStat(StatType.Velocity);
             behavior.LifeSpan = Time.time + this.GetInternalStat(StatType.ProjectileLifeSpan);
             behavior.Origin = origin;
