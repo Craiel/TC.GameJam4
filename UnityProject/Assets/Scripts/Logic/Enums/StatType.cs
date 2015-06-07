@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Logic
+﻿namespace Assets.Scripts.Logic.Enums
 {
     public enum StatType
     {

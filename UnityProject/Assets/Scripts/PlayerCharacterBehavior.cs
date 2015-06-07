@@ -7,6 +7,7 @@
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Controls;
     using Assets.Scripts.Logic;
+    using Assets.Scripts.Logic.Enums;
     using Assets.Scripts.Weapons;
 
     using JetBrains.Annotations;
@@ -96,7 +97,7 @@
 
             if (this.generateRandomStartupGear && !this.startupGearGenerated)
             {
-                foreach (GearType gearType in Enum.GetValues(typeof(GearType)))
+                foreach (GearType gearType in EnumLists.GearTypes)
                 {
                     this.Character.SetGear(gearType, GearGeneration.GenerateRandomGear(gearType));
                 }

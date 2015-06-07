@@ -1,6 +1,7 @@
 ﻿namespace Assets.Scripts.Armor
 {
     using Assets.Scripts.Logic;
+    using Assets.Scripts.Logic.Enums;
 
     public class DefaultChestArmor : BaseArmor
     {

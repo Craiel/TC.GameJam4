@@ -6,6 +6,7 @@
     using Assets.Scripts;
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Logic;
+    using Assets.Scripts.Logic.Enums;
 
     using UnityEditor;
 
@@ -57,7 +58,7 @@
 
             EditorGUILayout.BeginVertical();
             EditorGUILayout.LabelField(" -- Internal: ");
-            foreach (StatType statType in Enum.GetValues(typeof(StatType)))
+            foreach (StatType statType in EnumLists.StatTypes)
             {
                 float value = gear.GetInternalStat(statType);
                 if (Math.Abs(value) > float.Epsilon)
@@ -69,7 +70,7 @@
 
             EditorGUILayout.BeginVertical();
             EditorGUILayout.LabelField(" -- Inherited: ");
-            foreach (StatType statType in Enum.GetValues(typeof(StatType)))
+            foreach (StatType statType in EnumLists.StatTypes)
             {
                 float value = gear.GetInheritedStat(statType);
                 if (Math.Abs(value) > float.Epsilon)
@@ -84,7 +85,7 @@
         {
             this.AddHeaderGuiSection("Stats");
             EditorGUILayout.BeginVertical();
-            foreach (StatType type in Enum.GetValues(typeof(StatType)))
+            foreach (StatType type in EnumLists.StatTypes)
             {
                 float value = actor.GetCurrentStat(type);
                 if (Math.Abs(value) > float.Epsilon)

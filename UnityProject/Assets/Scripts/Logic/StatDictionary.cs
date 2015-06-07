@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
 
+    using Assets.Scripts.Logic.Enums;
+
     public class StatDictionary : Dictionary<StatType, float>
     {
         private static readonly IList<StatType> StatTypes;
@@ -13,7 +15,7 @@
         static StatDictionary()
         {
             StatTypes = new List<StatType>();
-            foreach (StatType type in Enum.GetValues(typeof(StatType)))
+            foreach (StatType type in EnumLists.StatTypes)
             {
                 StatTypes.Add(type);
             }
