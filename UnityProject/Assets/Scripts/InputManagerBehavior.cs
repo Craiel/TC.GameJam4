@@ -84,6 +84,7 @@
             for (int i = 0; i < StaticSettings.MaxPlayerCount; ++i )
             {   
                 var newPlayer = new Character();
+                newPlayer.myColor = StaticSettings.PlayerColors[i];
                 this.charactersToInputDevices.Add(newPlayer, null);
             }
 

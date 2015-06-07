@@ -27,6 +27,14 @@
         public static readonly float DefaultProjectileMoveSpeed = 10f;
 
         public static readonly StatDictionary ArmorBaseStats = new StatDictionary();
+        
+        public static IList<Color> PlayerColors = new List<Color>
+                                                          {
+                                                              Color.red,
+                                                              Color.blue,
+                                                              Color.yellow,
+                                                              Color.green
+                                                          };
 
         public static readonly StatDictionary WeaponBaseStats = new StatDictionary
         {

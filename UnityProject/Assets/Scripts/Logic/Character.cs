@@ -16,6 +16,8 @@
         private readonly IDictionary<GearType, IGear> gear;
 
         private float nextCoolingTick;
+
+
  
         // -------------------------------------------------------------------
         // Constructor
@@ -38,6 +40,8 @@
         public int Id { get; private set; }
 
         public string Name { get; set; }
+
+        public Color myColor { get; set; }
 
         public InputDevice InputDevice { get; set; }
 
