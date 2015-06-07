@@ -126,6 +126,11 @@
             }
         }
 
+        public void DetachDevice(InputDevice device)
+        {
+            OnDeviceDetached(device);
+        }
+
         private ICharacter GetPlayerForNewController()
         {
             foreach (ICharacter character in this.charactersToInputDevices.Keys)

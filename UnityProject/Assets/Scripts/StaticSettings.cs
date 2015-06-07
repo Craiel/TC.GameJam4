@@ -41,6 +41,8 @@
             { StatType.TargetingDistance, 20f},
         };
 
+
+
         public static bool EnableInControl = false;
 
         public static IList<StatType> ArmorInternalStats = new List<StatType>
