@@ -62,22 +62,22 @@ public class Utility {
 
 			if(code == "%") {
 				value = value * 100;
-				return Math.Round (value, 0) + StatUnits[statType];
+				return Convert.ToString(Math.Round (value, 0)) + StatUnits[statType];
 			
 			} else if (code == "s") {
-				return Math.Round (value, 2) + StatUnits[statType];
+				return Convert.ToString(Math.Round (value, 2)) + StatUnits[statType];
 			}
 
-			return Math.Round (value, 0) + StatUnits[statType];
+			return Convert.ToString(Math.Round (value, 0)) + StatUnits[statType];
 		}
 
 		if (statType == StatType.Velocity) {
 			return Math.Round (value, 2) + StatUnits[statType];
 		} else if (statType == StatType.RotationSpeed) {
-			return Math.Round (value, 2) + StatUnits[statType];
+			return Convert.ToString(Math.Round (value, 2)) + StatUnits[statType];
 		}
 
-		return Math.Round (value, 0);
+		return Convert.ToString(Math.Round (value, 0));
 
 	}
 
