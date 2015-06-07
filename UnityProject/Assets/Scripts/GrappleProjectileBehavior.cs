@@ -11,6 +11,7 @@
 
         private Vector3 depthOffset = new Vector3(0, 0, -1f);
         private bool walk = true;
+        private float distance;
 
         // -------------------------------------------------------------------
         // Protected
@@ -19,7 +20,7 @@
         {
             if (!this.isTriggered)
             {
-                this.destroyDelay = Time.time + 1.0f; // 1s for the walk
+                this.destroyDelay = Time.time + .50f; // 1s for the walk
                 this.isTriggered = true;
                 return;
             }
@@ -31,6 +32,7 @@
         protected override void Update()
         {
             base.Update();
+            
 
             // Check for the delayed destroy
             if (this.destroyDelay != null && Time.time > this.destroyDelay)
@@ -43,21 +45,16 @@
             {
                 LineRenderer line = this.Origin.GetComponent<LineRenderer>();
                 line.SetPosition(0, this.Origin.transform.position + this.depthOffset);
-                this.Origin.transform.position = Vector3.MoveTowards(this.Origin.transform.position, this.transform.position, .5f);
+                this.Origin.transform.position = Vector3.MoveTowards(this.Origin.transform.position, this.transform.position, .08f);
+                distance = Vector3.Distance(this.transform.position,this.Origin.transform.position);
+                if (distance <= .6f)
+                {
+                    this.DestroyProjectile();
+                    line.SetPosition(0, this.Origin.transform.position);
+                    line.SetPosition(1, this.Origin.transform.position);
+                    walk = false;
+                }
             }
-        }
-
-        // -------------------------------------------------------------------
-        // Private
-        // -------------------------------------------------------------------
-        [UsedImplicitly]
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            if (other.gameObject == this.Origin)
-            {
-                return;
-            }
-            this.walk = false;
         }
     }
 }
