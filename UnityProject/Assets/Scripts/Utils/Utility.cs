@@ -12,7 +12,10 @@ public class Utility {
 	private static Utility m_Instance = new Utility();
 	public static Utility Instance { get { return m_Instance; } }
 	
-	private Utility() {}
+	private Utility() 
+    {
+        Load();
+    }
 
 	private Dictionary<StatType,string> 	StatAbbreviations { get; set; }
 	private Dictionary<StatType,string>		StatUnits { get; set; }
@@ -72,9 +75,9 @@ public class Utility {
 		}
 
 		if (statType == StatType.Velocity) {
-			return Math.Round (value, 2) + StatUnits[statType];
+			return Convert.ToString(Math.Round (value, 2));
 		} else if (statType == StatType.RotationSpeed) {
-			return Convert.ToString(Math.Round (value, 2)) + StatUnits[statType];
+			return Convert.ToString(Math.Round (value, 2));
 		}
 
 		return Convert.ToString(Math.Round (value, 0));
