@@ -101,12 +101,7 @@ namespace Assets.Scripts.Arena
             int characterCount = this.gameplayManager.Characters.Count;
             int totalStarterGear = StaticSettings.NumGearDropsPerCharacterAtStart * characterCount;
 
-            for (int i = 0; i < characterCount; ++i)
-            {
-                this.PlaceGear(GearGeneration.GenerateRandomGear(GearType.RightWeapon));
-            }
-
-            for (int i = 0; i < totalStarterGear - characterCount; ++i)
+            for (int i = 0; i < totalStarterGear; ++i)
             {
                 this.PlaceGear(GearGeneration.GenerateRandomGear());
             }
@@ -122,44 +117,7 @@ namespace Assets.Scripts.Arena
             Destroy(gearView.gameObject);
         }
 
-        // -------------------------------------------------------------------
-        // Private
-        // -------------------------------------------------------------------
-        [UsedImplicitly]
-        private void Awake()
-        {
-            this.Tiles = new List<ArenaTile>();
-        }
-
-        [UsedImplicitly]
-        private void Update()
-        {
-        }
-
-        private ArenaTileType GetTileType(int index)
-        {
-            switch (index)
-            {
-                case 1: return ArenaTileType.Indestructible;
-                case 2: return ArenaTileType.Destructible;
-                case 3: return ArenaTileType.HalfWall;
-                case 4: return ArenaTileType.Spawn;
-            }
-
-            return ArenaTileType.Ground;
-        }
-
-        private void BuildTile(int tileIndex, Vector3 position)
-        {
-            ArenaTileType type = this.GetTileType(tileIndex);
-            GameObject tile = Instantiate(this.tilePrefabs[tileIndex]);
-            this.Tiles.Add(new ArenaTile { CurrentType = type, TileView = tile });
-
-            tile.transform.SetParent(this.transform);
-            tile.transform.localPosition = position;
-        }
-
-        private void PlaceGear(IGear gear)
+        public void PlaceGear(IGear gear)
         {
             const float minGearDropProximity = 0.7f;
 
@@ -211,6 +169,43 @@ namespace Assets.Scripts.Arena
             GearView newGearView = newGear.GetComponent<GearView>();
             newGearView.Init(gear);
             this.UnclaimedGear.Add(newGearView);
+        }
+
+        // -------------------------------------------------------------------
+        // Private
+        // -------------------------------------------------------------------
+        [UsedImplicitly]
+        private void Awake()
+        {
+            this.Tiles = new List<ArenaTile>();
+        }
+
+        [UsedImplicitly]
+        private void Update()
+        {
+        }
+
+        private ArenaTileType GetTileType(int index)
+        {
+            switch (index)
+            {
+                case 1: return ArenaTileType.Indestructible;
+                case 2: return ArenaTileType.Destructible;
+                case 3: return ArenaTileType.HalfWall;
+                case 4: return ArenaTileType.Spawn;
+            }
+
+            return ArenaTileType.Ground;
+        }
+
+        private void BuildTile(int tileIndex, Vector3 position)
+        {
+            ArenaTileType type = this.GetTileType(tileIndex);
+            GameObject tile = Instantiate(this.tilePrefabs[tileIndex]);
+            this.Tiles.Add(new ArenaTile { CurrentType = type, TileView = tile });
+
+            tile.transform.SetParent(this.transform);
+            tile.transform.localPosition = position;
         }
     }
 }

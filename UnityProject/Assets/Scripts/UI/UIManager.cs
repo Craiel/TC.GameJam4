@@ -89,6 +89,11 @@ public class UIManager : MonoBehaviour
             gamePanel.gameObject.SetActive(false);
         }
 
+        foreach (UIPlayerManager playerManager in this.players)
+        {
+            playerManager.ResetState();
+        }
+
         this.waitingForCharacterSelection = true;
     }
 
@@ -100,13 +105,16 @@ public class UIManager : MonoBehaviour
             if (this.gameplayManager.HasEnded && !this.waitingForCharacterSelection)
             {
                 this.SetupPlayerSelection();
+                return;
             }
-            else if (this.gameplayManager.HasEnded && this.waitingForCharacterSelection)
+            
+            if (this.waitingForCharacterSelection)
             {
                 IDictionary<ICharacter, MechLoadouts.MechLoadout> readyPlayers = this.GetReadyPlayers();
                 if (readyPlayers.Count > 1)
                 {
                     this.SetupMatch(readyPlayers);
+                    this.waitingForCharacterSelection = false;
                 }
             }
         }

@@ -111,6 +111,7 @@ public class PlayerGamePanel : MonoBehaviour
             if (gearSlots[activeGearSlot].Gear != null)
             {
                 character.RemoveGear(gearSlots[activeGearSlot].Gear.Type);
+                gearSlots[activeGearSlot].SetSelected(false);
                 //TODO: Spawn a gear drop
             }
         }
