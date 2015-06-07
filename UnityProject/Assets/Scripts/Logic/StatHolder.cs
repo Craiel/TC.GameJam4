@@ -2,9 +2,10 @@
 {
     using System.Collections.Generic;
 
+    using Assets.Scripts.Contracts;
     using Assets.Scripts.Logic.Enums;
 
-    public class StatHolder
+    public class StatHolder : IStatHolder
     {
         private readonly StatDictionary baseStats;
 
@@ -35,7 +36,9 @@
         {
             this.baseStats.Clear();
             this.baseStats.Merge(newStats);
-            this.NeedStatUpdate = true;
+
+            // We reset the stats for this call, it should be used to modify the core aspects of the stat holder
+            this.ResetCurrentStats();
         }
 
         public float GetCurrentStat(StatType type)
@@ -70,6 +73,18 @@
             this.NeedStatUpdate = true;
         }
 
+        public void ModifyStat(StatType type, float modifier)
+        {
+            float current = this.GetCurrentStat(type);
+            this.currentStats.SetStat(type, current + modifier);
+            this.NeedStatUpdate = true;
+        }
+
+        public void ResetCurrentStats()
+        {
+            this.UpdateStats(false);
+        }
+
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
@@ -83,7 +98,7 @@
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
-        private void UpdateStats()
+        private void UpdateStats(bool keepPersistentStats = true)
         {
             this.NeedStatUpdate = false;
 
@@ -103,20 +118,38 @@
             // Temporary stats are applied last
             this.fullStats.Merge(this.temporaryStats);
 
-            // Save all the persistent values before we update the current stats
-            StatDictionary persistentValues = new StatDictionary();
-            foreach (StatType type in StaticSettings.PersistentStats)
+            if (keepPersistentStats)
             {
-                persistentValues.SetStat(type, this.currentStats.GetStat(type));
+                // Save all the persistent values before we update the current stats
+                StatDictionary persistentValues = new StatDictionary();
+                foreach (StatType type in StaticSettings.PersistentStats)
+                {
+                    persistentValues.SetStat(type, this.currentStats.GetStat(type));
+                }
+
+                this.currentStats.Clear();
+                this.currentStats.Merge(this.fullStats);
+
+                // Re-set the persistent stats
+                foreach (StatType type in persistentValues.Keys)
+                {
+                    float current = persistentValues[type];
+                    float max = this.currentStats.GetStat(type);
+                    if (max < current)
+                    {
+                        current = max;
+                    }
+
+                    this.currentStats.SetStat(type, current);
+                }
             }
-
-            this.currentStats.Clear();
-            this.currentStats.Merge(this.fullStats);
-
-            // Re-set the persistent stats
-            foreach (StatType type in persistentValues.Keys)
+            else
             {
-                this.currentStats.SetStat(type, persistentValues[type]);
+                this.currentStats.Clear();
+                this.currentStats.Merge(this.fullStats);
+
+                // Special case for stats we want to be on the other end of the spectrum
+                this.currentStats.SetStat(StatType.Heat, 0);
             }
         }
     }

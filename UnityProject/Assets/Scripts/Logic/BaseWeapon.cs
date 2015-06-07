@@ -57,6 +57,13 @@
         {
             if (this.CanFire())
             {
+                float maxHeat = this.GetMaxStat(StatType.Heat);
+                if (maxHeat > 0)
+                {
+                    float heatIncrease = this.GetCurrentStat(StatType.HeatGeneration);
+                    this.ModifyStat(StatType.Heat, heatIncrease);
+                }
+
                 this.LastShotFired = Time.time;
 
                 IList<ProjectileBehavior> projectiles = this.DoFire(origin, source);

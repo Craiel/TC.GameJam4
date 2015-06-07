@@ -21,7 +21,6 @@
 
         Heat,
         HeatGeneration,
-        HeatMax,
         HeatCoolingRate,
 
         ProjectileLifeSpan,

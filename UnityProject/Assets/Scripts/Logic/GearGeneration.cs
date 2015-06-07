@@ -81,7 +81,7 @@
                         var rollData = new StatRollData { OptionalStatPicks = StaticSettings.LegsRollOptionalPicks };
                         rollData.RequiredStats.Add(StatType.Health);
                         rollData.RequiredStats.Add(StatType.HeatGeneration);
-                        rollData.RequiredStats.Add(StatType.HeatMax);
+                        rollData.RequiredStats.Add(StatType.Heat);
                         rollData.OptionalStats.AddRange(StaticSettings.LegsRollMetaFlags);
                         rollData.BudgetValues.Merge(StaticSettings.LegsRollBudgets);
                         rollData.BaseLineValues.Merge(StaticSettings.LegsRollBaseLineStats);

@@ -26,6 +26,8 @@
 
             // Set some defaults but will be override later
             this.SetBaseStats(StaticSettings.PlayerBaseStats);
+
+            this.ResetCurrentStats();
         }
 
         // -------------------------------------------------------------------

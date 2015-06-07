@@ -13,5 +13,9 @@
         void SetTemporaryStat(StatType type, float value);
 
         void RemoveTemporaryStat(StatType type);
-    }
+
+        void ModifyStat(StatType type, float modifier);
+
+        void ResetCurrentStats();
+    };
 }

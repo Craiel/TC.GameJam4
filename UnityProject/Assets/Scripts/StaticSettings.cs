@@ -48,7 +48,7 @@
         public static IList<StatType> ArmorInternalStats = new List<StatType>
                                                           {
                                                               StatType.Health,
-                                                              StatType.HeatMax,
+                                                              StatType.Heat,
                                                               StatType.HeatGeneration
                                                           };
 
@@ -105,7 +105,7 @@
                                                                { StatType.Velocity, 1f },
                                                                { StatType.HeatCoolingRate, 5f },
                                                                { StatType.Health, 100f },
-                                                               { StatType.HeatMax, 100f },
+                                                               { StatType.Heat, 100f },
                                                                { StatType.HeatGeneration, -9f }
                                                            };
 
@@ -118,7 +118,7 @@
                                                           {
                                                               StatType.Damage,
                                                               StatType.Health,
-                                                              StatType.HeatMax,
+                                                              StatType.Heat,
                                                               StatType.HeatGeneration
                                                           };
 
@@ -126,7 +126,7 @@
                                                            {
                                                                { StatType.Damage, 50f },
                                                                { StatType.Health, 200f },
-                                                               { StatType.HeatMax, 100f },
+                                                               { StatType.Heat, 100f },
                                                                { StatType.HeatGeneration, -19f },
                                                            };
 

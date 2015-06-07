@@ -60,10 +60,11 @@
             EditorGUILayout.LabelField(" -- Current: ");
             foreach (StatType statType in EnumLists.StatTypes)
             {
-                float value = gear.GetCurrentStat(statType);
-                if (Math.Abs(value) > float.Epsilon)
+                float current = gear.GetCurrentStat(statType);
+                float max = gear.GetMaxStat(statType);
+                if (Math.Abs(current) > float.Epsilon || Math.Abs(max) > float.Epsilon)
                 {
-                    EditorGUILayout.TextField(statType.ToString(), value.ToString(CultureInfo.InvariantCulture));
+                    EditorGUILayout.TextField(statType.ToString(), string.Format("{0} / {1}", current, max));
                 }
             }
             EditorGUILayout.EndVertical();
@@ -87,10 +88,11 @@
             EditorGUILayout.BeginVertical();
             foreach (StatType type in EnumLists.StatTypes)
             {
-                float value = actor.GetCurrentStat(type);
-                if (Math.Abs(value) > float.Epsilon)
+                float current = actor.GetCurrentStat(type);
+                float max = actor.GetMaxStat(type);
+                if (Math.Abs(current) > float.Epsilon || Math.Abs(max) > float.Epsilon)
                 {
-                    EditorGUILayout.TextField(type.ToString(), value.ToString(CultureInfo.InvariantCulture));
+                    EditorGUILayout.TextField(type.ToString(), string.Format("{0} / {1}", current, max));
                 }
             }
             EditorGUILayout.EndVertical();
