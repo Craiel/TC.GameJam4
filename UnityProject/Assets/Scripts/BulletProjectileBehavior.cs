@@ -6,11 +6,13 @@
     public class BulletProjectileBehavior : ProjectileBehavior
     {
         // -------------------------------------------------------------------
-        // Private
+        // Protected
         // -------------------------------------------------------------------
         [UsedImplicitly]
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
+
             this.transform.Translate(StaticSettings.DefaultMoveDirection * StaticSettings.DefaultProjectileMoveSpeed * this.Velocity * Time.deltaTime);
         }
     }

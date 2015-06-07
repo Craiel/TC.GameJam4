@@ -4,12 +4,14 @@
     class MeleeProjectileBehavior : ProjectileBehavior
     {
         // -------------------------------------------------------------------
-        // Private
+        // Protected
         // -------------------------------------------------------------------
         [UsedImplicitly]
-        private void Update()
+        protected override void Update()
         {
-            this.transform.position = Origin.transform.position;
+            base.Update();
+
+            this.transform.position = this.Origin.transform.position;
         }
     }
 }

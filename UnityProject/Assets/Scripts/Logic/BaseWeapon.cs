@@ -1,7 +1,5 @@
 ﻿namespace Assets.Scripts.Logic
 {
-    using System.Collections.Generic;
-
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Logic.Enums;
 
@@ -53,7 +51,7 @@
             this.Type = type;
         }
 
-        public IList<ProjectileBehavior> Fire(GameObject origin, ICharacter source)
+        public void Fire(WeaponFireContext context)
         {
             if (this.CanFire())
             {
@@ -66,17 +64,14 @@
 
                 this.LastShotFired = Time.time;
 
-                IList<ProjectileBehavior> projectiles = this.DoFire(origin, source);
+                this.DoFire(context);
                 this.ShotsFired++;
-                return projectiles;
             }
-
-            return null;
         }
 
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
-        protected abstract IList<ProjectileBehavior> DoFire(GameObject origin, ICharacter source);
+        protected abstract void DoFire(WeaponFireContext context);
     }
 }

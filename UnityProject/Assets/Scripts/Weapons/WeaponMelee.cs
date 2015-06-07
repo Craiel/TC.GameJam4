@@ -33,9 +33,9 @@
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
-        protected override IList<ProjectileBehavior> DoFire(GameObject origin, ICharacter source)
+        protected override void DoFire(WeaponFireContext context)
         {
-            GameObject instance = (GameObject)Object.Instantiate(this.meleePrefab, origin.transform.position, origin.transform.rotation);
+            GameObject instance = (GameObject)Object.Instantiate(this.meleePrefab, context.Origin.transform.position, context.Origin.transform.rotation);
             instance.GetComponent<Animator>().SetTrigger("Sword360");
             MeleeProjectileBehavior behavior = instance.AddComponent<MeleeProjectileBehavior>();
             behavior.DamageInfo = new CombatInfo
@@ -46,9 +46,7 @@
             };
             behavior.Type = ProjectileType.melee;
             behavior.LifeSpan = Time.time + .5f;
-            behavior.Origin = origin;
-
-            return new List<ProjectileBehavior> { behavior };
+            behavior.Origin = context.Origin;
         }
     }
 }

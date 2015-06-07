@@ -1,8 +1,5 @@
 ﻿namespace Assets.Scripts.Weapons
 {
-    using System.Collections.Generic;
-
-    using Assets.Scripts.Contracts;
     using Assets.Scripts.Logic;
     using Assets.Scripts.Logic.Enums;
 
@@ -37,9 +34,10 @@
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
-        protected override IList<ProjectileBehavior> DoFire(GameObject origin, ICharacter source)
+        protected override void DoFire(WeaponFireContext context)
         {
-            GameObject instance = (GameObject)Object.Instantiate(this.projectilePrefab, origin.transform.position, origin.transform.rotation);
+            GameObject instance = (GameObject)Object.Instantiate(this.projectilePrefab, context.Origin.transform.position, context.Origin.transform.rotation);
+            instance.transform.SetParent(context.ProjectileParent.transform);
 
             BulletProjectileBehavior behavior = instance.AddComponent<BulletProjectileBehavior>();
             behavior.DamageInfo = new CombatInfo
@@ -53,9 +51,7 @@
             behavior.Type = ProjectileType.bullet;
             behavior.Velocity = this.GetCurrentStat(StatType.Velocity);
             behavior.LifeSpan = Time.time + this.GetCurrentStat(StatType.ProjectileLifeSpan);
-            behavior.Origin = origin;
-
-            return new List<ProjectileBehavior> { behavior };
+            behavior.Origin = context.Origin;
         }
     }
 }
