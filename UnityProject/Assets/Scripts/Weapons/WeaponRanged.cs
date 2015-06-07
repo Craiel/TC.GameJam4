@@ -24,9 +24,9 @@
 
             var stats = new StatDictionary
                 {
-                    { StatType.Velocity, 0.1f },
+                    { StatType.Velocity, 0.8f },
                     { StatType.ProjectileLifeSpan, 1f },
-                    { StatType.Interval, 0.1f },
+                    { StatType.Interval, 0.5f },
                     { StatType.HeatGeneration, 1.0f },
                 };
 

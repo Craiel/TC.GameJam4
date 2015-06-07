@@ -64,7 +64,14 @@ public class UIManager : MonoBehaviour
                 GameObject combatText = Instantiate(CombatTextPrefab) as GameObject;
                 combatText.transform.SetParent(this.transform);
 
-                combatText.GetComponent<CombatText>().Init(Mathf.RoundToInt(combatResult.DamageDealtTotal).ToString(), Color.black, combatResult.Location);
+                if(combatResult.WasMiss)
+                {
+                    combatText.GetComponent<CombatText>().Init("miss", new Color(0.6f, 0.6f, 0.6f), combatResult.Location);
+                }
+                else
+                {
+                    combatText.GetComponent<CombatText>().Init(Mathf.RoundToInt(combatResult.DamageDealtTotal).ToString(), new Color(1, 0.4f, 0.4f), combatResult.Location);
+                }
             }
         }
     }
