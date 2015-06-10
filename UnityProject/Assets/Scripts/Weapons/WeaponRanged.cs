@@ -8,7 +8,7 @@
     public class WeaponRanged : BaseWeapon
     {
         private readonly Object projectilePrefab;
-
+        
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------

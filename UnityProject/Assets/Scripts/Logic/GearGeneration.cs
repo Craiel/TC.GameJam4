@@ -12,12 +12,31 @@
     
     public static class GearGeneration
     {
+        public static Dictionary<GearType, float> randomGenerationWeights = new Dictionary<GearType, float> 
+        {
+            {GearType.Head, 0.1f},
+            {GearType.Chest, 0.1f},
+            {GearType.LeftWeapon, 0.3f},
+            {GearType.RightWeapon, 0.4f},
+            {GearType.Legs, 0.1f}
+        };
+
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
         public static IGear GenerateRandomGear()
         {
-            return GenerateRandomGear(EnumLists.GearTypes[UnityEngine.Random.Range(0, EnumLists.GearTypes.Count)]);
+            float randomValue = UnityEngine.Random.value;
+            float currentRandom = 0f;
+            foreach(GearType gearType in Enum.GetValues(typeof(GearType)))
+            {
+                currentRandom += randomGenerationWeights[gearType];
+                if(randomValue < currentRandom)
+                {
+                    return GenerateRandomGear(gearType);
+                }
+            }
+            return null;
         }
 
         public static IWeapon GenerateRandomWeapon(GearType type, Type weaponType, DamageType? damageType = null)

@@ -7,6 +7,7 @@
 
     public class BulletProjectileBehavior : ProjectileBehavior
     {
+        private readonly Object exploadPrefab = Resources.Load("Projectiles/Explode");
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
@@ -31,8 +32,9 @@
                 Source = this.Origin,
                 Target = other.gameObject
             };
-
             Combat.Resolve(data);
+            //GameObject instance = (GameObject)Object.Instantiate(this.projectilePrefab, context.Origin.transform.position, context.Origin.transform.rotation);
+            GameObject instance = (GameObject)Object.Instantiate(this.exploadPrefab, this.transform.position, this.transform.rotation);
             this.ExpireProjectile();
         }
     }
