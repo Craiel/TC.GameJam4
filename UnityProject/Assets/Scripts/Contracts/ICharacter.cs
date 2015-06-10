@@ -1,9 +1,7 @@
 ﻿namespace Assets.Scripts.Contracts
 {
     using Assets.Scripts.Logic.Enums;
-
-    using InControl;
-
+    
     using UnityEngine;
 
     public interface ICharacter : IStatHolder
@@ -18,7 +16,7 @@
 
         ICharacter Target { get; set; }
 
-        InputDevice InputDevice { get; set; }
+        IInputDeviceMapping InputDevice { get; set; }
 
         IGear GetGear(GearType type);
 

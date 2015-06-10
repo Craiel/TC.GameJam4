@@ -4,6 +4,7 @@ using Assets.Scripts.Contracts;
 using UnityEngine.UI;
 using System;
 using Assets.Scripts.Logic;
+using Assets.Scripts.Logic.Enums;
 
 public class PlayerGamePanel : MonoBehaviour
 {
@@ -98,15 +99,15 @@ public class PlayerGamePanel : MonoBehaviour
             return;
         }
 
-        if (character.InputDevice.RightBumper.WasPressed)
+        if (character.InputDevice.GetState(PlayerControl.CycleItemsRight).IsPressed)
         {
             SetActiveGearSlot(FindNextGearSlot());
         }
-        else if (character.InputDevice.LeftBumper.WasPressed)
+        else if (character.InputDevice.GetState(PlayerControl.CycleItemsLeft).IsPressed)
         {
             SetActiveGearSlot(FindPreviousGearSlot());
         }
-        else if (character.InputDevice.Action3.WasPressed)
+        else if (character.InputDevice.GetState(PlayerControl.DropGear).IsPressed)
         {
             if (gearSlots[activeGearSlot].Gear != null)
             {

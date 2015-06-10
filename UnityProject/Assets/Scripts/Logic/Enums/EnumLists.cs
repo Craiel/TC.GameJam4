@@ -13,5 +13,7 @@
         public static IList<GearType> GearTypes = Enum.GetValues(typeof(GearType)).Cast<GearType>().ToList();
 
         public static IList<StatType> StatTypes = Enum.GetValues(typeof(StatType)).Cast<StatType>().ToList();
+
+        public static IList<PlayerControl> PlayerControls = Enum.GetValues(typeof(PlayerControl)).Cast<PlayerControl>().ToList();
     }
 }

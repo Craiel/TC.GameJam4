@@ -8,24 +8,15 @@
 
     using UnityEngine;
     using Assets.Scripts.Contracts;
+    using Assets.Scripts.InputHandling;
     using Assets.Scripts.Logic;
 
     public class InputManagerBehavior : MonoBehaviour
     {
         private static InputManagerBehavior instance;
 
-        private readonly IDictionary<ICharacter, InputDevice> charactersToInputDevices;
-        private readonly IDictionary<InputDevice, ICharacter> inputDevicesToCharacters;
-
-        // -------------------------------------------------------------------
-        // Constructor
-        // -------------------------------------------------------------------
-        public InputManagerBehavior()
-        {
-            this.charactersToInputDevices = new Dictionary<ICharacter, InputDevice>();
-            this.inputDevicesToCharacters = new Dictionary<InputDevice, ICharacter>();
-        }
-
+        private static readonly IList<ICharacter> characters = new List<ICharacter>(); 
+        
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -58,7 +49,7 @@
 
         public IList<ICharacter> GetCharacters()
         {
-            return new List<ICharacter>(charactersToInputDevices.Keys);
+            return characters;
         }
 
         // -------------------------------------------------------------------
@@ -79,12 +70,11 @@
         [UsedImplicitly]
         private void Start()
         {
-            InputManager.OnDeviceDetached += this.OnDeviceDetached;
-
             for (int i = 0; i < StaticSettings.MaxPlayerCount; ++i )
             {
                 var newPlayer = new Character { Color = StaticSettings.PlayerColors[i] };
-                this.charactersToInputDevices.Add(newPlayer, null);
+                InputHandler.RegisterPlayer(newPlayer);
+                characters.Add(newPlayer);
             }
 
             if (this.UIManager != null)
@@ -99,60 +89,7 @@
         [UsedImplicitly]
         private void Update()
         {
-            if(InputManager.Devices == null)
-            {
-                return;
-            }
-
-            foreach (InputDevice device in InputManager.Devices)
-            {
-                if (this.inputDevicesToCharacters.ContainsKey(device))
-                {
-                    // This device is already assigned, skip it
-                    continue;
-                }
-
-                if (device.GetControl(InputControlType.Action1))
-                {
-                    ICharacter target = this.GetPlayerForNewController();
-                    if (target != null)
-                    {
-                        this.charactersToInputDevices[target] = device;
-                        this.inputDevicesToCharacters.Add(device, target);
-                        target.InputDevice = device;
-                        Debug.Log("Assigned Controller " + device.Name + " to player " + target.Name);
-                    }
-                }
-            }
-        }
-
-        public void DetachDevice(InputDevice device)
-        {
-            OnDeviceDetached(device);
-        }
-
-        private ICharacter GetPlayerForNewController()
-        {
-            foreach (ICharacter character in this.charactersToInputDevices.Keys)
-            {
-                if (character.InputDevice == null)
-                {
-                    return character;
-                }
-            }
-
-            return null;
-        }
-
-        private void OnDeviceDetached(InputDevice device)
-        {
-            if (this.inputDevicesToCharacters.ContainsKey(device))
-            {
-                ICharacter assignedCharacter = this.inputDevicesToCharacters[device];
-                assignedCharacter.InputDevice = null;
-                this.charactersToInputDevices[assignedCharacter] = null;
-                this.inputDevicesToCharacters.Remove(device);
-            }
+            InputHandler.Update();
         }
     }
 }

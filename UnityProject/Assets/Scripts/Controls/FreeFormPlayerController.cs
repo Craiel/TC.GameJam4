@@ -8,7 +8,7 @@
 
     using UnityEngine;
 
-    public class FreeFormPlayerController : IMovementController
+    /*public class FreeFormPlayerController : IMovementController
     {
         private const float DefaultSpeedMultiplier = 0.02f;
 
@@ -66,5 +66,5 @@
 
             return changed;
         }
-    }
+    }*/
 }

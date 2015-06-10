@@ -9,6 +9,7 @@ namespace Assets.Scripts
     using System;
 
     using Assets.Scripts.Arena;
+    using Assets.Scripts.InputHandling;
     using Assets.Scripts.Logic.Enums;
 
     using JetBrains.Annotations;
@@ -115,7 +116,8 @@ namespace Assets.Scripts
             }
 
             int aliveCharacters = this.activePlayers.Count;
-            foreach (ICharacter character in this.activePlayers.Keys)
+            IList<ICharacter> players = new List<ICharacter>(this.activePlayers.Keys);
+            foreach (ICharacter character in players)
             {
                 if (character.IsDead)
                 {
@@ -123,6 +125,11 @@ namespace Assets.Scripts
                     {
                         aliveCharacters--;
                     }
+                }
+
+                if (character.InputDevice.GetState(PlayerControl.Start).IsPressed)
+                {
+                    this.EndGame();
                 }
             }
 
@@ -141,11 +148,6 @@ namespace Assets.Scripts
                     }
                     this.timeUntilSpawn = 30f;
                 }
-            }
-
-            if(InputManager.ActiveDevice.Command.WasPressed)
-            {
-                EndGame();
             }
         }
 

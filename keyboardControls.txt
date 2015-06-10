@@ -1,0 +1,13 @@
+wasd = move + rotate
+
+lCtrl  = fire1
+lalt   = fire2
+q, e   = Cycle weapons
+r	= Drop weapon
+
+
+arrow  = move + rotate
+rctrl  = fire1
+ralt   = fire2
+[, ]   = Cycle weapons
+\	= drop weapon

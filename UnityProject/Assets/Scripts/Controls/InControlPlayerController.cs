@@ -4,7 +4,6 @@
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Logic.Enums;
 
-    using InControl;
     using UnityEngine;
 
     public class InControlPlayerController : IMovementController
@@ -36,7 +35,7 @@
 
         public bool InvertAccellerationAxis { get; set; }
 
-        public InputDevice InputDevice { get; set; }
+        public IInputDeviceMapping InputDevice { get; set; }
 
         public bool Update()
         {
@@ -56,24 +55,24 @@
         // -------------------------------------------------------------------
         private bool HandleMove()
         {
-            float down = this.InputDevice.DPad.Down.Value;
-            float up = this.InputDevice.DPad.Up.Value;
+            float backwards = this.InputDevice.GetState(PlayerControl.MoveBackwards).Value;
+            float forward = this.InputDevice.GetState(PlayerControl.MoveForward).Value;
 
-            if (Math.Abs(down) < float.Epsilon
-                && Math.Abs(up) < float.Epsilon)
+            if (Math.Abs(backwards) < float.Epsilon
+                && Math.Abs(forward) < float.Epsilon)
             {
                 return false;
             }
 
             float direction = 0f;
-            if (Math.Abs(down) > float.Epsilon)
+            if (Math.Abs(backwards) > float.Epsilon)
             {
-                direction = this.InvertAccellerationAxis ? down : -down;
+                direction = this.InvertAccellerationAxis ? backwards : -backwards;
                 direction *= 0.5f; //Half-speed for backing up
-            } 
-            else if (Math.Abs(up) > float.Epsilon)
+            }
+            else if (Math.Abs(forward) > float.Epsilon)
             {
-                direction = -(this.InvertAccellerationAxis ? up : -up);
+                direction = -(this.InvertAccellerationAxis ? forward : -forward);
             }
 
             direction *= DefaultSpeedMultiplier * target.GetComponent<PlayerCharacterBehavior>().Character.GetCurrentStat(StatType.Velocity);
@@ -84,8 +83,8 @@
 
         private bool HandleRotation()
         {
-            float left = this.InputDevice.DPad.Left.Value;
-            float right = this.InputDevice.DPad.Right.Value;
+            float left = this.InputDevice.GetState(PlayerControl.MoveRotateLeft).Value;
+            float right = this.InputDevice.GetState(PlayerControl.MoveRotateRight).Value;
 
             if (Math.Abs(left) < float.Epsilon
                 && Math.Abs(right) < float.Epsilon)

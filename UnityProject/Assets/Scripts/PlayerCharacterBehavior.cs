@@ -49,23 +49,11 @@
         // -------------------------------------------------------------------
         private void InitializeMovementController()
         {
-            if (StaticSettings.EnableInControl)
-            {
-                this.movementController = new InControlPlayerController(this.gameObject);
-            }
-            else
-            {
-                if (this.useFixedAxisController)
-                {
-                    this.movementController = new FixedAxisPlayerController(this.gameObject);
-                }
-                else
-                {
-                    this.movementController = new FreeFormPlayerController(this.gameObject);
-                }
-            }
+            this.movementController = new InControlPlayerController(this.gameObject)
+                                          {
+                                              InputDevice = this.Character.InputDevice
+                                          };
 
-            this.movementController.InputDevice = this.Character.InputDevice;
         }
 
         [UsedImplicitly]
@@ -101,21 +89,9 @@
 
             this.Character.Update(this.gameObject);
 
-            float fireLeft;
-            float fireRight;
-            if (StaticSettings.EnableInControl && this.Character.InputDevice != null)
-            {
-                fireLeft = this.Character.InputDevice.Action1.Value;
-                fireRight = this.Character.InputDevice.Action2.Value;
-            }
-            else
-            {
-                fireLeft = Input.GetAxis("Fire1");
-                fireRight = Input.GetAxis("Fire2");
-            }
+            float fireLeft = this.Character.InputDevice.GetState(PlayerControl.Fire).Value;
+            float fireRight = this.Character.InputDevice.GetState(PlayerControl.Fire2).Value;
             
-            float currentTime = Time.time;
-
             if (Math.Abs(fireLeft) > float.Epsilon)
             {
                 this.FireWeapon(this.Character.GetGear(GearType.LeftWeapon) as IWeapon);

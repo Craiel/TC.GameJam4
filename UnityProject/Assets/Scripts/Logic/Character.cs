@@ -4,9 +4,7 @@
 
     using Assets.Scripts.Contracts;
     using Assets.Scripts.Logic.Enums;
-
-    using InControl;
-
+    
     using UnityEngine;
 
     public class Character : StatHolder, ICharacter
@@ -18,8 +16,6 @@
         private readonly IDictionary<GearType, bool> gearEnableState;
 
         private float nextCoolingTick;
-
-
  
         // -------------------------------------------------------------------
         // Constructor
@@ -51,7 +47,7 @@
 
         public Color Color { get; set; }
 
-        public InputDevice InputDevice { get; set; }
+        public IInputDeviceMapping InputDevice { get; set; }
 
         public bool IsDead { get; private set; }
 

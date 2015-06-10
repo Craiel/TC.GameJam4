@@ -3,12 +3,10 @@
     using System;
 
     using Assets.Scripts.Contracts;
-
-    using InControl;
-
+    
     using UnityEngine;
 
-    public class FixedAxisPlayerController : IMovementController
+    /*public class FixedAxisPlayerController : IMovementController
     {
         private const float DefaultSpeedMultiplier = 0.02f;
 
@@ -43,7 +41,7 @@
 
         public bool InvertAccellerationAxis { get; set; }
 
-        public InputDevice InputDevice { get; set; }
+        public IInputDeviceMapping InputDevice { get; set; }
 
         public bool Update()
         {
@@ -119,5 +117,5 @@
             this.target.transform.Rotate(Vector3.forward, RotateStep * this.activeVector);
             this.lastRotateTime = currentTime;
         }
-    }
+    }*/
 }

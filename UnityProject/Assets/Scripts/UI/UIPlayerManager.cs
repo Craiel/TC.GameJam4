@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using Assets.Scripts.Contracts;
 using Assets.Scripts;
+using Assets.Scripts.InputHandling;
+using Assets.Scripts.Logic.Enums;
 
 public class UIPlayerManager : MonoBehaviour
 {
@@ -105,11 +107,11 @@ public class UIPlayerManager : MonoBehaviour
                 currentState = UIState.NotJoined;
             }
 
-            if(character.InputDevice.Action1.WasPressed)
+            if(character.InputDevice.GetState(PlayerControl.Confirm).IsPressed)
             {
                 currentState = UIState.Ready;
             }
-            else if(character.InputDevice.DPadRight.WasPressed)
+            else if(character.InputDevice.GetState(PlayerControl.MoveRotateRight).IsPressed)
             {
                 currentLoadoutIndex++;
                 if(currentLoadoutIndex >= MechLoadouts.Loadouts.Count)
@@ -118,7 +120,7 @@ public class UIPlayerManager : MonoBehaviour
                 }
                 UpdateMechSelection();
             }
-            else if(character.InputDevice.DPadLeft.WasPressed)
+            else if(character.InputDevice.GetState(PlayerControl.MoveRotateLeft).IsPressed)
             {
                 currentLoadoutIndex--;
                 if(currentLoadoutIndex < 0)
@@ -127,15 +129,15 @@ public class UIPlayerManager : MonoBehaviour
                 }
                 UpdateMechSelection();
             }
-            else if(character.InputDevice.Action2.WasPressed)
+            else if(character.InputDevice.GetState(PlayerControl.Exit).IsPressed)
             {
-                InputManagerBehavior.Instance.DetachDevice(character.InputDevice);
+                InputHandler.ReleaseMapping(character);
                 currentState = UIState.NotJoined;
             }
         }
         else if(currentState == UIState.Ready)
         {
-            if(character.InputDevice.Action2.WasPressed)
+            if (character.InputDevice.GetState(PlayerControl.Exit).IsPressed)
             {
                 currentState = UIState.Joined;
             }
